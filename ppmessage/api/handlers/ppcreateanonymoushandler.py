@@ -43,7 +43,7 @@ class PPCreateAnonymousHandler(BaseHandler):
         if user_uuid == None or ip == None or data_uuid == None:
             return
         
-        url = "http://123.57.154.168:8099/IP2GEO/"
+        url = "http://mdmforum.cn:8099/IP2GEO/"
         http_headers = {"Content-Type" : "application/json"}
         
         http_body = {
