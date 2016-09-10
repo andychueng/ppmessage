@@ -85,6 +85,7 @@ class UploadFileHandler(RequestHandler):
         _existed_uuid = _redis.get(_key)
         if _existed_uuid != None:
             logging.info("same file: %s, %s" % (_existed_uuid, _file_name)) 
+            self.set_header("Access-Control-Allow-Origin", "*")
             self.write(json.dumps({"fuuid": _existed_uuid}))
             self.finish()
             return 
