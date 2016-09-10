@@ -32,6 +32,13 @@ class UploadFileHandler(RequestHandler):
     """
     FIXME: with api_token check
     """
+
+    def options(self, *args, **kwargs):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+        self.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        self.set_header("Access-Control-Max-Age", "1728000")
+        return
     
     @property
     def content_length(self):
