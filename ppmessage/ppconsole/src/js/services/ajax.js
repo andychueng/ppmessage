@@ -164,7 +164,7 @@ function $yvAjaxService($state, $timeout, $http, $cookieStore, yvUser, yvConstan
 
         // get single conversation's history messages
         get_history_messages: function(requestParams) {
-            return _apiPost('/PP_GET_HISTORY_MESSAGE', requestParams);
+            return _apiPost('/PP_PAGE_HISTORY_MESSAGE', requestParams);
         },
 
         //create group
