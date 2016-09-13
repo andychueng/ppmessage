@@ -166,7 +166,7 @@ class PPPageUnackedMessageHandler(BaseHandler):
             self._return_by_max(_key, _max_uuid, _page_size)
             return
 
-        _min_uuid = _request.get("max_uuid")
+        _min_uuid = _request.get("min_uuid")
         if _min_uuid != None:
             self._return_by_min(_key, _min_uuid, _page_size)
             return
