@@ -124,7 +124,7 @@ class PPPageUnackedMessageHandler(BaseHandler):
 
         _pushs = _redis.zrangebyscore(_key, _min_score, "+inf", start=0, num=_page_size)
         if len(_pushs) == 0:
-            logging.info("no pushs lower than %s" % _max_score)
+            logging.info("no pushs lower than %s" % _min_score)
             return
 
         if _min_uuid in _pushs:
