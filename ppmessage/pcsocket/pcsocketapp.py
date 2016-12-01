@@ -338,7 +338,7 @@ class PCSocketDelegate():
                 # no message
                 return
             body = json.loads(noti)
-            ws = self.sockets.get(body.get("devcie_uuid"))
+            ws = self.sockets.get(body.get("device_uuid"))
             if ws == None:
                 logging.error("No WS to handle online body: %s" % body) 
                 continue
