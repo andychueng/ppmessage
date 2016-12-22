@@ -92,7 +92,7 @@ class UploadFileHandler(RequestHandler):
 
         _new_path = _generic_store + os.path.sep + _uuid
 
-        with open(_new_path, "w") as _of:
+        with open(_new_path, "wb") as _of:
             _of.write(_file_body)
             
         _add = {
