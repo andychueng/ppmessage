@@ -1,6 +1,6 @@
 Service.$app = (function() {
 
-    var appInfo,
+    var appInfo = {},
         
         set = function(info) {
             appInfo = info;
