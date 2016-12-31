@@ -16,7 +16,9 @@
  */
 Service.$messageReceiverModule = (function() {
 
-    var browserTabNotify,
+    var PLAY_SOUND = true, // play notification sound
+
+    	browserTabNotify,
         
         isGroupOnChatting = function ( groupUUID ) {
             
@@ -40,6 +42,10 @@ Service.$messageReceiverModule = (function() {
             if ( browserTabNotify ) { // browser tab notify
                 browserTabNotify.notify( ppMessage );
             }
+
+	    if ( PLAY_SOUND ) { // Play notification sound when new message arrived
+		Audio !== undefined && new Audio( Service.Constants.MSG_NOTIFICATION_SOUND_URL ).play();
+	    }
 
             if ( isGroupOnChatting ( groupId ) ) { // we are chating with `converstionId`
 

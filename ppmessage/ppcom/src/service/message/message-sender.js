@@ -16,7 +16,10 @@ Service.$messageSender = ( function() {
             // put your upload content here
             uploadContent: null //file / 'large text'
             
-        };
+        },
+
+	// whether or not play sound when submiting or delivered
+    	PLAY_SOUND = true;
     
     //////// API ////////////
     return {
@@ -158,6 +161,11 @@ Service.$messageSender = ( function() {
         
         // update ppMessage state when send success
         ppMessage.messageState = Service.PPMessage.STATE.FINISH;
+
+	// play message send success audio
+	if (PLAY_SOUND) {
+	    Audio !== undefined && new Audio( Service.Constants.MSG_DELIVERED_SOUND_URL ).play();
+	}
 
         // generally `response` if exist, we consider this message was send by `api`, not by `ws`
         if ( response ) {

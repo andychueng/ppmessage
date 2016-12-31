@@ -85,7 +85,7 @@ Ctrl.$sheetheader = (function() {
 
     function cancelAnyWaitingToCreateConversations() {
         var $conversationAgency = Service.$conversationAgency,
-            inRequestingGroupConversation = $conversationAgency.isRequestingGroupConversation(),
+            inRequestingGroupConversation = false,
             DELAY_TIME = 300; // Waiting the css animation completed
 
         Ctrl.$conversationPanel.stopPollingWaitingQueueLength();

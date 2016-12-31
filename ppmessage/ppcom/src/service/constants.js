@@ -3,6 +3,11 @@
     function PPConstants() {
     }
 
+    // sound of msg submit -> delivered -> notification(received)
+    PPConstants.MSG_SUBMIT_SOUND_URL = Configuration.assets_path + 'submit.mp3';
+    PPConstants.MSG_DELIVERED_SOUND_URL = Configuration.assets_path + 'delivered.mp3';
+    PPConstants.MSG_NOTIFICATION_SOUND_URL = Configuration.assets_path + 'notification.mp3';    
+
     PPConstants.ICON_DEFAULT_LAUNCHER = Configuration.assets_path + "img/logo_1.png";
     PPConstants.DEFAULT_HEADER_TITLE = "PPMessage";
 
