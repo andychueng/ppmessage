@@ -64,12 +64,13 @@
     z-index: 2147483002;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);
     background: white;
+    border-radius: 10px 10px 0px 0px;
     overflow: hidden;
     position: absolute;
     top: 0;
     right: 0;
     width: 100%;
-    height: 48px;
+    height: 75px;
 }
 .pp-sheet-header-title-container{
     position: absolute;
@@ -77,13 +78,10 @@
     top: 0;
     width: 100%;
     height: 100%;
-    text-align: center;
-    -moz-text-align-last: center;
-    text-align-last: center;
 }
 .pp-container .pp-sheet-header-title {
     font-size: 16px;
-    line-height: 48px;
+    line-height: 75px;
     font-weight: 500;
     color: #465C66;
     letter-spacing: 0.2px;
@@ -97,15 +95,15 @@
 .pp-sheet-header-button{
     position: relative;
     margin: 0 20px;
-    height: 48px;
+    height: 75px;
     float: right;
     margin-left: 15px;
 }
 .pp-sheet-header-button-minimize-container {
     position: relative;
     margin: 0 0 0 0;
-    height: 48px;
-    width: 48px;
+    height: 75px;
+    width: 75px;
     float: right;
     cursor: pointer;
 }
@@ -118,7 +116,7 @@
     width: 16px;
     background-repeat: no-repeat;
     background-size: 15px 15px;
-    height:48px;
+    height:75px;
     position:relative;
     margin:auto;
 }
@@ -142,18 +140,104 @@
 /* GROUP-BEGIN */
 .pp-container .pp-group-content-container {
     box-sizing: border-box;
+    background-color: white;
+    border-radius: 0px 0px 10px 10px;
     display: none;
     position: relative;
-    height: 100%;
     margin: 0 auto;
-    padding-bottom: 48px;
+    padding-bottom: 75px;
     overflow-y: auto;
-    top: 48px; }
+    top: 75px; }
 
 .pp-group-item {
-    padding-top: 17px;
-    padding-left: 17px;
+    border-top: 1px solid #f3f4f5;
     cursor: pointer;
+    padding: 32px 30px;
+}
+
+.pp-group-item:hover {
+    background-color:#f7f8fa;
+    border-top:1px solid #ebedf1;
+}
+
+.pp-group-item:last-child {
+    border-bottom:1px solid #f3f4f5;
+}
+
+.pp-group-item-body {
+    position: relative;
+    margin-left: 50px;
+}
+
+.pp-group-item-meta {
+    margin-bottom: 2px;
+    min-height: 15px;
+}
+
+.pp-group-item-meta::after {
+    clear: both;
+}
+
+.pp-group-item-body-author {
+    float: left;
+    color: rgba(73,76,93,.7);
+}
+
+.pp-group-item-body-unread-dot {
+    display:inline-block;
+    background-color:#1F8CEB;
+    margin-right:9px;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    content:"";
+    float: right;
+    margin-top: 3px;
+}
+
+.pp-group-item-body-timestamp {
+    float:right;
+    text-align:right;
+    color:rgba(73,76,93,.7);
+}
+
+.pp-group-item-body-author, .pp-group-item-body-timestamp {
+    font-size:13px !important;
+    max-width:49%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.pp-group-item-content {
+    position: relative;
+}
+
+.pp-group-item-content-container {
+    margin-right:25px;
+    color:#3a3c4c;
+    font-size:13px;
+    line-height:19px;
+}
+
+.pp-group-item-content-text {
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size: 13px !important;
+    font-color: rgb(58, 60, 76);
+}
+
+.pp-group-item-body-user-icon {
+    background-size:16px 14px;
+    background-repeat:no-repeat;
+    display:inline-block;
+    background-position:50%;
+    width:16px;
+    position:absolute;
+    top:0;
+    bottom:0;
+    right:0;
 }
 
 .pp-group-item * {
@@ -163,100 +247,37 @@
 .pp-group-item img {
     border-radius: 50%;
     float: left;
-    margin-top: 5px;
     display: inline-block;
-    width: 42px;
-    height: 42px;
-}
-
-.pp-group-item .body-container {
-    margin-left: 55px;
-    padding-right: 17px;
-    border-bottom: 1px solid #e7e7e7;
-    height: 65px;
-}
-
-.pp-group-item .pp-body {
-    
-}
-
-.pp-group-item .pp-header {
-    margin-bottom: 5px;
-}
-
-.pp-group-item .pp-timestamp {
-    float: right;
-    font-size: 12px;
-    line-height: 20px;
-    color: #aaa;
-    width: 50px;
-    text-align: right;
-}
-
-.pp-group-item .title-container {
-    margin: 0 50px 0 0;
-}
-
-.pp-group-item .pp-title {
-    color: rgba(96,104,110,.8);
-    font-size: 15px;
-    line-height: 22px;
-    font-weight: 500;
-    display: block;
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.pp-group-item .pp-summary {
-    color: rgba(96,104,110,.8);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 19px;
-    height: 40px;
-    overflow: hidden;
-    position: relative;
-    padding-right: 17px;
-    word-break: break-word;
-}
-
-.pp-group-item .pp-content {
-    line-height: 19px;
-}
-
-.pp-group-item .pp-unread {
-    color: #3d4347;
-    font-weight: 500;
-}
-
-.pp-group-item .readstate {
-    background-color: red;
-    border-radius: 50%;
-    bottom: 27px;
-    color: white;
-    display: none;
-    font-size: 12px;
-    height: 16px;
-    width: 16px;
-    position: absolute;
-    right: 0;
-    text-align: center;
-    top: 6px;
-}
-
-.pp-group-item-hover {
-    background-color: #f5f5f6;
+    width: 35px;
+    height: 35px;
 }
 
 /* GROUP-END */
 
+.pp-sheet-header .pp-sheet-header-body {
+    padding: 20px 0 0 80px;
+}
+
+.pp-sheet-header .pp-sheet-header-title {
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.1em;
+}
+
+.pp-sheet-header .pp-sheet-header-app-name {
+    color: hsla(0,0%,100%,.8);
+    font-size: 13px;
+    line-height: 1.1em;
+}
+
 .pp-sheet-header .pp-sheet-conversations-button {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  width: 75px;
+  height: 75px;
   float: left;
-  cursor: pointer;
   display: none;
   position: relative;
-  margin: 0 20px;
   height: 100%; }
 .pp-sheet-header .pp-sheet-header-button-icon {
   background-size: 15px 12px;
@@ -265,21 +286,44 @@
   margin: 0 auto;
   width: 18px;
   height: 100%;
-  opacity: .4;
   float: left; }
+
+.pp-sheet-header .pp-header-buttons-close {
+    background-position: 50%;
+    background-size:14px 14px;
+    background-repeat:no-repeat;
+    display: none;
+    position:absolute;
+    top:0;
+    right:0;
+}
+
+.pp-sheet-header .pp-header-buttons-back-contents, .pp-sheet-header .pp-header-buttons-close-contents {
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    padding: 8px;
+    margin: 13px;
+    box-sizing: border-box !important;
+    border-radius: 8px
+}
+
+.pp-sheet-header .pp-header-buttons-back-contents:hover, .pp-sheet-header .pp-header-buttons-close-contents:hover {
+    background-color:rgba(0,0,0,.1);
+}
+
 .pp-sheet-header .pp-unread-count {
   border-radius: 50%;
-  border: 2px solid #fff;
   font-size: 11px;
   line-height: 16px;
-  background-color: #0074b0;
+  background-color: red;
   text-align: center;
   color: #fff;
   position: absolute;
   width: 16px;
   height: 16px;
   top: 11px;
-  left: 11px;
+  left: 44px;
   cursor: pointer;
   display: none; }
 
@@ -375,14 +419,14 @@
 .pp-messenger-panel {
     position:fixed;
     width:368px;
-    height: 100%;
     position: fixed;
-    right:0;
-    top:0;
-    bottom:0;
-    border-left: 1px solid #e7e7e7;
+    right:20px;
+    top:20px;
+    bottom:100px;
+    border-radius:10px;
     z-index:2147483646;
     box-shadow: 0 0 4px 1px rgba(0,0,0,.08);
+    min-height: 250px;
 }
 .pp-messenger-box-container {
 }
@@ -413,16 +457,16 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     cursor: pointer;
     background-position: center;
     border-color: #004c88;
     box-shadow: 0px 6px 13px 0px rgba(0, 0, 0, 0.23);
 }
 .pp-launcher-button-container {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
 }
 .pp-launcher-button-container-inactive {
     transition: opacity,.1s;
@@ -448,7 +492,7 @@
 
 .pp-launcher-container {
     position: fixed;
-    height: 48px;
+    height: 60px;
     z-index: 2147483646;
 }
 
@@ -459,7 +503,7 @@
     display: none;
   height: 100%;
   margin: 0 auto;
-  top: 48px; }
+  top: 75px; }
 
 .pp-loading-spinner {
     width:28px;
@@ -565,8 +609,11 @@
 
 .pp-composer {
     position: relative;
-    max-width: 336px;
     margin: 0 auto;
+}
+
+#pp-composer-container {
+    border-radius: 0px 0px 10px 10px;
 }
 
 .pp-composer-container-action-btn {
@@ -615,28 +662,34 @@
 
 .pp-container .pp-composer-container-textarea {
     line-height: 20px;
-    border-radius: 4px;
-    border: 1px solid #cfd8dc;
+    border-radius: 0px 0px 10px 10px;
     height: 100%;
     width: 100%;
     outline: none !important;
-    color: #455A64;
     resize: none;
     font-size: 14px;
-    padding: 10px 70px 5px 14px;
+    padding: 18px;
+    padding-right: 100px;
+    padding-left: 30px;
     word-break: break-all;
     overflow: hidden;
     max-height: 210px;
     min-height: 40px;
+    border: none;
+    transition: background-color .2s ease,box-shadow .2s ease;
+    color: #565867;
+    background-color: #f0f3f5;
+}
+
+.pp-container .pp-composer-container-textarea:focus {
+    outline:none;
+    background-color:#fff;
+    box-shadow:0 0 100px 0 rgba(150,165,190,.24);
 }
 
 /** apply to IE browser only to fix problem: textarea cursor not vertical allign**/
 .pp-composer-container-textarea-min-height {
     /* min-height: 34px !important; */
-}
-
-.pp-composer-container-powered-by-container {
-    padding: 2px;
 }
 
 .pp-container .pp-conversation-part-pulltorefreshbutton {
@@ -647,35 +700,6 @@
 
 .pp-composer-container-input {
     display: none !important;
-}
-
-.pp-container .pp-powered-by {
-    width: 100%;
-    color: #b0bec5;
-    text-align: center;
-    clear: both;
-    font-weight: 500;
-    line-height: 22px;
-    padding: 7px;
-    font-size: 13px;
-}
-
-.pp-powered-by a {
-    text-align:center;
-    cursor:pointer;
-    color:inherit;
-    text-decoration:none;
-}
-
-.pp-powered-by u {
-    text-decoration: underline !important;
-}
-
-.pp-container .pp-powered-by-span {
-    color: #b6c2c9;
-    float: none;
-    font-size: 13px;
-    margin-left: 0px;
 }
 
 .pp-conversation-part {
@@ -715,11 +739,12 @@
 }
 
 .pp-conversation-content {
+    background-color: #FAFAFA;
     bottom: 1px;
     overflow-y: auto;
     position: absolute;
-    top: 48px;
-    bottom: 79px;
+    top: 75px;
+    bottom: 56px;
     right: 0;
     width: 100%;
     padding: 8px;
@@ -773,6 +798,8 @@
 }
 .pp-container .pp-conversation-part-text-by-admin-body {
     font-size:14px; font-weight:400; line-height:20px; padding:12px 17px; text-align:left; word-break:break-all; white-space: pre-wrap;
+    color: #606273;
+    background-color: #eff3f6;
 }
 .pp-conversation-part-text-by-admin-triangle {
     width:0; height: 0; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 4px solid #dadee2; position:relative; float:left; margin-top:10px; margin-right:-1px; top: 3px;
@@ -1116,7 +1143,6 @@
     position: absolute;
     bottom: 0px;
     right: 0px;
-    padding: 5px;
 }
 
 .pp-composer-send-button {

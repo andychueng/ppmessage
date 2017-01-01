@@ -9,74 +9,58 @@ View.$sheetHeader = (function() {
             PPDiv = View.PPDiv,
             PPElement = View.PPElement,
 
-            iconConversations = Configuration.assets_path + 'img/icon-conversations.png',
+            iconBack = Configuration.assets_path + 'img/icon-back.png',
+            iconClose = Configuration.assets_path + 'img/close.png',
 
             buildTitle = function() {
-                return new PPDiv('pp-sheet-header-title-container')
-                    .add(new View.Div({
-                        className: 'title-container'
-                    })
-                         .add(new PPElement('b', {
-                             id: titleId,
-                             'class': titleId + ' pp-selectable'
-                         })));
-            },
-
-            buildMinimizeButton = function() {
-                return new PPElement('a', {
-                    id: minimizeButtonId,
-                    'class': minimizeButtonId,
-                    title: Service.Constants.i18n('MINIZE_BUTTON_HINT')
-                })
-                    .add(new PPDiv({
-                        id: 'pp-sheet-header-button-icon',
-                        style: 'background-image: url(' + Configuration.assets_path + 'img/icon-minimize.png)'
-                    }));
+                return new PPDiv( { className: 'pp-sheet-header-title-container', 
+                                    style: 'background-color:' + View.Style.Color.main_color })
+                .add( buildHeaderBody() );
             },
 
             buildConversationsButton = function() {
-                return new PPElement('a', {
-                    'class': 'pp-sheet-conversations-button'
+                return new PPDiv({
+                    'class': 'pp-sheet-conversations-button',
+                    style: 'background-image:url(' + iconBack + ')'
                 }).add(new PPDiv({
-                    'class': 'pp-sheet-header-button-icon',
-                    style: 'background-image: url(' + iconConversations + ')'
+                    'class': 'pp-header-buttons-back-contents',
                 })).add(new PPDiv({
                     'class': 'pp-unread-count pp-font pp-box-sizing'
                 }));
             },
 
+            buildHeaderBody = function() {
+                return new PPDiv('pp-sheet-header-body')
+                    .add(new PPDiv('pp-sheet-header-title').text('Conversations'))
+                    .add(new PPDiv('pp-sheet-header-app-name').text('PPMessage'));
+            },
+
+            buildCloseButton = function() {
+                return new PPDiv({
+                    'class':'pp-header-buttons-close',
+                    style: 'background-image:url(' + iconClose + ')'
+                }).add(new PPDiv({
+                    'class': 'pp-header-buttons-close-contents'
+                }))
+            }
+
             buildSheetHeaderEvent = function() {
                 $('#' + id).bind('click', ctrl.onSheetHeaderClicked);
             },
 
-            buildMinimizeButtonEvent = function() {
-
-                var selector = '.pp-sheet-header-button .pp-sheet-header-button-icon';
-                
-                $('#' + minimizeButtonId)
-                    .bind('mouseover', function() {
-                        $(selector).css('opacity', 1.0);
-                    })
-                    .bind('mouseleave', function() {
-                        $(selector).css('opacity', .4);
-                    })
-                    .bind('click', ctrl.minimize);
-            },
-
             buildConversationsButtonEvent = function() {
-
-                var selector = groupButtonIconSelector;
-                
+                var selector = '#pp-container .pp-header-buttons-back-contents';
                 $(selector)
-                    .bind('mouseover', function() {
-                        $(selector).css('opacity', 1.0);
-                    })
-                    .bind('mouseleave', function() {
-                        $(selector).css('opacity', .4);
-                    })
                     .bind('click', function() {
                         Ctrl.$conversationList.show();
                     });
+            },
+
+            buildCloseButtonEvent = function() {
+                var selector = '#pp-container .pp-header-buttons-close';
+                $(selector).bind( 'click', function() {
+                    Ctrl.$sheetheader.minimize();
+                } );
             },
 
             buildUnreadButtonEvent = function() {
@@ -101,22 +85,21 @@ View.$sheetHeader = (function() {
         // Build HTML
         this.add(buildTitle())
             .add(buildConversationsButton())
-            .add(buildMinimizeButton());
+            .add(buildCloseButton());
 
         // Bind event
         $timeout(function() {
             ctrl.onSheetHeaderInit();
             buildSheetHeaderEvent();
-            buildMinimizeButtonEvent();
             buildConversationsButtonEvent();
+            buildCloseButtonEvent();
             buildUnreadButtonEvent();
         });
     }
     extend(PPSheetHeader, View.PPDiv);
 
     var id = 'pp-sheet-header',
-        titleId = 'pp-sheet-header-title',
-        minimizeButtonId = 'pp-sheet-header-button',
+        titleSelector = '.pp-sheet-header-app-name',
         unreadCountSelector = '.pp-unread-count',
         groupButtonSelector = '.pp-sheet-conversations-button',
         groupButtonIconSelector = groupButtonSelector + ' .pp-sheet-header-button-icon',
@@ -145,7 +128,7 @@ View.$sheetHeader = (function() {
         },
 
         setTitle = function(title) {
-            $( '#' + titleId ).text( title );
+            $( titleSelector ).text( title );
         };
 
     ///////// API //////////////

@@ -126,12 +126,12 @@ Ctrl.$conversationContent = (function() {
             if ( conversationId ) {
                 
                 // load history
-                getConversationHistory( conversationId, function( list ) {
+                getConversationHistory( conversationId, function( list, loadable ) {
 
                     if (beforeUpdateViewCallback) beforeUpdateViewCallback();
 
                     // tell modal is can load more historys
-                    getModal() && getModal().setLoadable(list.length > 0);
+                    getModal() && getModal().setLoadable(loadable);
                     
                     // update view
                     prependMessages(list, function() {

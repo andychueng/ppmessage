@@ -18,7 +18,8 @@ Ctrl.$conversationPanel = ( function() {
         MODE: MODE,
         mode: mode,
 
-        stopPollingWaitingQueueLength: stopPollingWaitingQueueLength
+        stopPollingWaitingQueueLength: stopPollingWaitingQueueLength,
+        isOpen: isOpen
     }
 
     ////// Implementation //
@@ -54,6 +55,10 @@ Ctrl.$conversationPanel = ( function() {
             startPollingWaitingQueueLength();
             break;
         }
+    }
+
+    function isOpen() {
+        return View.$launcher.state() == View.$launcher.STATE.CLOSE;
     }
 
     // =======helpers==========

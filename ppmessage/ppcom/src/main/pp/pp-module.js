@@ -59,6 +59,30 @@ function PPModule(jQuery) {
                 existFn(jQuery) && getFn(jQuery).Service.$publicApi.hide();
             },
 
+	    // Show PPCom MesssageBox
+	    open : function() {
+		PP && PP.show();
+	    },
+	    
+	    // Hide PPCom MessageBox
+	    close : function() {
+		PP && PP.hide();
+	    },
+	    
+	    // Check is PPCom MessageBox opened
+	    isOpen : function() {
+		return existFn(jQuery) && getFn(jQuery).Service.$publicApi.isOpen();
+	    },
+
+	    // Toggle PPCom MessageBox
+	    toggle : function() {
+		if (PP.isOpen()) {
+		    PP.close();
+		} else {
+		    PP.open();
+		}
+	    },
+
             /**
              * PPCom MessageBox onShow event callback
              */

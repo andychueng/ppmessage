@@ -51,7 +51,7 @@
 
         var launcherCtrl = Ctrl.$launcher.get();
         if (launcherCtrl) {
-            launcherCtrl.onClickEvent();
+            launcherCtrl.showMessageBox();
             if (this._onShowEvent && typeof this._onShowEvent === 'function') {
                 this._onShowEvent();
             }
@@ -71,6 +71,10 @@
                 this._onHideEvent();
             }
         }
+    };
+
+    PublicAPI.prototype.isOpen = function() {
+        return this._booted && Ctrl.$conversationPanel.isOpen();
     };
 
     PublicAPI.prototype.onShow = function(event) {

@@ -1,5 +1,8 @@
 View.$groupContentItem = (function() {
 
+    var userIcon = Configuration.assets_path + 'img/icon-user-conversation.png',
+        userIconStyle = 'background-image:url(' + userIcon + ')';
+
     function Item(data) {
         View.PPDiv.call(this, {
             'class': 'pp-group-item',
@@ -10,7 +13,7 @@ View.$groupContentItem = (function() {
             timeStamp = '',
             groupID = data.uuid,
             icon = data.icon,
-            summary = data.summary,
+            summary = data.summary || "&nbsp;";
 
             buildAvatar = function() {
                 return new View.Img( {
@@ -19,46 +22,21 @@ View.$groupContentItem = (function() {
             },
             
             buildBody = function() {
-                return new View.PPDiv({
-                    'class': 'body-container'
-                })
-                    .add(new View.PPDiv({
-                        'class': 'pp-body'
-                    })
-                         .add(new View.PPDiv({
-                             'class': 'pp-header'
-                         })
-                              .add(new View.PPDiv({
-                                  'class': 'pp-timestamp'
-                              })
-                                   .add(new View.Span({
-                                       'class': 'pp-unread'
-                                   }).text(timeStamp)))
-                              .add(new View.PPDiv({
-                                  'class': 'title-container'
-                              })
-                                   .add(new View.PPDiv({
-                                       'class': 'pp-title'
-                                   }).text(groupName))))
-                         .add(new View.PPDiv({
-                             'class': clsSummary
-                         })
-                              .add(new View.PPDiv({
-                                  'class': 'readstate'
-                              }))
-                              .add(new View.Div( { className: 'pp-content' } )
-                                   .text(summary))));
+                return new View.PPDiv({ className: 'pp-group-item-body' })
+                    .add(new View.PPDiv({ className: 'pp-group-item-meta' })
+                         .add(new View.PPDiv({ className: 'pp-group-item-body-author' }).text( groupName ))
+                         .add(new View.PPDiv({ className: 'pp-group-item-body-timestamp' }).text( timeStamp ))
+                         .add(new View.PPDiv({ className: 'pp-group-item-body-unread-dot' })))
+                    .add(new View.PPDiv({ className: 'pp-group-item-content' })
+                         .add(new View.PPDiv({ className: 'pp-group-item-content-container' })
+                              .add(new View.PPDiv({ className: 'pp-group-item-content-text' }).text( summary )))
+                         .add(new View.Div({ className: 'pp-group-item-body-user-icon', style: userIconStyle })));
             },
 
             buildEvent = function() {
-                var $e = findItem(groupID),
-                    hoverClass = 'pp-group-item-hover';
+                var $e = findItem(groupID);
                 
-                $e.bind('mouseover', function() {
-                    $e.addClass(hoverClass);
-                }).bind('mouseleave', function() {
-                    $e.removeClass(hoverClass);
-                }).click('click', function() {
+                $e.click('click', function() {
                     Ctrl.$conversationList.showItem( groupID );
                 });
                 
@@ -74,8 +52,8 @@ View.$groupContentItem = (function() {
     }
     extend(Item, View.PPDiv);
     
-    var clsSummary = 'pp-summary',
-        clsSummarySelector = '.' + clsSummary + ' .pp-content',
+    var clsSummary = 'pp-group-item-content-text',
+        clsSummarySelector = '.' + clsSummary,
 
         findItem = function(groupUUID) {
             return $('.pp-group-content-container')
@@ -83,13 +61,13 @@ View.$groupContentItem = (function() {
         },
 
         // @param groupUUID
-        // @param unread > 0 --> show red circle
+        // @param unread > 0 --> show blue circle
         showUnread = function(groupUUID, unread) {
-            unread > 0 && findItem(groupUUID).find('.readstate').text( unread > 99 ? 99 : unread ).show();
+            unread > 0 && findItem(groupUUID).find('.pp-group-item-body-unread-dot').show();
         },
 
         hideUnread = function(groupUUID) {
-            findItem(groupUUID).find('.readstate').hide();
+            findItem(groupUUID).find('.pp-group-item-body-unread-dot').hide();
         },
 
         findGroupItemImg = function ( groupUUID ) {

@@ -14,7 +14,7 @@ View.$launcher = (function() {
         }, ctrl);
         
         var self = this;
-        var launcherButtonImageCssStyle = 'background-image: url(' + Configuration.assets_path + 'img/icon-newacquire.png);' + 'background-color:' + View.Style.Color.launcher_background_color;
+        var launcherButtonImageCssStyle = 'background-image: url(' + NORMAL_BG + ');' + 'background-color:' + View.Style.Color.launcher_background_color;
 
         var bottomMargin = ctrl.getLauncherBottomMargin(),
             rightMargin = ctrl.getLauncherRightMargin(),
@@ -37,12 +37,6 @@ View.$launcher = (function() {
                           event: {
                               click: function() {
                                   self.controller.onClickEvent();
-                              },
-                              mouseover: function() {
-                                  self.controller.onMouseOverEvent();
-                              },
-                              mouseleave: function() {
-                                  self.controller.onMouseLeaveEvent();
                               }
                           }
                       })))
@@ -65,6 +59,15 @@ View.$launcher = (function() {
         clsButtonContainerActive = 'pp-launcher-button-container-active',
         clsButtonContainerInActive = 'pp-launcher-button-container-inactive',
 
+        STATE = { NORMAL: 'normal', CLOSE: 'close' },
+        NORMAL_BG = Configuration.assets_path + 'img/icon-newacquire.png',
+        CLOSE_BG = Configuration.assets_path + 'img/close.png',
+        state = STATE.NORMAL,
+
+        getState = function() {
+            return state;
+        },
+
         build = function() {
             return new PPLauncher();
         },
@@ -73,13 +76,20 @@ View.$launcher = (function() {
             $( selectorButton ).removeClass( clsButtonMaximize ).addClass( clsButtonMinimize );
             $( selectorButtonContainer ).removeClass( clsButtonContainerActive ).addClass( clsButtonContainerInActive );
         },
-
-        showLauncher = function() {
-            $( selectorButton ).removeClass( clsButtonMinimize ).addClass( clsButtonMaximize );
+        
+        // state: View.$launcher.STATE
+        showLauncher = function( _state ) {
+            var $launcher = $( selectorButton );
+            $launcher.removeClass( clsButtonMinimize ).addClass( clsButtonMaximize );
             $( selectorButtonContainer ).removeClass( clsButtonContainerInActive ).addClass( clsButtonContainerActive );
+
+            state = _state;
+            var bgURL = (state == STATE.NORMAL) ? NORMAL_BG : CLOSE_BG;
+            $launcher.css( 'background-image', 'url(' + bgURL + ')' );
         },
         
         showMessageBox = function() {
+            showLauncher( STATE.CLOSE );
             View.$launcherPreview.text( '' ).hide();
             $('#pp-messenger').show();
             View.$conversation.show();
@@ -87,11 +97,14 @@ View.$launcher = (function() {
         };
     
     return {
+        STATE: STATE,
         build: build,
 
         hideLauncher: hideLauncher,
         showLauncher: showLauncher,
-        showMessageBox: showMessageBox
+        showMessageBox: showMessageBox,
+
+        state: getState
     }
     
 })();

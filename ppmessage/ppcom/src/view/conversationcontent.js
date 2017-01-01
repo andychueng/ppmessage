@@ -8,7 +8,6 @@ View.$conversationContent = (function() {
         View.PPDiv.call(this, {
             id: id,
             'class': id + ' pp-unselectable pp-box-sizing-borderbox',
-            style: 'background-color:' + View.Style.Color.base,
             event: {
                 click: function() {
                     ctrl.onConversationContentClicked();

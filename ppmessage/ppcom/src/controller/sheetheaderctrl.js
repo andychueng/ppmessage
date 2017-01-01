@@ -26,7 +26,7 @@ Ctrl.$sheetheader = (function() {
             $device.enableScroll();
         }
 
-        View.$launcher.showLauncher();
+        View.$launcher.showLauncher( View.$launcher.STATE.NORMAL );
         View.$conversation.hide();
 
         // Cancel all sechedule tasks

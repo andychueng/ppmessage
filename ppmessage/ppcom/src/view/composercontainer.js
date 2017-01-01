@@ -19,10 +19,7 @@ View.$composerContainer = (function() {
             .add(self.getComposerEmojiContainerHtml(ctrl))
             .add(new View.PPDiv({id: 'pp-composer'})
                  .add(self.getComposerSendButtonContainer(ctrl))
-                 .add(self.getComposerFormContainerHtml(ctrl)))
-            .add(View.$poweredBy.build());
-        
-        $timeout( View.$poweredBy.bindEvent );
+                 .add(self.getComposerFormContainerHtml(ctrl)));
         
         this.calcInputTextAreaRows();
     }

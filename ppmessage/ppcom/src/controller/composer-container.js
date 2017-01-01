@@ -35,7 +35,7 @@ Ctrl.$composerContainer = (function() {
             };
 
         this.getTextareaPaddingStyle = function() {
-            return this.isShowEmojiIcon() ? 'padding: 10px 70px 5px 14px' : 'padding: 10px 45px 5px 14px';
+            return this.isShowEmojiIcon() ? 'padding: 18px 70px 18px 30px' : 'padding: 18px 45px 18px 30px';
         };
 
         this.hide = function() {

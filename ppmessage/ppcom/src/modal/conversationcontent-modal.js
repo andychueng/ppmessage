@@ -113,7 +113,7 @@
 
                 // conversation id is empty
                 if (!conversationId) {
-                    if (callback) callback([]);
+                    if (callback) callback([], false);
                     return;
                 }
                 
@@ -163,12 +163,20 @@
                         var messageHistorysWithTimestamp = addTimestampsToHistoryMessageArrays(ppMessageArray);
                         // Store message historys to `chatMessages`
                         unshiftMessageArrays(messageHistorysWithTimestamp);
-                        if (callback) callback(messageHistorysWithTimestamp);
+                        if (callback) {
+                            var loadable = messageHistorysWithTimestamp.length > 0;
+                            // Only contain a timestamp message, so we consider there are no more history here
+                            if (messageHistorysWithTimestamp.length === 1 && 
+                               messageHistorysWithTimestamp[0].messageType === Service.PPMessage.TYPE.TIMESTAMP ) {
+                                loadable = false;
+                            }
+                            callback(messageHistorysWithTimestamp, loadable);
+                        }
                         
                     });
                     
                 }, function(error) { // On get message history error callback
-                    if (callback) callback([]);
+                    if (callback) callback([], false);
                 });
                 
             },

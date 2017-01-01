@@ -21,12 +21,11 @@ Service.$messageReceiverModule = (function() {
     	browserTabNotify,
         
         isGroupOnChatting = function ( groupUUID ) {
-            
             return groupUUID &&
                 View.$conversationContentContainer.visible() &&
-                !Ctrl.$launcher.get().isLauncherShow() && // launcher is not visible
-                Service.$conversationManager.activeConversation() && Service.$conversationManager.activeConversation().uuid === groupUUID;
-            
+                PP.isOpen() &&
+                Service.$conversationManager.activeConversation() && 
+                Service.$conversationManager.activeConversation().uuid === groupUUID;
         },
         
         getModal = function ( groupUUID ) {
@@ -59,14 +58,13 @@ Service.$messageReceiverModule = (function() {
                 modal.incrUnreadCount();
                 Ctrl.$sheetheader.incrUnread();
 
-                if ( Ctrl.$launcher.get().isLauncherShow() ) { // launcher is showing
-                    
-                    $pubsub.publish('msgArrived/launcher', ppMessage);
-                    
-                } else if (View.$groupContent.visible()) { // conversation list is showing
-                    
+                // conversation list is showing
+                if ( PP.isOpen() && 
+                     Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.LIST ) {
                     $pubsub.publish('msgArrived/group', ppMessage);
-                    
+                } else {
+                    // launcher is showing
+                    $pubsub.publish('msgArrived/launcher', ppMessage);
                 }
                 
             }

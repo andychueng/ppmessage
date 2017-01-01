@@ -2,8 +2,7 @@
 Ctrl.$launcher = (function() {
 
     var _launcherIcon = "",
-        _clickToOpenConversation = "",
-        _launcherImgWidth = 50; //50 * 50
+        _clickToOpenConversation = "";
 
     function PPLauncherCtrl() {
 
@@ -18,13 +17,21 @@ Ctrl.$launcher = (function() {
             };
 
         this.onClickEvent = function() { // Launcher onClick event
-            // If hoverCard delegate launcher click event, we will not show MessageBox
-            if (!Ctrl.$hoverCard.get().interceptLauncherClickEvent()) {
-                var $hoverCardController = Ctrl.$hoverCard.get();
-                $hoverCardController.asyncPrepareHoverCardInfo( function( prepareSucc ) {
-                    self.showMessageBox();
-                } );
+            if (!PP.isOpen()) {
+                this.setUnreadBadgeNum(0);
+                this.setLauncherIcon("");
+                // clearn message on showing
+                messageOnShowing = undefined;
             }
+            PP.toggle();
+
+            // // If hoverCard delegate launcher click event, we will not show MessageBox
+            // if (!Ctrl.$hoverCard.get().interceptLauncherClickEvent()) {
+            //     var $hoverCardController = Ctrl.$hoverCard.get();
+            //     $hoverCardController.asyncPrepareHoverCardInfo( function( prepareSucc ) {
+            //         self.showMessageBox();
+            //     } );
+            // }
         },
 
         this.shouldShowLauncherWhenInit = function() { // 是否默认显示小泡
@@ -33,20 +40,18 @@ Ctrl.$launcher = (function() {
 
         // Open messageBox and hide Launcher
         this.showMessageBox = function() {
+            var $hoverCardController = Ctrl.$hoverCard.get();
+            $hoverCardController.asyncPrepareHoverCardInfo( function( prepareSucc ) {
+                var messageOnShowingOld = messageOnShowing;
+                View.$launcher.showMessageBox();
 
-            var messageOnShowingOld = messageOnShowing;
-            
-            // clear data and hide launcher
-            self.hideLauncher();
-            View.$launcher.showMessageBox();
-
-            if ( Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.CONTENT ) {
-                Ctrl.$conversationContent
-                    .show( Service.$conversationManager.activeConversation(), { fadeIn: false, delay: 0 }, function() {
-                        View.$composerContainer.focus(); // focus
-                    } );
-            }
-            
+                if ( Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.CONTENT ) {
+                    Ctrl.$conversationContent
+                        .show( Service.$conversationManager.activeConversation(), { fadeIn: false, delay: 0 }, function() {
+                            View.$composerContainer.focus(); // focus
+                        } );
+                }
+            } );
         },
 
         this.onMouseOverEvent = function() {

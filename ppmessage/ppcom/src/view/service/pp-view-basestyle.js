@@ -31,12 +31,13 @@ View.Style = ( function() {
         
         var mainColor =
             // Try get from `ppcom_launcher_color` first
-            ( Service.$app.app() && Service.$app.app().ppcom_launcher_color ) || '#54C6D6',
-            gray = '#fafafb',                
+            ( Service.$app.app() && Service.$app.app().ppcom_launcher_color ) || '#1F8CEB',
+            gray = 'white',                
             darkerGray = '#E4E4E4';
 
         return {
-            launcher_background_color: mainColor, //小泡背景颜色 /* #0074b0; */
+            main_color: mainColor,
+            launcher_background_color: mainColor, //小泡背景颜色 /* #1F8CEB; */
             base: gray, //灰色
             base_darker: darkerGray, //深灰色
 
