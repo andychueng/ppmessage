@@ -22,6 +22,25 @@ View.$conversationContent = (function() {
                 this.add(new View.PPConversationPart(items[i]));
             }
         }
+
+        $timeout( function() {
+            // Bind mouse wheel event
+            $( selector ).bind( 'mousewheel' ,function( e ) {
+                var st = $(this).scrollTop();
+                if (e.originalEvent.wheelDelta /120 > 0) {
+                    if (st <= 0 ) { // Down
+                        if (!View.$sheetHeader.isShowingTeamProfileFull()) {
+                            View.$sheetHeader.showTeamProfileFull();
+                        }
+                    }
+                } else { // Up
+                    if (View.$sheetHeader.isShowingTeamProfileFull()) {
+                        View.$sheetHeader.hideTeamProfileFull();
+                    }
+                }             
+            } );
+
+        } );
     }
     extend(PPConversationContent, View.PPDiv);
 

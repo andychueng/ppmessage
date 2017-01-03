@@ -43,6 +43,7 @@ Ctrl.$conversationPanel = ( function() {
             // for simply, we always show it here, the count of conversation's members seldom not > 1
             View.$sheetHeader.showDropDownButton();
             View.$sheetHeader.showGroupButton(); // show group button
+            View.$sheetHeader.showTeamProfile();
             stopPollingWaitingQueueLength();
             break;
 

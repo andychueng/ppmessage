@@ -30,6 +30,7 @@ module.exports = {
         "../src/service/fileuploader.js",        
         "../src/service/language.js",
         "../src/service/tools.js",
+        "../src/service/ppmatc.js",
         "../src/service/startup.js",
         "../src/service/public-api.js",
         "../src/service/pp-service-basestorage.js",
@@ -121,6 +122,7 @@ module.exports = {
         "../src/view/conversationpart/textbyuser.js",
         "../src/view/conversationpart/audiobyadmin.js",
         "../src/view/conversationpart/pp-view-element-conversationparttimestamp.js",
+        "../src/view/conversationpart/sms-email.js",
         "../src/view/emoji/pp-view-element-emojiselectorgroupicon.js",
         "../src/view/emoji/pp-view-element-emojiselectorpanelheader.js",
         "../src/view/emoji/pp-view-element-emojiicon.js",
@@ -144,6 +146,7 @@ module.exports = {
         "../src/controller/pulltorefresh.js",
         "../src/controller/sheetheaderctrl.js",
         "../src/controller/uploadingbar.js",
+        "../src/controller/sms-email.js",
 
         "../src/modal/conversationcontent-modal.js",
         "../src/modal/conversationcontent-group.js",
@@ -172,6 +175,8 @@ module.exports = {
         "../src/css/msgs/emojibyuser.css",
         "../src/css/msgs/textbyuser.css",
         "../src/css/msgs/audiobyadmin.css",
+        "../src/css/msgs/email_sms.css",
+        "../src/css/sheet-header.css",
 
         // PUT media css to the end
         "../src/css/media.css"

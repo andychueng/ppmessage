@@ -38,6 +38,10 @@
         case Service.PPMessage.TYPE.TIMESTAMP:
             this.add(new View.PPConversationPartTimestamp(item));
             break;
+
+        case Service.PPMessage.TYPE.SMS_EMAIL:
+            this.add(View.$smsEmail.build());
+            break;
         }
     }
     extend(PPConversationPart, View.PPDiv);

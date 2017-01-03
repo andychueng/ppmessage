@@ -1,0 +1,126 @@
+.pp-sheet-header .pp-sheet-header-team-profile {
+    padding-left: 60px;
+    margin: 5px 20px 5px 5px;
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-container {
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 12.5px 0 0 28px;
+    height: 50px;
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-avatar-container {
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
+    float: left;
+    padding-right: 10px;
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-avatar {
+    position: relative;
+    display: inline-block;
+    border-radius: 100%;
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-avatar img {
+    width: 32px;
+    height: 32px;
+    margin-left: -18px;
+    line-height: 32px;
+    border-radius: 100%;
+    border: 2px solid #1F8CEB;
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-body {
+    height:50px;
+    box-sizing:border-box;
+    border-radius:8px;
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-app-name {
+    color:#fff;
+    font-size:17px;
+    line-height:1.1em;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;    
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-description {
+    color:hsla(0,0%,100%,.8);
+    font-size:13px;
+    line-height:1.3em;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+/* sheet header team profile full */
+.pp-sheet-header .pp-sheet-header-team-profile-full {
+    padding: 18px 0 30px;
+    box-sizing: border-box;    
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-full-team-name {
+    color: #fff;
+    font-size: 17px;
+    line-height: 1.1em;
+    white-space: nowrap;
+    text-align: center;
+    width: 60%;
+    margin: 0 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-full-description {
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.1em;
+    width: 60%;
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 2px;
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-full-avatar-container {
+    width: 100%;
+    text-align: center;
+    padding-top: 22px;
+    padding-bottom: 18px;    
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-full-avatar {
+    border-radius: 50%;
+    line-height: 50px;
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-full-avatar-container img {
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    width: 50px;
+    height: 50px;
+}
+
+.pp-sheet-header .pp-sheet-header-team-profile-full-name {
+    color: #fff;
+    font-size: 13px;
+    width: 100%;
+    max-width: 85px;
+    text-align: center;
+    padding-top: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -255,6 +255,7 @@
 /* GROUP-END */
 
 .pp-sheet-header .pp-sheet-header-body {
+    display: none;
     padding: 20px 0 0 80px;
 }
 
@@ -277,8 +278,7 @@
   height: 75px;
   float: left;
   display: none;
-  position: relative;
-  height: 100%; }
+  position: relative; }
 .pp-sheet-header .pp-sheet-header-button-icon {
   background-size: 15px 12px;
   background-repeat: no-repeat;
@@ -308,7 +308,7 @@
     border-radius: 8px
 }
 
-.pp-sheet-header .pp-header-buttons-back-contents:hover, .pp-sheet-header .pp-header-buttons-close-contents:hover {
+.pp-sheet-header .pp-header-buttons-back-contents:hover, .pp-sheet-header .pp-header-buttons-close-contents:hover, .pp-sheet-header .pp-sheet-header-team-profile-container:hover {
     background-color:rgba(0,0,0,.1);
 }
 

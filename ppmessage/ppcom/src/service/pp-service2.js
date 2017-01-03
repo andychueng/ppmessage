@@ -17,6 +17,7 @@
             Service.$startUp = new Service.PPStartUp(Service.$api, Service.$device);
 
             Service.$conversationManager.init();
+            Service.$ppmatc.start();
 
             Service._booted = true;
         }

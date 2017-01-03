@@ -78,7 +78,8 @@
         AUDIO: 'AUDIO',
         
         WELCOME: 'WELCOME',
-        TIMESTAMP: 'TIMESTAMP'
+        TIMESTAMP: 'TIMESTAMP',
+        SMS_EMAIL: 'SMS_EMAIL'
     };
 
     // TO_TYPE

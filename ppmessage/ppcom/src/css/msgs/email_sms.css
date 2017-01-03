@@ -1,0 +1,128 @@
+#pp-container .msg-sms-email-admin {
+    position: relative;
+    padding: 16px 20px 20px;
+    border: 1px solid #dadfe3;
+    border-radius: 5px;
+    max-width: 60%;
+}
+
+#pp-container .msg-sms-email-title {
+    position: relative;
+    margin-bottom: 5px;
+    font-size: 14px;
+    line-height: 24px;
+    color: #606273;
+    transition: opacity .3s 1s,max-height .4s 1s;
+}
+
+#pp-container .msg-sms-email-options-container {
+    height: 30px;
+    opacity: 1;
+    transition: opacity .3s .3s,height .4s 1s;
+}
+
+#pp-container .msg-sms-email-options-container a {
+    color: #a8b6c2;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+#pp-container .msg-sms-email-options-container a.msg-sms-email-options-container-active, #pp-container .msg-sms-email-options-container a:hover {
+    color: #565867;
+    border-bottom:1px solid;
+}
+
+#pp-container .msg-sms-email-options-container a:first-child {
+    margin-right: 15px;
+}
+
+#pp-container .msg-sms-email-input-container {
+    position: relative; */
+    font-weight: 400;
+    font-style: normal;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    margin-bottom: 10px;
+}
+
+#pp-container .msg-sms-email-input {
+    max-width: 100%;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+}
+
+#pp-container .msg-sms-email-input input {
+    box-sizing: border-box !important;
+    height: 40px;
+    width: 100%;
+    padding: 0 12px;
+    font-size: 14px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #565867;
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #38a652;
+    -webkit-appearance: none;
+    transition: border .3s,color .4s .6s,padding .3s .6s,height .4s 1s;
+}
+
+#pp-container .msg-sms-email-input input.msg-sms-email-input-success {
+    opacity: .7;
+    transition: none;
+    height: 20px;
+    color: #a8b6c2;
+    -webkit-text-fill-color: #a8b6c2;
+    padding: 0px;
+    border: 1px solid #FAFAFA;
+    background-color: #FAFAFA;
+}
+
+#pp-container .msg-sms-email-input input:focus {
+    outline: none;
+}
+
+#pp-container .msg-sms-email-submit-container {
+    cursor: pointer;
+    width: 40px;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+}
+
+#pp-container .msg-sms-email-submit-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 0 4px 4px 0;
+    background-color: #38a652;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.15);
+    transition: border-radius .3s,opacity .3s .6s,height .4s 1s;
+}
+
+#pp-container .msg-sms-email-submit-icon {
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: 8px 13px;
+    background-repeat: no-repeat;
+    opacity: 1;
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+#pp-container .msg-sms-email-valid-icon {
+    background-size: 18px 14px;
+    background-repeat: no-repeat;
+    opacity: 0;
+    -webkit-transform: rotate(-90deg) scale(.5);
+    transform: rotate(-90deg) scale(.5);
+}
+
+#pp-container .msg-sms-email-error {
+    height:0;
+    bottom:0;
+    color:#fc576b;
+    font-size:13px;
+    line-height:10px;
+}

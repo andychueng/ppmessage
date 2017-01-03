@@ -11,6 +11,7 @@
      *
      */
     PublicAPI.prototype._clearData = function() {
+        Service.$ppmatc.stop();
         Service.$uploader.clear();
         Service.$notification.reset();
         Ctrl.$conversationPanel.stopPollingWaitingQueueLength();
