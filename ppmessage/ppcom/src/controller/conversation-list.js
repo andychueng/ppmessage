@@ -23,8 +23,9 @@ Ctrl.$conversationList = ( function() {
             View.$loading.hide();
 
             markUnreadState ( conversationList );
-            conversationDescriptionLoader( conversationList ).load( function( token, description ) {
+            conversationDescriptionLoader( conversationList ).load( function( token, description, timestamp ) {
                 View.$groupContentItem.description( token, description );
+                View.$groupContentItem.timestamp( token, new timeago().format( timestamp ) );
             } );
             
         } );
@@ -141,7 +142,9 @@ Ctrl.$conversationList = ( function() {
                 var modal = Modal.$conversationContentGroup.get ( item.token );
                 if ( modal && !modal.isEmpty() ) {
                     var lastMsg = modal.getMessages()[ modal.getMessages().length - 1 ];
-                    if ( callback ) callback( item.token, Service.PPMessage.getMessageSummary( lastMsg ) );
+                    if ( callback ) callback( item.token, 
+                                              Service.PPMessage.getMessageSummary( lastMsg ),
+                                              lastMsg.messageTimestamp * 1000 );
                     return;
                 }
                     
@@ -152,7 +155,9 @@ Ctrl.$conversationList = ( function() {
                         .asyncGetPPMessage( function( ppMessage, success ) {
                             
                             if ( success ) {
-                                if ( callback ) callback( item.token, success ? ppMessage.getMessageSummary() : "" );
+                                if ( callback ) callback( item.token, 
+                                                          success ? ppMessage.getMessageSummary() : "",
+                                                          ppMessage.getBody().messageTimestamp * 1000 );
                             }
                                 
                         } );

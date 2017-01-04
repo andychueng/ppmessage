@@ -103,11 +103,16 @@ View.$groupContentItem = (function() {
         groupIcon: groupIcon,
 
         // act as setter
-        description: description
+        description: description,
+        timestamp: timestamp
     }
 
     function description( token, desc ) {
         findItem( token ).find( clsSummarySelector ).text( desc );
+    }
+
+    function timestamp( token, timeago ) {
+        findItem( token ).find( '.pp-group-item-body-timestamp' ).text( timeago );
     }
     
 })();
