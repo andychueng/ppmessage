@@ -30,7 +30,7 @@ module.exports = {
         "../src/service/fileuploader.js",        
         "../src/service/language.js",
         "../src/service/tools.js",
-        "../src/service/ppmatc.js",
+        "../src/service/ppmatc/ppmatc.js",
         "../src/service/startup.js",
         "../src/service/public-api.js",
         "../src/service/pp-service-basestorage.js",

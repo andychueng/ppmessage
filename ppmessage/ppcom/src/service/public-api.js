@@ -11,7 +11,6 @@
      *
      */
     PublicAPI.prototype._clearData = function() {
-        Service.$ppmatc.stop();
         Service.$uploader.clear();
         Service.$notification.reset();
         Ctrl.$conversationPanel.stopPollingWaitingQueueLength();
@@ -24,10 +23,9 @@
      *     fail: function(false, errorCode);
      */
     PublicAPI.prototype.boot = function(ppSettings, callback) {
-        if (!ppSettings) {
-            return;
-        }
-        if (this._booted) {
+        if (!Service.$ppmatc.isStarted()) Service.$ppmatc.start(); // run globally as quickly as possible
+
+        if (!ppSettings || this._booted) {
             return;
         }
 

@@ -41,7 +41,7 @@
                 if (userSettings != null) return userSettings;
 
                 // is anonymous user
-                var isAnonymousUser = settings.user_email ? false : true;
+                var isAnonymousUser = true;
 
                 // 保持键的名字与`$service.User.DEFAULT`相同，因为我们会使用`userSettings`来Create
                 // `$service.User`
@@ -56,9 +56,6 @@
                     is_portal_user: true,
                     is_anonymous: isAnonymousUser,
                     ppcom_trace_uuid: (function() {
-                        
-                        if (!isAnonymousUser) return null;
-
                         // get ppcom_trace_uuid
                         var id = Service.$cookies.get(ANONYMOUS_USER_COOKIE_KEY) || function() {
                             var uuid = Service.$tools.getUUID();

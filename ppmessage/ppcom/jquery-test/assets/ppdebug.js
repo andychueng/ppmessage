@@ -77,6 +77,9 @@ head.appendChild(ppcom);
             $elDebugContainer.append( _buildInputViewHtml( 'simulate-one-conversation-avaliable', '模拟一个Conversation Avaliable' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'check-current-messagepanel-mode', '查看当前MessagePanel所在的Mode' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'snapshot', '快照' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-to-ppmatc', 'Push PPSettings' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-ent-user-to-ppmatc', 'Push Ent User Event to PPMatc' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-track-event-to-ppmatc', 'Push Track Event to PPMatc' ) );
             
             $elDebugContainer.append( '<br/><select class="drop-down"><option>None</option></select><br/>' );
             $elDebugContainer.append( _buildInputViewHtml( 'clear', '清空' ) );
@@ -106,6 +109,9 @@ head.appendChild(ppcom);
             _bindViewClickEvent( 'simulate-one-conversation-avaliable', test.simulateOneConversationAvaliable );
             _bindViewClickEvent( 'check-current-messagepanel-mode', test.checkCurrentMessagePanelMode );
             _bindViewClickEvent( 'snapshot', test.snapshot );
+            _bindViewClickEvent( 'push-pp-settings-to-ppmatc', test.pushPPSettingsToPPMatc );
+            _bindViewClickEvent( 'push-ent-user-to-ppmatc', test.pushEntUserToPPMatc );
+            _bindViewClickEvent( 'push-track-event-to-ppmatc', test.pushTrackEventToPPMatc );
             
         }
 
@@ -171,6 +177,10 @@ head.appendChild(ppcom);
             simulateOneConversationAvaliable: simulateOneConversationAvaliable,
             checkCurrentMessagePanelMode: checkCurrentMessagePanelMode,
             snapshot: snapshot,
+
+            pushPPSettingsToPPMatc: pushPPSettingsToPPMatc,
+            pushEntUserToPPMatc: pushEntUserToPPMatc,
+            pushTrackEventToPPMatc: pushTrackEventToPPMatc,
 
             clear: clear
         }
@@ -380,6 +390,38 @@ head.appendChild(ppcom);
             info += 'is webSocket OK: ' + Service.$notification.isWsOk() + '\n';
             info += 'current mode: ' + Ctrl.$conversationPanel.mode() + '\n';
             append( info );
+        }
+
+        function pushPPSettingsToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                pp_settings: {
+                    app_uuid: '7e4dcbf2-d08f-11e6-afb1-74de2b58a3a8'
+                }
+            });
+        }
+
+        function pushEntUserToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                ent_user: {
+                    ent_user_name: 'Guijinding',
+                    ent_user_id: '1234',
+                    ent_user_createtime: 1483505560586
+                }
+            });
+        }
+
+        function pushTrackEventToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                track_event: {
+                    track_event_name: 'create_project',
+                    track_event_data: {
+                        project_name: 'HelloProject'
+                    }
+                }
+            });
         }
         
         function onChattingMessage() {
