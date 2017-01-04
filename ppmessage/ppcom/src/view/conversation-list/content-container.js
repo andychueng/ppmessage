@@ -20,6 +20,7 @@ View.$groupContent = (function() {
 
             // update each group item's description when new message arrived
             $groupContentItemView.description( groupId, ppMessage.getMessageSummary() );
+            $groupContentItemView.timestamp( groupId, new timeago().format( ppMessage.getBody().messageTimestamp * 1000 ) );
             
         });
     }

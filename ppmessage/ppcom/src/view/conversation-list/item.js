@@ -54,6 +54,7 @@ View.$groupContentItem = (function() {
     
     var clsSummary = 'pp-group-item-content-text',
         clsSummarySelector = '.' + clsSummary,
+        classPrefix = 'pp-group-item-body',
 
         findItem = function(groupUUID) {
             return $('.pp-group-content-container')
@@ -63,11 +64,23 @@ View.$groupContentItem = (function() {
         // @param groupUUID
         // @param unread > 0 --> show blue circle
         showUnread = function(groupUUID, unread) {
-            unread > 0 && findItem(groupUUID).find('.pp-group-item-body-unread-dot').show();
+            if ( unread > 0 ) {
+                var $item = findItem(groupUUID);
+                $item.find('.' + classPrefix + '-unread-dot').show();
+                $item.find('.' + classPrefix + '-timestamp').css( {
+                    color: View.Style.Color.main_color,
+                    'font-weight': 'bold'
+                } );
+            }
         },
 
         hideUnread = function(groupUUID) {
-            findItem(groupUUID).find('.pp-group-item-body-unread-dot').hide();
+            var $item = findItem(groupUUID);
+            $item.find( '.' + classPrefix + '-unread-dot').hide();
+            $item.find('.' + classPrefix + '-timestamp').css( {
+                color: '',
+                'font-weight': ''
+            } );
         },
 
         findGroupItemImg = function ( groupUUID ) {
@@ -112,7 +125,7 @@ View.$groupContentItem = (function() {
     }
 
     function timestamp( token, timeago ) {
-        findItem( token ).find( '.pp-group-item-body-timestamp' ).text( timeago );
+        findItem( token ).find( '.' + classPrefix + '-timestamp' ).text( timeago );
     }
     
 })();
