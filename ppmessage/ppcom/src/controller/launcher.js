@@ -50,7 +50,10 @@ Ctrl.$launcher = (function() {
                         .show( Service.$conversationManager.activeConversation(), { fadeIn: false, delay: 0 }, function() {
                             View.$composerContainer.focus(); // focus
                         } );
+                } else if ( Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.LIST ) {
+                    Ctrl.$conversationList.show();
                 }
+
             } );
         },
 

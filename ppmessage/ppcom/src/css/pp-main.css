@@ -142,11 +142,13 @@
     box-sizing: border-box;
     background-color: white;
     border-radius: 0px 0px 10px 10px;
+    bottom: 0px;
     display: none;
-    position: relative;
+    position: fixed;
     margin: 0 auto;
-    padding-bottom: 75px;
     overflow-y: auto;
+    margin-bottom: 10px;
+    width: 100%;
     top: 75px; }
 
 .pp-group-item {
@@ -217,6 +219,7 @@
     margin-right:25px;
     color:#3a3c4c;
     font-size:13px;
+    min-height: 15px;
     line-height:19px;
 }
 
@@ -419,10 +422,10 @@
 .pp-messenger-panel {
     position:fixed;
     width:368px;
+    height: calc(100% - 95px - 20px);
     position: fixed;
     right:20px;
-    top:20px;
-    bottom:100px;
+    bottom:95px;
     border-radius:10px;
     z-index:2147483646;
     box-shadow: 0 0 4px 1px rgba(0,0,0,.08);

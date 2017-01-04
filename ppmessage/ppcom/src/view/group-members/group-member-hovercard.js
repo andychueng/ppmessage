@@ -211,14 +211,14 @@ View.$groupMemberHovercard = (function() {
     function smoothTransitionToMessagePanel( position, completeCallback ) {
 
         var textareaHeight = 46,
-            fixTextareaPaddingBottom = 18,
+            fixTextareaPaddingBottom = 0,
             textareaTargetHeight = 40,
-            textareaTargetMargin = 10,
+            textareaTargetMargin = 0,
             bodyHeight = 100,
             messagePanelWidth = 368,
             duration = 300,
-            sheetHeaderHeight = 50,
-            windowHeight = window.innerHeight,
+            sheetHeaderHeight = 0,
+            windowHeight = $( '#pp-conversation' ).height(),
             hovercardTargetHeight = windowHeight - sheetHeaderHeight,
             marginTop = ( $( elSelector ).offset().top - sheetHeaderHeight - $( window ).scrollTop() ) +
             ( windowHeight - ( $( textareaElSelector ).offset().top - $( window ).scrollTop() ) ) -

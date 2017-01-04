@@ -43,17 +43,19 @@ Ctrl.$groupMembers = ( function() {
     }
 
     function triggerMemberClickEvent( userId, callback ) {
-        
-        Service.$conversationManager.asyncGetConversation( {
-            user_uuid: userId
-        } , function ( conversation ) {
-            
-            conversation && Service.$conversationManager.activeConversation( conversation.token );
-            Ctrl.$conversationContent.show( conversation );
-            $onResult( undefined, callback );
-            
+        View.$sheetHeader.hideTeamProfileFull( function() {
+
+            Service.$conversationManager.asyncGetConversation( {
+                user_uuid: userId
+            } , function ( conversation ) {
+                
+                conversation && Service.$conversationManager.activeConversation( conversation.token );
+                Ctrl.$conversationContent.show( conversation );
+                $onResult( undefined, callback );
+                
+            } );
+
         } );
-        
     }
     
 } )();

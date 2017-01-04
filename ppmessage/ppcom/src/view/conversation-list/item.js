@@ -13,7 +13,7 @@ View.$groupContentItem = (function() {
             timeStamp = '',
             groupID = data.uuid,
             icon = data.icon,
-            summary = data.summary || "&nbsp;";
+            summary = data.summary;
 
             buildAvatar = function() {
                 return new View.Img( {
