@@ -22,9 +22,9 @@ View.$sheetHeader = (function() {
                         { user_avatar: Configuration.assets_path + 'img/avatar_3.jpg' }
                     ] ) )
                     .add( buildTeamProfileFull( [
-                        { user_avatar: Configuration.assets_path + 'img/avatar_1.jpg', user_fullname: 'Tom' },
-                        { user_avatar: Configuration.assets_path + 'img/avatar_2.jpg', user_fullname: 'Jak' },
-                        { user_avatar: Configuration.assets_path + 'img/avatar_3.jpg', user_fullname: 'Emma' }
+                        { user_avatar: Configuration.assets_path + 'img/avatar_1.jpg', user_fullname: 'Tom', user_uuid: '7e2c6cd2-d08f-11e6-afb1-74de2b58a3a8' },
+                        { user_avatar: Configuration.assets_path + 'img/avatar_2.jpg', user_fullname: 'Jak', user_uuid: 'A' },
+                        { user_avatar: Configuration.assets_path + 'img/avatar_3.jpg', user_fullname: 'Emma', user_uuid: 'B' }
                     ] ) )
                     .add( buildHeaderBody() );
             },
@@ -81,7 +81,7 @@ View.$sheetHeader = (function() {
                 while ( i < MAX && i < users.length ) {
                     var user = users[ i ];
                     parent.add( new Div( teamProfileFullClassPrefix + '-avatar' )
-                              .add( new View.Img( { src: user.user_avatar } ) )
+                              .add( new View.Img( { src: user.user_avatar, user_uuid: user.user_uuid } ) )
                               .add( new View.Div( teamProfileFullClassPrefix + '-name' ).text( user.user_fullname ) ) );
                     i++;
                 }
@@ -177,6 +177,10 @@ View.$sheetHeader = (function() {
         teamProfileFullShowing = false,
         TEAM_PROFILE_FULL_HEIGHT = 100,
         TEAM_PROFILE_FULL_ANIM_DURATION = 200, // duration in millseconds
+
+        isMouseoverImg = false,
+        REMOVE_GROUP_MEMBER_HOVERCARD_EVENT_ID = 'rm-group-member-hovercard',
+        mEventToken = REMOVE_GROUP_MEMBER_HOVERCARD_EVENT_ID,
 
         build = function() {
             return new PPSheetHeader();
@@ -326,7 +330,12 @@ View.$sheetHeader = (function() {
         $conversationList.animate( { scrollTop: 0 }, 0 );
         $conversationList.animate( { 'top': "+=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
         $( '#' + id ).animate({ height: "+=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
-
+        
+        _bindEvent( [
+            { user_avatar: Configuration.assets_path + 'img/avatar_1.jpg', user_fullname: 'Tom', user_uuid: '7e2c6cd2-d08f-11e6-afb1-74de2b58a3a8' },
+            { user_avatar: Configuration.assets_path + 'img/avatar_2.jpg', user_fullname: 'Jak', user_uuid: 'A' },
+            { user_avatar: Configuration.assets_path + 'img/avatar_3.jpg', user_fullname: 'Emma', user_uuid: 'B' }
+        ] );
     }
 
     function hideTeamProfileFull( callback ) {
@@ -346,6 +355,77 @@ View.$sheetHeader = (function() {
             showTeamProfile();
             callback && callback();
         }
+    }
+
+    function _bindEvent( users ) {
+        if ( Service.$device.isMobileBrowser() ) {
+            _bindMobileEvent( users );
+        } else {
+            _bindPCEvent( users );
+        }
+    }
+
+    function _bindMobileEvent( users ) {
+        $( '.' + teamProfileFullClassPrefix + '-avatar img' )
+            .on( 'click', function ( e ) {
+                
+                var userId = $( this ).attr( 'user_uuid' );
+
+                View.$loading.show();
+                Ctrl.$groupMembers.hide();
+                Ctrl.$groupMembers.onMemberClicked( userId, function() {
+                    View.$loading.hide();
+                } );
+                
+            } );
+    }
+
+    function _bindPCEvent( users ) {
+        $( '.' + teamProfileFullClassPrefix + '-avatar img' )
+            .bind( 'mouseover', function( e ) {
+                e.stopImmediatePropagation();
+
+                isMouseoverImg = true;
+                Service.$task.cancel( mEventToken );
+
+                var user = _findUser( users, $( this ).attr( 'user_uuid' ) );
+                
+                View.$groupMemberHovercard.remove();
+                View.$groupMemberHovercard.show( user, { e: e, el: $( this ) } );
+            } )
+            .bind( 'mouseleave', function( e ) {
+                isMouseoverImg = false;
+            } );
+
+        $( '#' + teamProfileFullClassPrefix )
+            .bind( 'click', function ( e ) {
+                !isMouseoverImg && View.$groupMemberHovercard.remove();
+            } )
+            .bind( 'mouseover', function ( e ) {
+                if ( View.$groupMemberHovercard.isShow() && !View.$groupMemberHovercard.isMouseover() ) {
+                    
+                    Service.$task.plan( mEventToken , function() {
+                        !isMouseoverImg &&
+                            !View.$groupMemberHovercard.isMouseover() &&
+                            View.$groupMemberHovercard.remove();
+                    } );
+                    
+                }
+                
+            } );
+    }
+
+    function _findUser( users, userId ) {
+
+        var user;
+        $.each( users, function( index, item ) {
+            if ( userId === item.user_uuid ) {
+                user = item;
+            }
+        } );
+
+        return user;
+        
     }
     
 })();

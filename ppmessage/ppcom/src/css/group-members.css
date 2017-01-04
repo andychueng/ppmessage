@@ -60,3 +60,9 @@
     text-align: center;
     text-overflow: ellipsis;
 }
+
+.pp-container .pp-group-member-hovercard-panel {
+    display: none;
+    z-index: 2147483002;
+    position: absolute;
+}

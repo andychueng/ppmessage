@@ -124,3 +124,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.pp-sheet-header .pp-sheet-header-team-profile-full-hovercard-container {
+    color: transparent;
+    height: 140px;
+}

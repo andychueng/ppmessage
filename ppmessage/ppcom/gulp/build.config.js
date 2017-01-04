@@ -94,6 +94,7 @@ module.exports = {
         "../src/view/group-members/group-members.js",
         "../src/view/group-members/group-member.js",
         "../src/view/group-members/group-member-hovercard.js",
+        "../src/view/group-members/group-member-hovercard-panel.js",
         "../src/view/loading.js",
         "../src/view/launcher.js",
         "../src/view/container.js",

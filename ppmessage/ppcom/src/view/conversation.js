@@ -35,7 +35,8 @@ View.$conversation = (function() {
         this.add(View.$sheetHeader.build())
             .add(View.$groupContent.build())
             .add(View.$conversationContentContainer.build())
-            .add(View.$loading.build());
+            .add(View.$loading.build())
+            .add(View.$groupMemberHovercardPanel.build());
     }
     extend(PPConversation, View.PPDiv);
     

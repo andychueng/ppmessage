@@ -1,7 +1,7 @@
 View.$groupMemberHovercard = (function() {
 
     var globalSelector = '.pp-container',
-        parentSelector = '#pp-conversation-container',
+        parentSelector = '#pp-group-member-hovercard-panel',
         hovercardClassName = 'group-member-hovercard',
         elSelector = globalSelector + ' .' + hovercardClassName,
         textareaElSelector = elSelector + ' textarea',
@@ -9,7 +9,8 @@ View.$groupMemberHovercard = (function() {
         textareaContainerElSelector = elSelector + ' .textarea-container',
 
         HOVERCARD_HEIGHT = 156, // default hovercard height
-        HOVERCARD_TOP_OFFSET = 60, // height of `img`
+        HOVERCARD_TOP_OFFSET = 25,
+        IMG_WIDTH = 70, // width of `img`
 
         mouseover = false; // mouse `over` or `leave` on current hovercard ? 
 
@@ -35,6 +36,7 @@ View.$groupMemberHovercard = (function() {
     //     el: `jQuery element`
     // }
     function show( user, config ) {
+        View.$groupMemberHovercardPanel.show();
 
         var position = calcHovercardPosition( config );
         
@@ -48,6 +50,7 @@ View.$groupMemberHovercard = (function() {
         isShow() && $( elSelector ).detach();
         unbindHovercardEvent();
         mouseover = false;
+        View.$groupMemberHovercardPanel.hide();
     }
 
     function isShow() {
@@ -63,7 +66,7 @@ View.$groupMemberHovercard = (function() {
         hoverCard
             .add( buildBody( memberInfo ) )
             .add( buildTextarea( memberInfo ) )
-            .add( buildPseudoStyle( position.direction, position.arrowRight ) );
+            .add( buildPseudoStyle( position.arrowRight ) );
 
         bindHovercardEvent( memberInfo, position );
 
@@ -119,27 +122,14 @@ View.$groupMemberHovercard = (function() {
     //GroupMemberHovercard.Views.CssStyle
     /////////////////////////////////////
 
-    // @param direction: 'up'/'down'
     // @param right: arrow right margin, 'number' type
-    function buildPseudoStyle( direction, right ) {
+    function buildPseudoStyle( right ) {
         var style = new View.Element('style', {
             type: 'text/css',
             className: hovercardClassName + '-style'
         });
 
-        var arrowStyle;
-
-        switch ( direction ) {
-        case 'up':
-            arrowStyle = getArrowUpStyle( right );
-            break;
-
-        case 'down':
-            arrowStyle = getArrowDownStyle( right );
-            break;
-        }
-
-        style.text( arrowStyle );
+        style.text( getArrowUpStyle( right ) );
 
         return style;
     }
@@ -153,20 +143,6 @@ View.$groupMemberHovercard = (function() {
             '.pp-container .group-member-hovercard:after {border-color: rgba(250,250,251,0);border-bottom-color: #fff;border-width: 9px;margin-left: -6px;}';
     }
 
-    function getArrowDownStyle ( right ) {
-        return '.pp-container .group-member-hovercard:after, ' +
-            '.pp-container .group-member-hovercard:before{' +
-            'top:100%;' +
-            'right:' + right + 'px;' +
-            'border: solid transparent;content: " ";height: 0;width: 0;position: absolute;pointer-events: none;}' +
-            '.pp-container .group-member-hovercard:before{' +
-            'border-color: rgba(204, 204, 204, 0);' +
-            'border-top-color: rgba(0, 0, 0, 0.14);border-width: 9px;margin-left: -6px;}' +
-            '.pp-container .group-member-hovercard:after {border-color: rgba(250, 250, 251, 0);border-top-color: #fafafb;border-width: 8px;margin-left: -5px;right:' +
-            ( right + 1 ) + 'px;' +
-            '}';
-    }
-
     //GroupMemberHovercard.Position
     ////////////////////////////////
     
@@ -176,37 +152,23 @@ View.$groupMemberHovercard = (function() {
     // }
     //
     // @return {
-    //     direction: arrow direction
     //     top: hovercard top margin relative to the window top edge
     //     arrowRight: arrow right margin relative to the window right edge
     // }
     function calcHovercardPosition( config ) {
 
-        var windowHeight = window.innerHeight,
-            upEdgeDistance = config.el.offset().top - $( window ).scrollTop(),
-            downEdgeDistance = ( windowHeight - upEdgeDistance ),
-            hovercardHeight = HOVERCARD_HEIGHT,
+        var upEdgeDistance = config.el.offset().top - $( window ).scrollTop(),
             hovercardOffsetY = HOVERCARD_TOP_OFFSET;
 
-        if ( downEdgeDistance - hovercardOffsetY >= hovercardHeight ) {
-            return {
-                direction: 'up',
-                top: upEdgeDistance + hovercardOffsetY,
-                arrowRight: calcArrowRight( config.e )
-            };
-        }
-
         return {
-            direction: 'down',
-            top: ( upEdgeDistance - hovercardHeight ),
+            top: upEdgeDistance + hovercardOffsetY,
             arrowRight: calcArrowRight( config.e )
-        }
+        };
         
     }
 
     function calcArrowRight( mouseEvent ) {
-        var IMG_WIDTH = 64,
-            HALF_IMG_WIDTH = 64 / 2,
+        var HALF_IMG_WIDTH = IMG_WIDTH / 2,
 
             // @see http://stackoverflow.com/questions/6073505/what-is-the-difference-between-screenx-y-clientx-y-and-pagex-y
             // `screenX` and `screenY`: Relative to the top left of the physical screen/monitor, this reference point only moves if you increase or decrease the number of monitors or the monitor resolution.
@@ -215,7 +177,7 @@ View.$groupMemberHovercard = (function() {
             fix = HALF_IMG_WIDTH - mouseEvent.offsetX;
 
         // number `5` is a magic number that let `hovercard` a little closer from right
-        return marginRight - fix - 5;
+        return marginRight - fix - 20;
     }
 
     //GroupMemberHovercard.Event
