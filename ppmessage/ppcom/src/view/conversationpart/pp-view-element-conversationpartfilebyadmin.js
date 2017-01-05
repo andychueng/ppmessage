@@ -42,7 +42,7 @@
                                 .add(new View.PPDiv('pp-conversation-part-file-by-admin-outer-5')
                                      .add(new View.PPDiv({
                                          id: 'pp-conversation-part-file-by-admin-upload-icon',
-                                         style: 'background-image:url(' + Configuration.assets_path + 'img/icon-upload-white.png)'
+                                         style: 'background-image:url(' + Configuration.assets_path + 'img/icon-attachment.png)'
                                      }))
                                      .add(new View.PPDiv('pp-conversation-part-file-by-admin-outer-6')
                                           .add(new View.PPElement('a', {

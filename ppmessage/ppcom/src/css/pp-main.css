@@ -877,7 +877,7 @@
     float:left; position:relative; margin-top:3px;
 }
 .pp-conversation-part-file-by-admin-outer-5 {
-    display:block; background-color:#0071b2; border-radius:4px; border-width:1px; border-style:solid; padding:5px; overflow:hidden;
+    display:block; background-color: #dadfe3; border-radius:6px; padding:5px; overflow:hidden; border: 1px solid #dadfe3;
 }
 .pp-conversation-part-file-by-admin-upload-icon {
     position:relative;
@@ -896,13 +896,13 @@
     overflow: hidden;
 }
 .pp-container .pp-conversation-part-file-by-admin-file-link {
-    font-size:14px;
+    color: #8f919d;
+    font-size: 13px;
     font-weight:400;
     line-height:20px;
     position:relative;
     float:left;
-    color:white;
-    text-decoration:underline;
+    text-decoration:none;
     cursor:pointer;
     overflow: hidden;
     word-break: break-all;
@@ -920,15 +920,13 @@
     width: 100%;
     position: relative;
     overflow: hidden;
-    /* padding-bottom: 16px; */
 }
 .pp-conversation-part-file-by-user-o2 {
     float: right;
     padding: 5px;
-    background-color:#0071b2;
-    border-radius:4px;
-    border-width:1px;
-    border-style:solid;
+    background-color:#dadfe3;
+    border-radius:6px;
+    border: 1px solid #dadfe3;
     margin-bottom: 5px;
     max-width: 80%;
 }
@@ -944,19 +942,17 @@
 }
 
 .pp-conversation-part-file-by-user-link-container {
-    /* float:left; */
-    /* max-width: 80%; */
     max-height: 20px;
     overflow: hidden;
     margin: 5px 5px 0 32px;
 }
 
 .pp-container .pp-conversation-part-file-by-user a {
-    color:white;
-    font-size:14px;
+    color: #8f919d;
+    font-size: 13px;
     font-weight:400;
     line-height:20px;
-    text-decoration:underline;
+    text-decoration:none;
     word-break: break-all;
     margin: 5px 5px 0 10px;
 }
