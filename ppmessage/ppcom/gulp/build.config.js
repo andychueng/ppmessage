@@ -178,6 +178,7 @@ module.exports = {
         "../src/css/msgs/textbyuser.css",
         "../src/css/msgs/audiobyadmin.css",
         "../src/css/msgs/email_sms.css",
+        "../src/css/msgs/msgbyadmin.css",
         "../src/css/sheet-header.css",
 
         // PUT media css to the end

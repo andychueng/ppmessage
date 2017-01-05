@@ -750,7 +750,7 @@
     bottom: 56px;
     right: 0;
     width: 100%;
-    padding: 8px;
+    padding: 30px 35px 40px;
     box-sizing: border-box;
 
     transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1);
@@ -769,25 +769,13 @@
     position:relative;
     width:100%;
 }
-.pp-conversation-part-text-by-admin-avatar {
-    margin-right:5px;
-    border-radius:50%;
-    width:28px;
-    height:28px;
-    float:left;
-    position:relative;
-    overflow:hidden;
-}
-.pp-conversation-part-text-by-admin-outer-3 {
-    position:relative;
-}
 .pp-conversation-part-text-by-admin-body-container {
     border-color: #dadee2;
     border-radius:4px;
     border-width:1px;
     border-style:solid;
     position:relative;
-    max-width:80%;
+    max-width:90%;
     display: inline-block;
     background-color:white;
     color:#455A64;
@@ -796,16 +784,10 @@
     -ms-user-select: text;
     top: 3px;
 }
-.pp-container .pp-conversation-part-serve-name {
-    font-size:12px; color:#455A64; text-align:left;
-}
 .pp-container .pp-conversation-part-text-by-admin-body {
     font-size:14px; font-weight:400; line-height:20px; padding:12px 17px; text-align:left; word-break:break-all; white-space: pre-wrap;
     color: #606273;
     background-color: #eff3f6;
-}
-.pp-conversation-part-text-by-admin-triangle {
-    width:0; height: 0; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 4px solid #dadee2; position:relative; float:left; margin-top:10px; margin-right:-1px; top: 3px;
 }
 .pp-container .pp-conversation-part-text-by-admin-timestamp-container {
     font-size:12px; line-height:20px; color:#c9cbcf; position:relative; top:0; display:inline-block;
@@ -815,23 +797,10 @@
  * PPConversationPartEmojiByAdmin
  */
 .pp-conversation-part-emoji-by-admin-outer {
-    text-align:right;
     margin-bottom:16px;
     width: 100%;
     position: relative;
     overflow: hidden;
-}
-.pp-conversation-part-emoji-by-admin-avatar {
-    margin-right:7px;
-    border-radius:50%;
-    width:28px;
-    height:28px;
-    float:left;
-    position:relative;
-}
-.pp-conversation-part-emoji-by-admin-body-container {
-    float: left;
-    position: relative;
 }
 .pp-container .pp-conversation-part-emoji-by-admin-body {
     font-size:96px;
@@ -877,16 +846,10 @@
  * PPConversationPartImageByAdmin
  */
 .pp-conversation-part-image-by-admin-o {
-    text-align:right; margin-bottom:16px; clear: both;
+    margin-bottom:16px; clear: both;
 }
 .pp-conversation-part-image-by-admin-o1 {
     position:relative; width:100%;
-}
-.pp-conversation-part-image-by-admin-avatar {
-    margin-right:7px; border-radius:50%; width:28px; height:28px; float:left; position:relative; overflow:hidden;
-}
-.pp-conversation-part-image-by-admin-o2 {
-    overflow:hidden; position:relative;
 }
 .pp-conversation-part-image-by-admin-o3 {
     overflow:hidden;
@@ -905,19 +868,13 @@
  * pp-conversation-part-file-by-admin
  */
 .pp-conversation-part-file-by-admin-outer {
-    text-align:right; margin-bottom:16px; clear: both;
+    margin-bottom:16px; clear: both;
 }
 .pp-conversation-part-file-by-admin-outer-2 {
     position:relative; width:100%;
 }
-.pp-conversation-part-file-by-admin-avatar {
-    margin-right:7px; border-radius:50%; width:28px; height:28px; float:left; position:relative; overflow:hidden;
-}
-.pp-conversation-part-file-by-admin-outer-3 {
-    overflow:hidden; position:relative;
-}
 .pp-conversation-part-file-by-admin-outer-4 {
-    max-width:80%; float:left; position:relative; margin-top:3px;
+    float:left; position:relative; margin-top:3px;
 }
 .pp-conversation-part-file-by-admin-outer-5 {
     display:block; background-color:#0071b2; border-radius:4px; border-width:1px; border-style:solid; padding:5px; overflow:hidden;
@@ -1017,10 +974,10 @@
     margin: 0 auto 10px;
 }
 .pp-container .pp-conversation-part-timestamp-time {
-    background-color: #cecece;
-    padding: 4px;
     border-radius: 4px;
-    font-size: 14px;
+    color: #a8b6c2;
+    font-size: 13px;
+    padding: 4px;
 }
 
 /*

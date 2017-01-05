@@ -1,0 +1,16 @@
+.pp-conversation-part-msg-by-admin-avatar {
+    margin-right:5px;
+    border-radius:50%;
+    bottom: 10px;
+    width:28px;
+    height:28px;
+    float:left;
+    position:absolute;
+    overflow:hidden;
+}
+
+.pp-conversation-part-msg-by-admin-body-container {
+    overflow: hidden;
+    position: relative;
+    margin-left: 45px;
+}

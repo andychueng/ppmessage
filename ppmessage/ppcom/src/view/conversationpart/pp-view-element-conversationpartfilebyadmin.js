@@ -1,5 +1,7 @@
 ((function(View) {
 
+    var classAvatar = 'pp-conversation-part-msg-by-admin-avatar';
+
     /**
      * @constructor
      */
@@ -21,13 +23,8 @@
 
                 // Change user avatar src
                 $(selector)
-                    .find('.pp-conversation-part-file-by-admin-avatar')
+                    .find('.' + classAvatar)
                     .attr('src', userInfo.user_avatar);
-
-                // Change user name text
-                $(selector)
-                    .find('.pp-conversation-part-serve-name')
-                    .text(userInfo.user_fullname);                    
                 
             };
 
@@ -37,14 +34,10 @@
         this.add(new View.PPDiv('pp-conversation-part-file-by-admin-outer')
                  .add(new View.PPDiv('pp-conversation-part-file-by-admin-outer-2')
                       .add(new View.PPElement('img', {
-                          'class': 'pp-conversation-part-file-by-admin-avatar',
+                          'class': classAvatar,
                           src: userAvatar
                       }))
-                      .add(new View.PPDiv('pp-conversation-part-file-by-admin-outer-3')
-                           .add(new View.PPDiv({
-                               id: '',
-                               'class': 'pp-conversation-part-serve-name pp-font'
-                           }).text(userName))
+                      .add(new View.PPDiv('pp-conversation-part-msg-by-admin-body-container')
                            .add(new View.PPDiv('pp-conversation-part-file-by-admin-outer-4')
                                 .add(new View.PPDiv('pp-conversation-part-file-by-admin-outer-5')
                                      .add(new View.PPDiv({

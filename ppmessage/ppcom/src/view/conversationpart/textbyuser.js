@@ -61,8 +61,7 @@ View.$userTextMessage = ( function() {
                                id: 'pp-conversation-part-text-by-user-body',
                                'class': 'pp-conversation-part-text-by-user-body pp-font pp-text-link-user pp-selectable'
                            })
-                                .html(html)))
-                      .add(new Div({ className: 'pp-conversation-part-text-by-user-triangle', style: 'border-left:4px solid ' + View.Style.Color.main_color })))
+                                .html(html))))
                  .add(new Div('pp-conversation-part-text-by-user-timestamp-outer')
                       .add(new View.Span({
                           'class': 'extra pp-selectable',

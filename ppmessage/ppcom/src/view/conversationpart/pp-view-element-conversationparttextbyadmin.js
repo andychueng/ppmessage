@@ -1,5 +1,7 @@
 ((function(View) {
 
+    var avatarClass = 'pp-conversation-part-msg-by-admin-avatar';
+
     /**
      * @constructor
      */
@@ -16,36 +18,25 @@
 
             // Change user avatar src
             $(selector)
-                .find('.pp-conversation-part-text-by-admin-avatar')
-                .attr('src', userInfo.user_avatar);
-
-            // Change user name text
-            $(selector)
-                .find('.pp-conversation-part-serve-name')
-                .text(userInfo.user_fullname);           
+                .find('.' + avatarClass)
+                .attr('src', userInfo.user_avatar);  
             
         });
         
         this.add(new View.PPDiv('pp-conversation-part-text-by-admin-outer')
                  .add(new View.PPDiv('pp-conversation-part-text-by-admin-outer-2')
                       .add(new View.PPElement('img', {
-                          id: 'pp-conversation-part-text-by-admin-avatar',
+                          className: avatarClass,
                           src: item.user.avatar
                       }))
-                      .add(new View.PPDiv('pp-conversation-part-text-by-admin-outer-3')
-                           .add(new View.PPDiv()
-                                .add(new View.PPDiv({
-                                    id: '',
-                                    style: 'margin-left:' + defaultServeNameMarginLeft,
-                                    'class': 'pp-conversation-part-serve-name pp-font'
-                                }).text(item.user.name))
+                      .add(new View.PPDiv('pp-conversation-part-msg-by-admin-body-container')
+                           .add(new View.PPDiv( { style: 'padding-bottom: 10px;' } )
                                 .add(new View.PPDiv('pp-conversation-part-text-by-admin-body-container')
                                      .add(new View.PPDiv({
                                          id: 'pp-conversation-part-text-by-admin-body',
                                          'class': 'pp-conversation-part-text-by-admin-body pp-font pp-text-link-admin pp-selectable'
                                      })
-                                          .html(html)))
-                                .add(new View.PPDiv('pp-conversation-part-text-by-admin-triangle')))
+                                          .html(html))))
                            .add(new View.PPDiv('pp-conversation-part-text-by-admin-timestamp-container')
                                 .add(new View.PPElement('span', {
                                     'class': 'pp-selectable pp-font',

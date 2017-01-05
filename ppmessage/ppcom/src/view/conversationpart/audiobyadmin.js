@@ -35,11 +35,9 @@ View.$adminAudioMessage = ( function() {
             };
 
         
-        this.add( new View.Img( { src: item.user.avatar, className: 'pp-avatar' } ) )
-            .add( new View.Div( { className: 'pp-content' } )
-                  .add( new View.Span( { className: 'pp-name' } ).text( item.user.name ) )
+        this.add( new View.Img( { src: item.user.avatar, className: 'pp-conversation-part-msg-by-admin-avatar' } ) )
+            .add( new View.Div( { className: 'pp-conversation-part-msg-by-admin-body-container' } )
                   .add( new View.Div( { className: 'pp-voice', uuid: audio.id() } )
-                        .add( new View.Div( { className: 'pp-triangle' } ) )
                         .add( new View.Div( { className: 'pp-body',
                                               style: 'width:' + getVoiceViewLength( duration) + 'px',
                                               selector: audioBodySelector,
