@@ -42,18 +42,41 @@ Ctrl.$launcher = (function() {
         this.showMessageBox = function() {
             var $hoverCardController = Ctrl.$hoverCard.get();
             $hoverCardController.asyncPrepareHoverCardInfo( function( prepareSucc ) {
+                
+                var mode = Ctrl.$conversationPanel.mode();
+                if ( mode === Ctrl.$conversationPanel.MODE.QUICK_MESSAGE ) { // We are in QUICK_MESSAGE mode, disable it first
+                    Ctrl.$conversationQuickMessage.disable();
+                }
+                
                 var messageOnShowingOld = messageOnShowing;
                 View.$launcher.showMessageBox();
+                
+                if ( mode === Ctrl.$conversationPanel.MODE.QUICK_MESSAGE ) {
+                    
+                    if ( Ctrl.$conversationQuickMessage.getActiveConversationId() !== undefined ) {
 
-                if ( Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.CONTENT ) {
-                    Ctrl.$conversationContent
-                        .show( Service.$conversationManager.activeConversation(), { fadeIn: false, delay: 0 }, function() {
-                            View.$composerContainer.focus(); // focus
-                        } );
+                        // Simulate we are enter content mode from list mode
+                        var activeConversation = Service.$conversationManager.activeConversation,
+                            conversationId = activeConversation ? activeConversation.token : undefined;
+                        conversationId && Ctrl.$conversationList.showItem( conversationId );
+
+                    } else {
+                        _enterContentMode();
+                    }
+
+                } else if ( mode === Ctrl.$conversationPanel.MODE.CONTENT ) {
+                    _enterContentMode();
                 } else if ( Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.LIST ) {
                     Ctrl.$conversationList.show();
                 }
 
+                function _enterContentMode() {
+                    Ctrl.$conversationContent
+                        .show( Service.$conversationManager.activeConversation(), { fadeIn: false, delay: 0 }, function() {
+                            View.$composerContainer.focus(); // focus
+                        } );
+                }
+                
             } );
         },
 

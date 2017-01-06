@@ -140,6 +140,7 @@ module.exports = {
         "../src/controller/conversation-content.js",
         "../src/controller/conversation-list.js",
         "../src/controller/conversation-panel.js",
+        "../src/controller/conversation-quick-message.js",
         "../src/controller/emoji-selector.js",
         "../src/controller/group-members.js",
         "../src/controller/hovercard/launcher-hovercard.js",

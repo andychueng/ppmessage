@@ -183,6 +183,7 @@
                 .conversation({ uuid: apiMessage.ci })
                 .rawData(apiMessage)
                 .userId(apiMessage.fi)
+                .quick(!!apiMessage.is_quick_message)
                 .admin(isAdmin(apiMessage));
 
             asyncBuildMessageData(ppMessageBuilder, function(success) {

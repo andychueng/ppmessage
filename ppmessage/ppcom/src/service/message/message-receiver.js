@@ -32,6 +32,14 @@ Service.$messageReceiverModule = (function() {
             return Modal.$conversationContentGroup.get( groupUUID );
         },
 
+        handleByQuickMessageMode = function( ppMessage ) {
+            if ( Ctrl.$conversationQuickMessage.isEnabled() ) {
+                Ctrl.$conversationQuickMessage.handleMessage( ppMessage );
+                return true;
+            }
+            return false;
+        },
+
         onNewMessageArrived = function(topics, ppMessage) {
             
             var $pubsub = Service.$pubsub,
@@ -42,9 +50,16 @@ Service.$messageReceiverModule = (function() {
                 browserTabNotify.notify( ppMessage );
             }
 
-	    if ( PLAY_SOUND ) { // Play notification sound when new message arrived
-		Audio !== undefined && new Audio( Service.Constants.MSG_NOTIFICATION_SOUND_URL ).play();
-	    }
+	        if ( PLAY_SOUND ) { // Play notification sound when new message arrived
+		        Audio !== undefined && new Audio( Service.Constants.MSG_NOTIFICATION_SOUND_URL ).play();
+	        }
+
+            // Quick message
+            if ( Service.$messageToolsModule.isQuickMessage( body ) && 
+                 handleByQuickMessageMode( ppMessage ) ) {
+                getModal( groupId ).addMessage ( body ); // Store message to local
+                return;
+            }
 
             if ( isGroupOnChatting ( groupId ) ) { // we are chating with `converstionId`
 

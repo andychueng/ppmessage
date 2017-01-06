@@ -27,7 +27,7 @@ Ctrl.$conversationContent = (function() {
                     groupId = body.conversation.uuid;
 
                 appendMessage( body );
-                View.$conversationContent.scrollToBottom();    
+                View.$conversationContent.scrollToBottom();
                 
             });
 
@@ -175,7 +175,11 @@ Ctrl.$conversationContent = (function() {
         /**
          * Append Message at tail
          */
-        appendMessage = function( message ) {
+        appendMessage = function( message, onlyUpdateView ) {
+            if ( onlyUpdateView ) {
+                _updateView();
+                return;
+            }
 
             var modal = getModal( message.conversation.uuid );
             
@@ -184,14 +188,22 @@ Ctrl.$conversationContent = (function() {
                 if ( timestampMsg ) {
                     $(selector).append(new View.PPConversationPartTimestamp( timestampMsg ).getElement()[0].outerHTML);
                 }
-                $(selector).append(new View.PPConversationPart( message ).getElement()[0].outerHTML);                
+                _updateView();
             }
 
+            function _updateView() {
+                $(selector).append(new View.PPConversationPart( message ).getElement()[0].outerHTML);
+            }
         },
 
         // push a new messageid to messageIdArrays for message duplicate check
         updateMessageIdsArray = function( messageId ) {
             getModal() && getModal().updateMessageIdsArray(messageId);
+        },
+
+        // clear current messages
+        clear = function() {
+            $( selector ).empty();
         },
 
         // show conversation-content panel with callback
@@ -270,6 +282,7 @@ Ctrl.$conversationContent = (function() {
         appendMessage: appendMessage,
         loadHistorys: loadHistorys,
         updateMessageIdsArray: updateMessageIdsArray,
+        clear: clear,
 
         isLoadable: isLoadable
     }

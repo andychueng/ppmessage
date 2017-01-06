@@ -39,6 +39,10 @@
             ]) !== -1;
         }
 
+        function isQuickMessage(msg) {
+            return isMessage(msg) && msg.quick;
+        }
+
         // detect to_type
         function toType() {
             return 'DU';
@@ -49,6 +53,7 @@
             isMessageTextOverflow: isMessageTextOverflow,
 
             isMessage: isMessage,
+            isQuickMessage: isQuickMessage,
 
             toType: toType
         }

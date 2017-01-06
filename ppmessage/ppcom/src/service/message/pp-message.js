@@ -167,7 +167,8 @@
                 name: '',
                 avatar: Service.Constants.ICON_DEFAULT_USER
             },
-            conversation: undefined
+            conversation: undefined,
+            quick: false
         };
 
         //----------------------
@@ -216,6 +217,11 @@
 
         this.conversation = function( conversation ) {
             ppMessage.conversation = conversation;
+            return this;
+        };
+
+        this.quick = function( _quick ) {
+            ppMessage.quick = _quick;
             return this;
         };
 

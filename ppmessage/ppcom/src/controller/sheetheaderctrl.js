@@ -35,6 +35,9 @@ Ctrl.$sheetheader = (function() {
 
         cancelAnyWaitingToCreateConversations();
 
+        // We should enter quick message mode when minimize
+        Ctrl.$conversationPanel.mode( Ctrl.$conversationPanel.MODE.QUICK_MESSAGE );
+
     }
 
     function getHeaderTitle() {

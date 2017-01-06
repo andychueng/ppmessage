@@ -21,9 +21,7 @@ head.appendChild(ppcom);
     var $,
         Service,
         Ctrl,
-        Modal,
-
-        isQuickMessageMode = false;
+        Modal;
 
     ////////// PPDebug ////////////
     window.PPDebug = ( function() {
@@ -99,7 +97,6 @@ head.appendChild(ppcom);
             _bindViewClickEvent( 'send-msg', test.sendMessage );
             _bindViewClickEvent( 'monitor', test.monitor );
             _bindViewClickEvent( 'user-info-change', test.userListInDropDown );
-            _bindViewClickEvent( 'enable-quick-mode', test.enableQuickMessageMode );
             _bindViewClickEvent( 'clear', test.clear );
             _bindViewClickEvent( 'audio-msg-arrived', test.onAudioMessage );
             _bindViewClickEvent( 'text-msg-arrived', test.onTextMessage );
@@ -117,6 +114,8 @@ head.appendChild(ppcom);
             _bindViewClickEvent( 'push-ent-user-to-ppmatc', test.pushEntUserToPPMatc );
             _bindViewClickEvent( 'push-track-event-to-ppmatc', test.pushTrackEventToPPMatc );
             
+            // Initial code
+            test.pushPPSettingsToPPMatc();
         }
 
         function _cssDebugContainer() {
@@ -146,7 +145,7 @@ head.appendChild(ppcom);
         }
 
         function _buildCheckoutViewHtml( cls, label ) {
-            return '<label><input class="' + cls + '" type="checkbox">' + label + '</label><br/>';
+            return '<label><input checked class="' + cls + '" type="checkbox">' + label + '</label><br/>';
         }
 
         function _bindViewClickEvent( cls, func ) {
@@ -162,7 +161,6 @@ head.appendChild(ppcom);
             dropDown = '.drop-down';
 
         return {
-            enableQuickMessageMode: enableQuickMessageMode,
             onMessage: onMessage,
             onChattingMessage: onChattingMessage,
             onAudioMessage: onAudioMessage,
@@ -445,10 +443,6 @@ head.appendChild(ppcom);
                 }
             } );
         }
-
-        function enableQuickMessageMode() {
-            isQuickMessageMode = $( '.enable-quick-mode' ).is( ':checked' );
-        }
         
         function onMessage( config ) {
             _onMessage( getRandomMessage(), config );
@@ -488,7 +482,7 @@ head.appendChild(ppcom);
                         ft: 'DU',
                         ms: message.ms,
                         bo: message.bo,
-                        is_quick_message: isQuickMessageMode
+                        is_quick_message: $( '.enable-quick-mode' ).is( ':checked' )
                     }
                 }
             } );

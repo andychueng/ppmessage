@@ -7,7 +7,7 @@
 //
 Ctrl.$conversationPanel = ( function() {
 
-    var MODE = { LIST: 'LIST', CONTENT: 'CONTENT', WAITING: 'WAITING' },
+    var MODE = { LIST: 'LIST', CONTENT: 'CONTENT', WAITING: 'WAITING', QUICK_MESSAGE: 'QUICK_MESSAGE' },
         cMode = MODE.CONTENT,
         POLLING_QUEUE_LENGTH_EVENT_ID = 'POLLING_QUEUE_LENGTH_EVENT_ID';
 
@@ -17,6 +17,7 @@ Ctrl.$conversationPanel = ( function() {
     return {
         MODE: MODE,
         mode: mode,
+        setMode: setMode,
 
         stopPollingWaitingQueueLength: stopPollingWaitingQueueLength,
         isOpen: isOpen
@@ -24,13 +25,17 @@ Ctrl.$conversationPanel = ( function() {
 
     ////// Implementation //
 
+    function setMode( m ) {
+        cMode = m;
+    }
+
     function mode( m ) { //Query current mode
         
         if ( m === undefined ) {
             return cMode;    
         }
 
-        cMode = m;
+        setMode( m );
 
         switch ( cMode ) {
         case MODE.LIST:
@@ -54,6 +59,10 @@ Ctrl.$conversationPanel = ( function() {
             View.$loading.show();
             Ctrl.$sheetheader.setHeaderTitle( Service.Constants.i18n( 'WAITING_AVALIABLE_CONVERSATION' ) );
             startPollingWaitingQueueLength();
+            break;
+
+        case MODE.QUICK_MESSAGE:
+            Ctrl.$conversationQuickMessage.enable();
             break;
         }
     }
