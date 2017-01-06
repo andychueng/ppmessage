@@ -21,7 +21,9 @@ head.appendChild(ppcom);
     var $,
         Service,
         Ctrl,
-        Modal;
+        Modal,
+
+        isQuickMessageMode = false;
 
     ////////// PPDebug ////////////
     window.PPDebug = ( function() {
@@ -65,6 +67,7 @@ head.appendChild(ppcom);
             $elDebugContainer.append( _buildInputViewHtml( 'send-msg', '当前会话发送消息' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'monitor', '监视所有事件' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'user-info-change', '加载所有用户信息至下拉菜单' ) );
+            $elDebugContainer.append( _buildCheckoutViewHtml( 'enable-quick-mode', 'Enable Quick Message Mode' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'audio-msg-arrived', '当前会话语音消息到来' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'text-msg-arrived', '当前会话文字消息到来' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'file-msg-arrived', '当前会话文件消息到来' ) );
@@ -96,6 +99,7 @@ head.appendChild(ppcom);
             _bindViewClickEvent( 'send-msg', test.sendMessage );
             _bindViewClickEvent( 'monitor', test.monitor );
             _bindViewClickEvent( 'user-info-change', test.userListInDropDown );
+            _bindViewClickEvent( 'enable-quick-mode', test.enableQuickMessageMode );
             _bindViewClickEvent( 'clear', test.clear );
             _bindViewClickEvent( 'audio-msg-arrived', test.onAudioMessage );
             _bindViewClickEvent( 'text-msg-arrived', test.onTextMessage );
@@ -141,6 +145,10 @@ head.appendChild(ppcom);
             return '<input type="button" value="' + val + '" class="' + cls + '" /><br/>'
         }
 
+        function _buildCheckoutViewHtml( cls, label ) {
+            return '<label><input class="' + cls + '" type="checkbox">' + label + '</label><br/>';
+        }
+
         function _bindViewClickEvent( cls, func ) {
             $( debugContainerId + ' .' + cls ).on( 'click', func );
         }
@@ -154,6 +162,7 @@ head.appendChild(ppcom);
             dropDown = '.drop-down';
 
         return {
+            enableQuickMessageMode: enableQuickMessageMode,
             onMessage: onMessage,
             onChattingMessage: onChattingMessage,
             onAudioMessage: onAudioMessage,
@@ -436,6 +445,10 @@ head.appendChild(ppcom);
                 }
             } );
         }
+
+        function enableQuickMessageMode() {
+            isQuickMessageMode = $( '.enable-quick-mode' ).is( ':checked' );
+        }
         
         function onMessage( config ) {
             _onMessage( getRandomMessage(), config );
@@ -474,7 +487,8 @@ head.appendChild(ppcom);
                         tt: 'S2P',
                         ft: 'DU',
                         ms: message.ms,
-                        bo: message.bo
+                        bo: message.bo,
+                        is_quick_message: isQuickMessageMode
                     }
                 }
             } );

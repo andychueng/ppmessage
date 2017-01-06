@@ -25,9 +25,12 @@ View.$conversationContent = (function() {
 
         $timeout( function() {
             // Bind mouse wheel event
-            $( selector ).bind( 'mousewheel' ,function( e ) {
-                var st = $(this).scrollTop();
-                if (e.originalEvent.wheelDelta /120 > 0) {
+            var isFF = Service.$device.isFirefox(),
+                event = isFF ? 'DOMMouseScroll' : 'mousewheel';
+            $( selector ).bind( event ,function( e ) {
+                var st = $(this).scrollTop(),
+                    delta = isFF ? -e.originalEvent.detail : e.originalEvent.wheelDelta /120;
+                if ( delta > 0) {
                     if (st <= 0 ) { // Down
                         if (!View.$sheetHeader.isShowingTeamProfileFull()) {
                             View.$sheetHeader.showTeamProfileFull();

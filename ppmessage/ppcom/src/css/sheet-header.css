@@ -46,6 +46,7 @@
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;    
+    margin: 0px;
 }
 
 .pp-sheet-header .pp-sheet-header-team-profile-description {
@@ -55,6 +56,7 @@
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
+    margin: 0px;
 }
 
 /* sheet header team profile full */
