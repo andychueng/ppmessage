@@ -533,9 +533,10 @@
 .pp-loading {
     box-sizing: border-box;
     display: none;
-  height: 100%;
-  margin: 0 auto;
-  top: 75px; }
+    height: 100%;
+    margin: 0 auto;
+    top: 75px;
+}
 
 .pp-loading-spinner {
     width:28px;

@@ -35,14 +35,16 @@ Ctrl.$launcher = (function() {
             var $hoverCardController = Ctrl.$hoverCard.get();
             $hoverCardController.asyncPrepareHoverCardInfo( function( prepareSucc ) {
 
-                var mode = Ctrl.$conversationPanel.mode();
+                var mode = Ctrl.$conversationPanel.mode(),
+                    lastMode = Ctrl.$conversationQuickMessage.getLastMode();
+
                 if ( mode === Ctrl.$conversationPanel.MODE.QUICK_MESSAGE ) { // We are in QUICK_MESSAGE mode, disable it first
                     Ctrl.$conversationQuickMessage.disable();
                 }
                 
                 var messageOnShowingOld = messageOnShowing;
                 View.$launcher.showMessageBox();
-                
+
                 if ( mode === Ctrl.$conversationPanel.MODE.QUICK_MESSAGE ) {
                     
                     if ( Ctrl.$conversationQuickMessage.getActiveConversationId() !== undefined ) {
@@ -51,12 +53,16 @@ Ctrl.$launcher = (function() {
                         var activeConversation = Service.$conversationManager.activeConversation,
                             conversationId = activeConversation ? activeConversation.token : undefined;
                         conversationId && Ctrl.$conversationList.showItem( conversationId );
+                        return;
 
                     } else {
-                        _enterContentMode();
+                        mode = lastMode;
+                        Ctrl.$conversationPanel.mode( mode );
                     }
 
-                } else if ( mode === Ctrl.$conversationPanel.MODE.CONTENT ) {
+                }
+
+                if ( mode === Ctrl.$conversationPanel.MODE.CONTENT ) {
                     _enterContentMode();
                 } else if ( Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.LIST ) {
                     Ctrl.$conversationList.show();

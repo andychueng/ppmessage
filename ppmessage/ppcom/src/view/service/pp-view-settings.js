@@ -12,17 +12,26 @@
 ((function(View) {
 
     function PPSettings() {
-        this._ppSettings = null;
+        this._ppSettings = {};
+        this._launchMode = PPSettings.LAUNCH_MODE.NORMAL; // default launcher mode
     }
 
     PPSettings.DEFAULT_BOTTOM_MARGIN = "20px";
     PPSettings.DEFAULT_RIGHT_MARGIN = "20px";
+    PPSettings.LAUNCH_MODE = {
+        NORMAL: 'normal',
+        CUSTOM: 'custom'
+    };
+    
+    var proto = PPSettings.prototype;
 
     /**
      * Do not forget to init ppSettings
      */
     PPSettings.prototype.init = function(ppSettings) {
-        this._ppSettings = ppSettings;
+        if ( ppSettings ) {
+            $.extend( this._ppSettings, ppSettings );            
+        }
         return this;
     };
 
@@ -58,6 +67,11 @@
         return value;
     };
 
+    proto.getLaunchMode = function() {
+        return this._getValueFromPPSettingsView( 'launch_mode', PPSettings.LAUNCH_MODE.NORMAL );
+    };
+
     View.PPSettings = PPSettings;
+    View.$settings = PPSettings;
     
 })(View));

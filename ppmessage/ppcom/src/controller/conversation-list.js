@@ -76,7 +76,7 @@ Ctrl.$conversationList = ( function() {
     }
 
     /////// showItem /////////
-    function showItem( token ) {
+    function showItem( token, callback ) {
 
         var $conversationManager = Service.$conversationManager,
             conversation = $conversationManager.find( token ),
@@ -112,6 +112,8 @@ Ctrl.$conversationList = ( function() {
         function onErrorCallback() {
             View.$loading.hide(); // hide loading view
             View.$groupContent.show(); // Hide group-content-view
+
+            callback && callback( false );
         }
 
         function onSuccessCallback() {
@@ -119,6 +121,8 @@ Ctrl.$conversationList = ( function() {
             
             View.$loading.hide(); // hide loading view
             View.$composerContainer.focus(); // focus
+
+            callback && callback( true );
         }
         
     }

@@ -2,7 +2,8 @@ Ctrl.$conversationQuickMessage = (function() {
 
     var supportQuickMessageMode = true,
         enabled = false,
-        activeConversationId = undefined;
+        activeConversationId = undefined,
+        lastMode = undefined;
 
     return {
         isSupportQuickMessageMode: isSupportQuickMessageMode,
@@ -12,7 +13,10 @@ Ctrl.$conversationQuickMessage = (function() {
         disable: disable,
 
         handleMessage: handleMessage,
-        getActiveConversationId: getActiveConversationId
+        getActiveConversationId: getActiveConversationId,
+
+        setLastMode: setLastMode,
+        getLastMode: getLastMode
     }
 
     function isSupportQuickMessageMode() {
@@ -55,12 +59,13 @@ Ctrl.$conversationQuickMessage = (function() {
 
         enabled = false;
         activeConversationId = undefined;
+        lastMode = undefined;
 
         $( '#pp-composer' ).show();
         $( '#pp-conversation' ).show();
 
         $( '.pp-conversation-part-pulltorefreshbutton' ).show();
-        $( '.pp-messenger-panel' ).css( { 'background-color': '', 'box-shadow': '' } );
+        $( '.pp-messenger-panel' ).css( { 'background-color': View.Style.Color.base, 'box-shadow': '' } );
         $( '.pp-conversation-content' ).css( { top: '', 
                                                'background-color': '', 
                                                'margin-bottom': '', 
@@ -78,29 +83,51 @@ Ctrl.$conversationQuickMessage = (function() {
     }
 
     function handleMessage( ppMessage ) {
-        var ppMessageBody = ppMessage.getBody();
+        var ppMessageBody = ppMessage.getBody(),
+            prepare = function() {
+                Ctrl.$conversationContent.clear();
+                $( '#pp-composer' ).show();
+                $( '#pp-conversation' ).show();
+            },
+            handle = function() {
+                if ( activeConversationId !== ppMessageBody.messageConversationId ) {
+                    return false;
+                }
 
-        // Check
-        if ( activeConversationId === undefined ) {
+                Ctrl.$conversationContent.appendMessage( ppMessageBody, true );
+                View.$conversationContent.scrollToBottom();
+            };
+
+        if ( activeConversationId === undefined ) { // First quick message arrive
             activeConversationId = ppMessageBody.messageConversationId;
 
-            Ctrl.$conversationContent.clear();
-            $( '#pp-composer' ).show();
-            $( '#pp-conversation' ).show();
+            if ( lastMode === Ctrl.$conversationPanel.MODE.LIST ) {
+                Ctrl.$conversationList.showItem( activeConversationId, function( success ) { // Async prepare & handle
+                    Ctrl.$conversationPanel.setMode( Ctrl.$conversationPanel.MODE.QUICK_MESSAGE );
+                    prepare();
+                    handle();
+                } );
+            } else { // sync prepare & handle
+                prepare();
+                handle();
+            }
+        } else { // Not the first quick message
+            handle();
         }
-
-        if ( activeConversationId !== ppMessageBody.messageConversationId ) {
-            return false;
-        }
-
-        Ctrl.$conversationContent.appendMessage( ppMessageBody, true );
-        View.$conversationContent.scrollToBottom();
 
         return true;
     }
 
     function getActiveConversationId() {
         return activeConversationId;
+    }
+
+    function setLastMode( mode ) {
+        lastMode = mode;
+    }
+
+    function getLastMode() {
+        return lastMode;
     }
 
 }() );

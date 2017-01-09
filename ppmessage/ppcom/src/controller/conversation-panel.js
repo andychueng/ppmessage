@@ -26,6 +26,9 @@ Ctrl.$conversationPanel = ( function() {
     ////// Implementation //
 
     function setMode( m ) {
+        if ( m === MODE.QUICK_MESSAGE ) {
+            Ctrl.$conversationQuickMessage.setLastMode( cMode );
+        }
         cMode = m;
     }
 
