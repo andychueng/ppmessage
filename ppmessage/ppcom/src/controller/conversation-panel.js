@@ -62,6 +62,8 @@ Ctrl.$conversationPanel = ( function() {
             break;
 
         case MODE.QUICK_MESSAGE:
+            View.$sheetHeader.hideTeamProfileFull();
+            View.$groupMemberHovercard.remove();
             Ctrl.$conversationQuickMessage.enable();
             break;
         }
@@ -98,7 +100,7 @@ Ctrl.$conversationPanel = ( function() {
             //
             $timeout( function() {
 
-                !Ctrl.$launcher.get().isLauncherShow() && mode( MODE.WAITING );
+                Ctrl.$conversationPanel.isOpen() && mode( MODE.WAITING );
                 
             }, TIMEOUT_DELAY );            
         } );

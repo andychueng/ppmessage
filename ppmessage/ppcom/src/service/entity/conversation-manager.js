@@ -123,6 +123,7 @@ Service.$conversationManager = ( function() {
             if ( defaultConversation ) {
                 onDefaultConversationAvaliable( defaultConversation );
             } else {
+                Service.$debug.d( 'Cannot get deault conversation: waiting ...' );
                 notifyToWaiting();                
             }
             $onResult( findDefault(), callback );

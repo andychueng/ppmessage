@@ -24,14 +24,6 @@ Ctrl.$launcher = (function() {
                 messageOnShowing = undefined;
             }
             PP.toggle();
-
-            // // If hoverCard delegate launcher click event, we will not show MessageBox
-            // if (!Ctrl.$hoverCard.get().interceptLauncherClickEvent()) {
-            //     var $hoverCardController = Ctrl.$hoverCard.get();
-            //     $hoverCardController.asyncPrepareHoverCardInfo( function( prepareSucc ) {
-            //         self.showMessageBox();
-            //     } );
-            // }
         },
 
         this.shouldShowLauncherWhenInit = function() { // 是否默认显示小泡
@@ -42,7 +34,7 @@ Ctrl.$launcher = (function() {
         this.showMessageBox = function() {
             var $hoverCardController = Ctrl.$hoverCard.get();
             $hoverCardController.asyncPrepareHoverCardInfo( function( prepareSucc ) {
-                
+
                 var mode = Ctrl.$conversationPanel.mode();
                 if ( mode === Ctrl.$conversationPanel.MODE.QUICK_MESSAGE ) { // We are in QUICK_MESSAGE mode, disable it first
                     Ctrl.$conversationQuickMessage.disable();
