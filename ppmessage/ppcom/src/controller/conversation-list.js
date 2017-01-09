@@ -102,7 +102,7 @@ Ctrl.$conversationList = ( function() {
                 var $manager = Service.$conversationManager;            
                 $manager.activeConversation( token );
                 Ctrl.$conversationContent
-                    .show( $manager.activeConversation(), {}, onSuccessCallback );                
+                    .show( $manager.activeConversation(), {}, onSuccessCallback );
             } else {
                 onErrorCallback();
             }

@@ -344,7 +344,7 @@
     box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 }
 .pp-emoji-selector-triangle {
-    right: 25px;
+    right: 40px;
     border: solid transparent;
     position: absolute;
     pointer-events: none;
@@ -354,7 +354,7 @@
     z-index: 2147483646;
 }
 .pp-emoji-selector-triangle-mask {
-    right: 25px;
+    right: 40px;
     border: solid transparent;
     position: absolute;
     pointer-events: none;
@@ -619,13 +619,32 @@
     border-radius: 0px 0px 10px 10px;
 }
 
+.pp-composer-container-file-sendbutton-selector-container {
+    cursor: pointer;
+    float: right;
+    position: relative;
+}
+
+.pp-composer-container-send-button-container {
+    display: none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px;
+    height: 25px;
+    width: 25px;
+    opacity: .4;
+}
+
+.pp-composer-container-send-button-container:hover {
+    opacity: 1.0;
+}
+
 .pp-composer-container-action-btn {
     background-position: center;
+    cursor: pointer;
     height: 15px;
     width: 15px;
-    position: relative;
     float: right;
-    cursor: pointer;
     top: 5px;
     margin: 0 2px 0 0;
     padding: 5px;
@@ -640,7 +659,7 @@
 }
 .pp-composer-container-tools-container {
     position: absolute;
-    top: 3px;
+    bottom: 15px;
     right: 6px;
 }
 .pp-composer-container-warning {
@@ -656,6 +675,7 @@
     padding: 0px !important;
     float: right;
     width: 100%;
+    position: relative;
 }
 
 .pp-container .pp-composer-container-warning-span {

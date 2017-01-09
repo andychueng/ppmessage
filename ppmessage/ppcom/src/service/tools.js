@@ -113,7 +113,8 @@
          * Is show emoji icon
          */
         this.isShowEmojiIcon = function() {
-            return Service.$device.isMac();
+            return true;
+            // return Service.$device.isMac();
         };
 
         /*

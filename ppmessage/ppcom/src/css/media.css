@@ -9,6 +9,7 @@
 @media (max-width:736px) {
     .pp-messenger-panel {
         width:100%; /* fix width */
+        height:100%;
         right:0;
         top:0;
         bottom:0;
