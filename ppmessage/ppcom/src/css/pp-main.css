@@ -162,6 +162,9 @@
     border-top:1px solid #ebedf1;
 }
 
+.pp-group-item-avatar-container {
+}
+
 .pp-group-item:last-child {
     border-bottom:1px solid #f3f4f5;
 }
@@ -249,10 +252,36 @@
 
 .pp-group-item img {
     border-radius: 50%;
-    float: left;
+    border: 2px solid #fff;
     display: inline-block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+}
+
+.pp-group-item .pp-group-item-avatar-container {
+    float: left;
+    position: relative;
     width: 35px;
     height: 35px;
+}
+
+.pp-group-item .pp-group-item-first-of-three-avatar {
+    top: -1;
+    left: 6px;
+    z-index: 2;
+}
+
+.pp-group-item .pp-group-item-second-of-three-avatar {
+    top: 15px;
+    right: 14px;
+    z-index: 3;
+}
+
+.pp-group-item .pp-group-item-third-of-three-avatar {
+    top: 15px;
+    left: 14px;
+    z-index: 1;
 }
 
 /* GROUP-END */

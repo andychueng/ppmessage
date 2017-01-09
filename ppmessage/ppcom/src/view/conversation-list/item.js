@@ -13,12 +13,26 @@ View.$groupContentItem = (function() {
             timeStamp = '',
             groupID = data.uuid,
             icon = data.icon,
-            summary = data.summary;
+            summary = data.summary,
+            CLS_PREFIX = 'pp-group-item',
 
             buildAvatar = function() {
-                return new View.Img( {
-                    src: icon
-                } );
+                // return new View.Img( { src: icon } );
+                var icons = [
+                    { user_avatar: Configuration.assets_path + 'img/avatar_1.jpg' },
+                    { user_avatar: Configuration.assets_path + 'img/avatar_2.jpg' },
+                    { user_avatar: Configuration.assets_path + 'img/avatar_3.jpg' }
+                ];
+                var $container = new View.Div( 'pp-group-item-avatar-container' ),
+                    len = icons.length,
+                    SEQUENCE = [ 'first', 'second', 'third' ];
+
+                for ( var i=0; i<len; i++ ) {
+                    $container.add( new View.Img( { src: icons[ i ].user_avatar, 
+                                                    className: 'pp-group-item-' + SEQUENCE[i] + '-of-three-avatar' } ) );
+                }
+                
+                return $container;
             },
             
             buildBody = function() {
