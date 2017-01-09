@@ -339,13 +339,14 @@ View.$sheetHeader = (function() {
     }
 
     function hideTeamProfileFull( callback ) {
+        var $full = $( '.' + teamProfileFullClassPrefix );
         if ( !teamProfileFullShowing ) {
+            $full.hide();
             callback && callback();
             return;
         }
         teamProfileFullShowing = false;
 
-        var $full = $( '.' + teamProfileFullClassPrefix );
         $full.animate( { 'margin-top': "-=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
         $( '#pp-conversation-content' ).animate( { 'top': "-=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
         $( '#' + id ).animate({ height: "-=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION, _completed );
