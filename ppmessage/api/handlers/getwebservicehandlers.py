@@ -74,7 +74,6 @@ from .ppkefulogouthandler import PPKefuLogoutHandler
 from .ppgetuserdetailhandler import PPGetUserDetailHandler
 
 from .ppconsolelogouthandler import PPConsoleLogoutHandler
-from .ppconsolesignuphandler import PPConsoleSignupHandler
 
 from .ppconsolegetoverviewnumber import PPConsoleGetOverviewNumber
 from .ppconsolegetrealtimecustomernumber import PPConsoleGetRealTimeCustomerNumber
@@ -105,8 +104,6 @@ from .ppgetallpredefinedscriptgroup import PPGetAllPredefinedScriptGroup
 from .ppgetpredefinedscriptwithgroup import PPGetPredefinedScriptWithGroup
 
 from .ppcancelwaitingcreateconversation import PPCancelWaitingCreateConversation
-
-from .ppconsolesendnewpassword import PPConsoleSendNewPassword
 
 from .ppcomgetdefaultconversationhandler import PPComGetDefaultConversationHandler
 from .ppcomcreateconversationhandler import PPComCreateConversationHandler

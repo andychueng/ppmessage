@@ -14,7 +14,6 @@ from ppmessage.core.constant import REDIS_PORT
 from ppmessage.core.constant import USER_STATUS
 from ppmessage.core.constant import CONFIG_STATUS
 from ppmessage.core.constant import PP_WEB_SERVICE
-from ppmessage.core.constant import REDIS_EMAIL_KEY
 from ppmessage.core.main import AbstractWebService
 from ppmessage.core.singleton import singleton
 
@@ -480,30 +479,6 @@ class FirstHandler(tornado.web.RequestHandler):
         _dump_config(_config)
         return True
 
-    def _welcome_email(self, _request):
-        _subject = "Welcome to use PPMessage"
-        _template = os.path.join(_cur_dir(), "../resource/email/welcome-template-en-us.html")
-        
-        if _get_config().get("server").get("language").get("locale") == "zh_CN":
-            _subject = "欢迎使用 PPMessage"
-            _template = os.path.join(_cur_dir(), "../resource/email/welcome-template-zh-cn.html")
-
-        with open(_template, "r") as _f:
-            _template = _f.read()
-            
-        _template = _template.replace("{{user_email}}", _request.get("user_email"))
-        _template = _template.replace("{{user_fullname}}", _request.get("user_fullname"))
-        _template = _template.replace("{{server_name}}", _get_config().get("server").get("name"))
-        _template = _template.replace("{{server_port}}", str(_get_config().get("server").get("port")))
-        _email_request = {
-            "to": [_request.get("user_email")],
-            "subject": _subject,
-            "text": _template,
-            "html": _template
-        }
-        self.application.redis.rpush(REDIS_EMAIL_KEY, json.dumps(_email_request))
-        return
-    
     def post(self, id=None):
         _request = json.loads(self.request.body.decode("utf-8"))
 
@@ -527,8 +502,6 @@ class FirstHandler(tornado.web.RequestHandler):
             return _return(self, -1)
 
         self._dump_config(_request)
-
-        self._welcome_email(_request)
 
         return _return(self, 0)
 
