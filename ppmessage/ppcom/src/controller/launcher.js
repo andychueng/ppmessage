@@ -27,7 +27,7 @@ Ctrl.$launcher = (function() {
         },
 
         this.shouldShowLauncherWhenInit = function() { // 是否默认显示小泡
-            return View.$settings.isShowLauncher();
+            return !View.$launcher.shouldHideLauncher();
         },
 
         // Open messageBox and hide Launcher

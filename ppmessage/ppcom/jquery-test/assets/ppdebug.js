@@ -21,7 +21,8 @@ head.appendChild(ppcom);
     var $,
         Service,
         Ctrl,
-        Modal;
+        Modal,
+        APP_UUID = '2e9835e8-d675-11e6-afb1-74de2b58a3a8';
 
     ////////// PPDebug ////////////
     window.PPDebug = ( function() {
@@ -81,6 +82,9 @@ head.appendChild(ppcom);
             $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-to-ppmatc', 'Push PPSettings' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'push-ent-user-to-ppmatc', 'Push Ent User Event to PPMatc' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'push-track-event-to-ppmatc', 'Push Track Event to PPMatc' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-launch-style-left-to-ppmatc', 'Push Launch Style Left to PPMatc' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-launch-style-right-to-ppmatc', 'Push Launch Style Right to PPMatc' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-launch-style-normal-to-ppmatc', 'Push Launch Style Normal to PPMatc' ) );
             
             $elDebugContainer.append( '<br/><select class="drop-down"><option>None</option></select><br/>' );
             $elDebugContainer.append( _buildInputViewHtml( 'clear', '清空' ) );
@@ -113,6 +117,9 @@ head.appendChild(ppcom);
             _bindViewClickEvent( 'push-pp-settings-to-ppmatc', test.pushPPSettingsToPPMatc );
             _bindViewClickEvent( 'push-ent-user-to-ppmatc', test.pushEntUserToPPMatc );
             _bindViewClickEvent( 'push-track-event-to-ppmatc', test.pushTrackEventToPPMatc );
+            _bindViewClickEvent( 'push-pp-settings-launch-style-left-to-ppmatc', test.pushLaunchStyleLeftToPPMatc );
+            _bindViewClickEvent( 'push-pp-settings-launch-style-right-to-ppmatc', test.pushLaunchStyleRightToPPMatc );
+            _bindViewClickEvent( 'push-pp-settings-launch-style-normal-to-ppmatc', test.pushLaunchStyleNormalToPPMatc );
             
             // Initial code
             test.pushPPSettingsToPPMatc();
@@ -188,6 +195,10 @@ head.appendChild(ppcom);
             pushPPSettingsToPPMatc: pushPPSettingsToPPMatc,
             pushEntUserToPPMatc: pushEntUserToPPMatc,
             pushTrackEventToPPMatc: pushTrackEventToPPMatc,
+
+            pushLaunchStyleLeftToPPMatc: pushLaunchStyleLeftToPPMatc,
+            pushLaunchStyleRightToPPMatc: pushLaunchStyleRightToPPMatc,
+            pushLaunchStyleNormalToPPMatc: pushLaunchStyleNormalToPPMatc,
 
             clear: clear
         }
@@ -403,7 +414,13 @@ head.appendChild(ppcom);
             window._ppmatc = window._ppmatc || [];
             window._ppmatc.push({
                 pp_settings: {
-                    app_uuid: '669d5e36-d612-11e6-afb1-74de2b58a3a8'
+                    app_uuid: APP_UUID,
+                    view: {
+                        launch_style: {
+                            mode: 'custom',
+                            position: 'right'
+                        }
+                    }
                 }
             });
         }
@@ -426,6 +443,50 @@ head.appendChild(ppcom);
                     track_event_name: 'create_project',
                     track_event_data: {
                         project_name: 'HelloProject'
+                    }
+                }
+            });
+        }
+
+        function pushLaunchStyleLeftToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                pp_settings: {
+                    app_uuid: APP_UUID,
+                    view: {
+                        launch_style: {
+                            mode: 'custom',
+                            position: 'left'
+                        }
+                    }
+                }
+            });
+        }
+
+        function pushLaunchStyleRightToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                pp_settings: {
+                    app_uuid: APP_UUID,
+                    view: {
+                        launch_style: {
+                            mode: 'custom',
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        }
+
+        function pushLaunchStyleNormalToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                pp_settings: {
+                    app_uuid: APP_UUID,
+                    view: {
+                        launch_style: {
+                            mode: 'normal'
+                        }
                     }
                 }
             });

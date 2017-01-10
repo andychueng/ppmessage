@@ -36,7 +36,9 @@ Ctrl.$sheetheader = (function() {
         cancelAnyWaitingToCreateConversations();
 
         // We should enter quick message mode when minimize
-        Ctrl.$conversationPanel.mode( Ctrl.$conversationPanel.MODE.QUICK_MESSAGE );
+        if ( View.$settings.getLaunchStyle().mode.toLowerCase() === View.Settings.LAUNCH_MODE.NORMAL ) {
+            Ctrl.$conversationPanel.mode( Ctrl.$conversationPanel.MODE.QUICK_MESSAGE );   
+        }
 
     }
 

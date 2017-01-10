@@ -16,7 +16,8 @@
     PPConstants.USER_DEFAULT_NAME = 'Anonymous';
 
     PPConstants.STYLE = {
-        EMOJI_PANEL_DEFAULT_BOTTOM_MARGIN: 67
+        EMOJI_PANEL_DEFAULT_BOTTOM_MARGIN: 67,
+        PANEL_WIDTH: 368
     };
 
     PPConstants.EVENT = {

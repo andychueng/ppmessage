@@ -91,6 +91,7 @@ Service.$ppmatc = (function() {
     }
 
     function _run( type, event ) {
+        Service.$debug.d( 'Exec event: ', type, event );
         switch (type) {
             case EVENT_ENT_USER:
             break;
@@ -98,8 +99,20 @@ Service.$ppmatc = (function() {
             case EVENT_TRACK:
             break;
 
-            case EVENT_PP_SETTINGS:
-            PP.boot( event[ EVENT_PP_SETTINGS ] );
+            case EVENT_PP_SETTINGS: {
+                if ( event[ EVENT_PP_SETTINGS ].app_uuid !== Service.$ppSettings.getAppUuid() ) { // Update App
+                    PP.boot( event[ EVENT_PP_SETTINGS ] );
+                } else { // Update View
+                    PP.hide();
+                    View.$settings.init( event[ EVENT_PP_SETTINGS ] );
+                    if ( View.$settings.getLaunchStyle().mode.toLowerCase() === View.Settings.LAUNCH_MODE.CUSTOM ) { // Custom Mode
+                        View.$launcher.hideLauncher(); // Hide launcher in custom mode
+                        View.$conversation.makeConversationPanelVisible();
+                    } else {
+                        $( '.pp-launcher' ).show(); // Normal Mode
+                    }
+                }
+            }
             break;
 
             case EVENT_UNKNOWN:

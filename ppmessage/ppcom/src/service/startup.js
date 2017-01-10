@@ -114,6 +114,7 @@
                     });
 
                     setTimeout(function() {
+                        View.$conversation.prepare();
                         if (succCallback) succCallback();
                     });
                     

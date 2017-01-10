@@ -2,6 +2,16 @@
  * 根据 ppSettings.view 来配置和管理 View
  *
  * Example:
+ *
+ * { 
+ *     app_uuid: xxx,
+ *     view: {
+ *         launch_style: {
+ *             mode: 'custom',
+ *             position: 'left'/'right'
+ *         }
+ *     }
+ * }
  * 
  * var viewSettings = new View.PPSettings().init(ppSettings);
  * viewSettings.getLauncherBottomMargin();
@@ -12,7 +22,14 @@
 ((function(View) {
 
     function PPSettings() {
-        this._ppSettings = {};
+        this._ppSettings = {
+            view: {
+                launch_style: {
+                    mode: 'normal',
+                    position: undefined   
+                }
+            }
+        };
         this._launchMode = PPSettings.LAUNCH_MODE.NORMAL; // default launcher mode
     }
 
@@ -21,6 +38,10 @@
     PPSettings.LAUNCH_MODE = {
         NORMAL: 'normal',
         CUSTOM: 'custom'
+    };
+    PPSettings.LAUNCH_POSITION = {
+        LEFT: 'left',
+        RIGHT: 'right'
     };
     
     var proto = PPSettings.prototype;
@@ -62,16 +83,23 @@
     PPSettings.prototype._getValueFromPPSettingsView = function(key, defaultValue) {
         var value = defaultValue;
         if (this._ppSettings && this._ppSettings.view && key in this._ppSettings.view) {
-            value = this._ppSettings.view[key];
+            value = this._ppSettings.view[ key.toLowerCase() ];
         }
         return value;
     };
 
-    proto.getLaunchMode = function() {
-        return this._getValueFromPPSettingsView( 'launch_mode', PPSettings.LAUNCH_MODE.NORMAL );
+    proto.getLaunchStyle = function() {
+        return this._getValueFromPPSettingsView( 'launch_style', {
+            mode: 'normal',
+            position: undefined   
+        } );
+    };
+
+    proto.getSettings = function() {
+        return this._ppSettings;
     };
 
     View.PPSettings = PPSettings;
-    View.$settings = PPSettings;
+    View.Settings = View.PPSettings;
     
 })(View));

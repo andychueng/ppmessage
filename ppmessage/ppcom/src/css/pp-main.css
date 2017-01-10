@@ -144,7 +144,7 @@
     border-radius: 0px 0px 10px 10px;
     bottom: 0px;
     display: none;
-    position: fixed;
+    position: relative;
     margin: 0 auto;
     overflow-y: auto;
     margin-bottom: 10px;

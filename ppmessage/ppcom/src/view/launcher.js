@@ -72,9 +72,20 @@ View.$launcher = (function() {
             return new PPLauncher();
         },
 
+        shouldHideLauncher = function() {
+            return View.$settings.getLaunchStyle().mode.toLowerCase() === View.Settings.LAUNCH_MODE.CUSTOM;
+        },
+
         hideLauncher = function() {
-            $( selectorButton ).removeClass( clsButtonMaximize ).addClass( clsButtonMinimize );
-            $( selectorButtonContainer ).removeClass( clsButtonContainerActive ).addClass( clsButtonContainerInActive );
+            switch( View.$settings.getLaunchStyle().mode.toLowerCase() ) {
+            case View.Settings.LAUNCH_MODE.CUSTOM:
+                $( '.pp-launcher' ).hide();
+                break;
+            case View.Settings.LAUNCH_MODE.NORMAL:
+                $( selectorButton ).removeClass( clsButtonMaximize ).addClass( clsButtonMinimize );
+                $( selectorButtonContainer ).removeClass( clsButtonContainerActive ).addClass( clsButtonContainerInActive );
+                break;
+            }
         },
         
         // state: View.$launcher.STATE
@@ -100,6 +111,7 @@ View.$launcher = (function() {
         STATE: STATE,
         build: build,
 
+        shouldHideLauncher: shouldHideLauncher,
         hideLauncher: hideLauncher,
         showLauncher: showLauncher,
         showMessageBox: showMessageBox,
