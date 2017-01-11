@@ -55,14 +55,17 @@ Service.$messageReceiverModule = (function() {
 	        }
 
             // Quick message
+            Service.$debug.d( '[New-Message] is quick message: ', Service.$messageToolsModule.isQuickMessage( body ) );
             if ( Service.$messageToolsModule.isQuickMessage( body ) && 
                  handleByQuickMessageMode( ppMessage ) ) {
+                Service.$debug.d( '[New-Message] handle by quick message mode' );
                 getModal( groupId ).addMessage ( body ); // Store message to local
                 return;
             }
 
             if ( isGroupOnChatting ( groupId ) ) { // we are chating with `converstionId`
 
+                Service.$debug.d( '[New-Message] handle by active conversation' );
                 $pubsub.publish('msgArrived/chat', ppMessage);
                 
             } else {
@@ -76,9 +79,11 @@ Service.$messageReceiverModule = (function() {
                 // conversation list is showing
                 if ( PP.isOpen() && 
                      Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.LIST ) {
+                    Service.$debug.d( '[New-Message] handle by list' );
                     $pubsub.publish('msgArrived/group', ppMessage);
                 } else {
                     // launcher is showing
+                    Service.$debug.d( '[New-Message] handle by launcher' );
                     $pubsub.publish('msgArrived/launcher', ppMessage);
                 }
                 

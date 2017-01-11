@@ -284,6 +284,11 @@
     z-index: 1;
 }
 
+.pp-group-item .pp-group-item-first-of-one-avatar {
+    width: 36px;
+    height: 36px;
+}
+
 /* GROUP-END */
 
 .pp-sheet-header .pp-sheet-header-body {

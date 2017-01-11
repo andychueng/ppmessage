@@ -83,6 +83,8 @@ Service.$conversationManager = ( function() {
             Service.$conversationAgency.requestInfo( conversationUUID, function( conv ) {
                 
                 if ( conv ) {
+                    Service.$debug.d( 'Default conversation avaliable !', conv );
+
                     // We are waiting `default conversation`
                     // Now, this `default conversation` become avaliable now
                     var isDefaultConversation = !Service.$conversationAgency.isDefaultConversationAvaliable();
@@ -134,6 +136,9 @@ Service.$conversationManager = ( function() {
     function onDefaultConversationAvaliable( response ) {
         push( conversation( response, true ) );
         active( response[ 'token' ] );
+        
+        Service.$conversationAgency.tellDefaultConversationAvaliable( response );
+        Ctrl.$hoverCard.get().updateInitState( true );
     }
 
     //////// activeConversation ///////////

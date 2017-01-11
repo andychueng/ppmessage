@@ -28,9 +28,15 @@ Ctrl.$conversationQuickMessage = (function() {
     }
     
     function enable() {
-        if (enabled || 
-            !Ctrl.$hoverCard.get().isInited() ||
-            Ctrl.$conversationPanel.isOpen()) return;
+        if ( enabled ) return;
+        if ( !Ctrl.$hoverCard.get().isInited() ) {
+            Service.$debug.d( '[Quick-Message] Cannot enable quick message mode, Hovercard not inited' );
+            return;
+        }
+        if ( Ctrl.$conversationPanel.isOpen() ) {
+            Service.$debug.d( '[Quick-Message] Cannot enable quick message mode, ConversationPanel not open' );
+            return;
+        }
 
         enabled = true;
 
@@ -50,7 +56,11 @@ Ctrl.$conversationQuickMessage = (function() {
                                                'margin-right': '-16px' } );
         $( '.pp-sheet-header' ).hide();
         $( '#pp-composer-container' ).css( { 'border-radius': '5px', 'width': '270px' } );
-        $( '.pp-composer-container-textarea' ).css( { 'border-radius': '5px' } ).attr( 'placeholder', 'Write to reply' );
+        $( '.pp-composer-container-textarea' )
+            .css( { 'border-radius': '5px',
+                    'padding-top': '16px',
+                    'padding-bottom': '16px' } )
+            .attr( 'placeholder', 'Write to reply' );
         $( '.pp-conversation-container' ).css( { height: '100%', overflow: 'hidden', position: 'relative' } );   
     }
 
@@ -75,7 +85,7 @@ Ctrl.$conversationQuickMessage = (function() {
         $( '.pp-sheet-header' ).show();
         $( '#pp-composer-container' ).css( { 'border-radius': '', 'width': '' } );
         $( '.pp-composer-container-textarea' )
-            .css( { 'border-radius': '' } )
+            .css( { 'border-radius': '', 'padding-top': '18px', 'padding-bottom': '18px' } )
             .attr( 'placeholder', Service.Constants.i18n( Service.$device.inMobile() ? 
                                                           'START_CONVERSATION_MOBILE_HINT' : 
                                                           'START_CONVERSATION_HINT') );
@@ -90,12 +100,14 @@ Ctrl.$conversationQuickMessage = (function() {
                 $( '#pp-conversation' ).show();
             },
             handle = function() {
+                Service.$debug.d( '[Quick-Message] activeId: ', activeConversationId, ppMessageBody );
                 if ( activeConversationId !== ppMessageBody.messageConversationId ) {
                     return false;
                 }
 
                 Ctrl.$conversationContent.appendMessage( ppMessageBody, true );
                 View.$conversationContent.scrollToBottom();
+                return true;
             };
 
         if ( activeConversationId === undefined ) { // First quick message arrive
@@ -107,15 +119,14 @@ Ctrl.$conversationQuickMessage = (function() {
                     prepare();
                     handle();
                 } );
+                return true;
             } else { // sync prepare & handle
                 prepare();
-                handle();
+                return handle();
             }
         } else { // Not the first quick message
-            handle();
+            return handle();
         }
-
-        return true;
     }
 
     function getActiveConversationId() {
