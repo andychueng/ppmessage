@@ -1,6 +1,17 @@
 .pp-sheet-header .pp-sheet-header-team-profile {
     padding-left: 60px;
     margin: 5px 20px 5px 5px;
+
+    -webkit-animation-name: pp-messenger-view-fade-in;
+    animation-name: pp-messenger-view-fade-in;
+    -webkit-animation-duration: .32s;
+    animation-duration: .32s;
+    -webkit-animation-timing-function: cubic-bezier(.23,1,.32,1);
+    animation-timing-function: cubic-bezier(.23,1,.32,1);
+    -webkit-animation-delay: .16s;
+    animation-delay: .16s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both
 }
 
 .pp-sheet-header .pp-sheet-header-team-profile-container {

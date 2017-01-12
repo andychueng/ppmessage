@@ -88,6 +88,7 @@ Ctrl.$conversationList = ( function() {
         }
 
         function before() {
+            View.$groupContentItem.animateHide();
             View.$loading.show(); // show loading view
             View.$groupContent.hide(); // Hide group-content-view
         }

@@ -1,0 +1,67 @@
+@-webkit-keyframes pp-messenger-view-fade-in {
+    0% {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+@keyframes pp-messenger-view-fade-in {
+    0% {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+@-webkit-keyframes pp-messenger-view-fade-out {
+    0% {
+        opacity: 1
+    }
+
+    to {
+        opacity: 0
+    }
+}
+
+@keyframes pp-messenger-view-fade-out {
+    0% {
+        opacity: 1
+    }
+
+    to {
+        opacity: 0
+    }
+}
+
+@-webkit-keyframes pp-messenger-view-slide-left-out {
+    0% {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+    }
+
+    to {
+        opacity: 0;
+        -webkit-transform: translateX(-8px);
+        transform: translateX(-8px)
+    }
+}
+
+@keyframes pp-messenger-view-slide-left-out {
+    0% {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+    }
+
+    to {
+        opacity: 0;
+        -webkit-transform: translateX(-8px);
+        transform: translateX(-8px)
+    }
+}

@@ -30,12 +30,12 @@ View.$groupContent = (function() {
         elSelector = '.' + elementClass,
 
         show = function() {
-            $(elSelector).show();
+            $(elSelector).removeClass( elementClass + '-leave' ).show();
             return this;
         },
 
         hide = function() {
-            $(elSelector).hide();
+            $( elSelector ).addClass( elementClass + '-leave' );
             return this;
         },
 

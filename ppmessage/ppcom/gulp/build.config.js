@@ -172,6 +172,7 @@ module.exports = {
     cssFiles: [
         "../src/css/global.css",
         "../src/css/pp-main.css",
+        "../src/css/animation.css",
         "../src/css/group-member-hovercard.css",
         "../src/css/group-members.css",
         "../src/css/msgs/common.css",

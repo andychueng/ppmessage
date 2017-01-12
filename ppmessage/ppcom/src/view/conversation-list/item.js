@@ -1,11 +1,12 @@
 View.$groupContentItem = (function() {
 
     var userIcon = Configuration.assets_path + 'img/icon-user-conversation.png',
-        userIconStyle = 'background-image:url(' + userIcon + ')';
+        userIconStyle = 'background-image:url(' + userIcon + ')',
+        itemClassPrefix = 'pp-group-item';
 
     function Item(data) {
         View.PPDiv.call(this, {
-            'class': 'pp-group-item',
+            'class': itemClassPrefix,
             group_uuid: data.uuid
         });
 
@@ -136,7 +137,9 @@ View.$groupContentItem = (function() {
 
         // act as setter
         description: description,
-        timestamp: timestamp
+        timestamp: timestamp,
+
+        animateHide: animateHide
     }
 
     function description( token, desc ) {
@@ -145,6 +148,10 @@ View.$groupContentItem = (function() {
 
     function timestamp( token, timeago ) {
         findItem( token ).find( '.' + classPrefix + '-timestamp' ).text( timeago );
+    }
+
+    function animateHide() {
+        $( '.' + itemClassPrefix ).addClass( itemClassPrefix + '-leave' );
     }
     
 })();

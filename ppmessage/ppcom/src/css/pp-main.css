@@ -191,10 +191,47 @@
     width: 100%;
     top: 75px; }
 
+.pp-container .pp-group-content-container-leave {
+    -webkit-animation-name: pp-messenger-view-fade-out;
+    animation-name: pp-messenger-view-fade-out;
+    -webkit-animation-duration: .32s;
+    animation-duration: .32s;
+    -webkit-animation-timing-function: cubic-bezier(.23,1,.32,1);
+    animation-timing-function: cubic-bezier(.23,1,.32,1);
+    -webkit-animation-delay: .12s;
+    animation-delay: .12s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both    
+}
+
 .pp-group-item {
     border-top: 1px solid #f3f4f5;
     cursor: pointer;
     padding: 32px 30px;
+
+    -webkit-animation-name: pp-messenger-view-slide-right-in;
+    animation-name: pp-messenger-view-slide-right-in;
+    -webkit-animation-duration: .32s;
+    animation-duration: .32s;
+    -webkit-animation-timing-function: cubic-bezier(.23,1,.32,1);
+    animation-timing-function: cubic-bezier(.23,1,.32,1);
+    -webkit-animation-delay: .16s;
+    animation-delay: .16s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both
+}
+
+.pp-group-item-leave {
+    -webkit-animation-name: pp-messenger-view-slide-left-out;
+    animation-name: pp-messenger-view-slide-left-out;
+    -webkit-animation-duration: .32s;
+    animation-duration: .32s;
+    -webkit-animation-timing-function: cubic-bezier(.23,1,.32,1);
+    animation-timing-function: cubic-bezier(.23,1,.32,1);
+    -webkit-animation-delay: 0;
+    animation-delay: 0;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both
 }
 
 .pp-group-item:hover {
@@ -802,6 +839,60 @@
 
 .pp-conversation-part {
     margin-bottom: 16px;
+    opacity:1;
+    -webkit-transform:translateX(0);
+    transform:translateX(0);
+    -webkit-animation-name:pp-messenger-view-slide-left-in;
+    animation-name:pp-messenger-view-slide-left-in;
+    -webkit-animation-duration:.32s;
+    animation-duration:.32s;
+    -webkit-animation-timing-function:cubic-bezier(.23,1,.32,1);
+    animation-timing-function:cubic-bezier(.23,1,.32,1);
+    -webkit-animation-delay:.23s;
+    animation-delay:.23s;
+    -webkit-animation-fill-mode:backwards;
+    animation-fill-mode:backwards
+}
+
+@keyframes pp-messenger-view-slide-left-in {
+    0%{
+        opacity:0;
+        -webkit-transform:translateX(8px);
+        transform:translateX(8px)
+    }
+    to{
+        opacity:1;
+        -webkit-transform:translateX(0);
+        transform:translateX(0)
+    }
+}
+
+@-webkit-keyframes pp-messenger-view-slide-right-in {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateX(-8px);
+        transform: translateX(-8px)
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+    }
+}
+
+@keyframes pp-messenger-view-slide-right-in {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateX(-8px);
+        transform: translateX(-8px)
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+    }
 }
 
 .pp-conversation-part-welcome-outer-1 {
