@@ -22,7 +22,7 @@ head.appendChild(ppcom);
         Service,
         Ctrl,
         Modal,
-        APP_UUID = 'e68dcf32-d7a1-11e6-afb1-74de2b58a3a8';
+        APP_UUID = '1998f614-d7dd-11e6-afb1-74de2b58a3a8';
 
     ////////// PPDebug ////////////
     window.PPDebug = ( function() {
@@ -706,43 +706,11 @@ head.appendChild(ppcom);
 
         function imgs() {
             return [
-                'http://e.hiphotos.baidu.com/image/h%3D300/sign=f33b35d67a1ed21b66c928e59d6fddae/b21bb051f819861842d54ba04ded2e738bd4e600.jpg',
-                'http://img2.imgtn.bdimg.com/it/u=3947386643,2401800583&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=3084720760,288869075&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=52754568,3369504778&fm=23&gp=0.jpg',
-                'http://img0.imgtn.bdimg.com/it/u=2845747024,3167693364&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=2584355946,4148531126&fm=23&gp=0.jpg',
-                'http://img2.imgtn.bdimg.com/it/u=2160420705,2533030665&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=421165063,3498236940&fm=23&gp=0.jpg',
-                'http://img5.imgtn.bdimg.com/it/u=209761400,1951974759&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=2293915270,526489152&fm=11&gp=0.jpg',
-                'http://img0.imgtn.bdimg.com/it/u=2531583001,1422407153&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=2093058865,1325752770&fm=23&gp=0.jpg',
-                'http://img5.imgtn.bdimg.com/it/u=632680172,595028883&fm=23&gp=0.jpg',
-                'http://img2.imgtn.bdimg.com/it/u=1724304029,2011548657&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=642819720,2965626235&fm=11&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=266880594,205135855&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=693354233,2652180815&fm=11&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=2684396043,3390854681&fm=23&gp=0.jpg',
-                'http://img0.imgtn.bdimg.com/it/u=3676558158,1680314104&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=2969725826,2642695997&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=690802292,3622175025&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=49812969,110034636&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=1718720747,2799425769&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=3402125124,3537687320&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=259588212,3088751835&fm=23&gp=0.jpg',
-                'http://img0.imgtn.bdimg.com/it/u=1251795695,445939417&fm=23&gp=0.jpg',
-                'http://img2.imgtn.bdimg.com/it/u=1745088913,794630035&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=1250904486,3831896269&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=4131486482,3650592575&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=1668320013,469116154&fm=23&gp=0.jpg',
-                'http://img0.imgtn.bdimg.com/it/u=1444843527,1432845993&fm=23&gp=0.jpg',
-                'http://img2.imgtn.bdimg.com/it/u=985788794,2632812390&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=3042226720,3865293507&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=2926920398,3757699980&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=2828341053,849876388&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=2693076931,3434605236&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=3977873970,616557059&fm=23&gp=0.jpg'
+                'http://imglf0.nosdn.127.net/img/SENKQXkvaU1MYkgyMG5UWEVuRmExWWUrQ2ViaFBuUU9OTXFmR2Zsdk1EZDJmK1pBSkUzaktRPT0.jpg?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg',
+                'http://imglf0.nosdn.127.net/img/VjgyYVlpdUNvODNHblNyL2RRVFJlZzdGcDBrbXE3cmpPVFpLb3pvQlFnMFdNWnJwaG1NdTl3PT0.2?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg',
+                'http://imglf1.nosdn.127.net/img/ZGc5YVQwZGxjLzlOaDlVNlNMSFVSc1JXQjJMN3JBLzVZVHh0K1NRVy9OaS8xcnBYc29CbGNnPT0.jpg?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg',
+                'http://imglf.nosdn.127.net/img/aFdKY3Iydi82VUFLZXVmaDNvTkRFMjgxZStZZlMrUEcyeUQ5THlIWUI3YkxIMFpqNXpzcnRRPT0.jpg?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg%7Cwatermark&type=2&text=wqkgam95bW9jaGEgLyBqb3ltb2NoYS5sb2Z0ZXIuY29t&font=bXN5aA==&gravity=southwest&dissolve=30&fontsize=240&dx=8&dy=10&stripmeta=0',
+                'http://imglf0.nosdn.127.net/img/VjgyYVlpdUNvODJ4RTlPb0pBVzgvWjQvS0FDRGVjbmRmUm1tQTFIbFg0TE4rWW4wVitYSGV3PT0.2?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg'
             ];
         }
         

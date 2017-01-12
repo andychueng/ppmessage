@@ -2,6 +2,46 @@
 .pp-conversation-container {
     display: none;
 }
+
+.pp-borderless-dismiss-bar {
+    display: none;
+    margin-bottom: 10px;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+}
+
+.pp-borderless-dismiss-view-more {
+    display: inline-block;
+    background-color: #5d6c80;
+    opacity: .8;
+    color: #fff;
+    font-size: 13px;
+    font-size: 13px !important;
+    line-height: 32px !important;
+    padding: 0 8px;
+    border-radius: 16px;
+    cursor: pointer;
+    background-position: 50%;
+    position: relative;
+    float: right;
+    margin-right: 70px;
+}
+
+.pp-borderless-dismiss-button {
+    background-color: #5d6c80;
+    background-position: 50%;
+    background-size: 8px 8px;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    cursor: pointer;
+    display: block;
+    float: right;
+    position: relative;
+    width: 32px;
+    height: 32px;
+}
+
 /* --CONVERSATION-CONTAINER-END-- */
 
 .pp-text-link-user {
@@ -839,10 +879,20 @@
     -ms-user-select: text;
     top: 3px;
 }
+
 .pp-container .pp-conversation-part-text-by-admin-body {
     font-size:14px; font-weight:400; line-height:20px; padding:12px 17px; text-align:left; word-break:break-all; white-space: pre-wrap;
     color: #606273;
     background-color: #eff3f6;
+}
+.pp-conversation-part-msg-by-admin-body-triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 7.5px;
+    border-style: solid;
+    border-width: 0 0 13px 5px;
+    border-color: transparent transparent #fff;
 }
 .pp-container .pp-conversation-part-text-by-admin-timestamp-container {
     font-size:12px; line-height:20px; color:#c9cbcf; position:relative; top:0; display:inline-block;

@@ -95,7 +95,7 @@ Ctrl.$composerContainer = (function() {
         this.onTextareaChange = function() {
 
             var text = $(composerContainerTextareaSelector).val();
-            var enableSendButton = text && text.length > 0;
+            var enableSendButton = !!( text && text.length > 0 );
             if ( enableSendButton ) {
                 $( composerContainerSendButtonSelector ).show();
                 $( composerContainerFileSelector ).hide();
@@ -119,22 +119,25 @@ Ctrl.$composerContainer = (function() {
             if (event.which == 13) {
                 event.preventDefault(); // Don't make a new line
                 this.sendText();
+                this.onTextareaChange();
             }
         };
 
-        this.sendText = function() {            
+        this.sendText = function() {
             var text = $(composerContainerTextareaSelector).val();
             if (text) {
                 Ctrl.$emojiSelector.get().showSelector(false);
                 $(composerContainerTextareaSelector).val('');
                 $(composerContainerTextareaSelector).focus();
-                View.$composerContainer.fixInputRows();
+                // View.$composerContainer.fixInputRows();
                 $(composerContainerTextareaSelector)[0].rows = 1;
 
                 // Send text message
                 new Service.PPMessage.Builder( Service.PPMessage.TYPE.TEXT )
                     .textMessageBody(text)
                     .build().send();
+
+                View.$conversationContentContainer.adjustDismissBarPosition();
 
                 // Place cursor to the begining
                 // resetCursor();
@@ -188,6 +191,9 @@ Ctrl.$composerContainer = (function() {
                         .build().send();
 
                 }
+
+                // Adjust dismissbar position
+                View.$conversationContentContainer.adjustDismissBarPosition();
             };
             fileReader.onerror = function(e) {
                 Service.$debug.d('FileReader upload file error. filePath: %s, error: %s.', filePath, e);

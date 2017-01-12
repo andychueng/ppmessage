@@ -48,11 +48,14 @@ Ctrl.$conversationQuickMessage = (function() {
 
         $( '.pp-conversation-part-pulltorefreshbutton' ).hide();
         $( '.pp-messenger-panel' ).css( { 'background-color': 'transparent', 'box-shadow': 'none' } );
-        $( '.pp-conversation-content' ).css( { top: '0px', 
+        $( '.pp-conversation-content' ).css( { top: 'initial', 
+                                               width: '330px',
                                                'background-color': 'transparent', 
-                                               'margin-bottom': '20px', 
-                                               'padding': '30px 6px 0px 35px', 
-                                               'overflow-y': 'scroll', 
+                                               'margin-bottom': '0px', 
+                                               'padding': '0px 20px 0px 0px', 
+                                               '-webkit-mask-image': 'linear-gradient(0deg,#000,#000,transparent)',
+                                               'mask-image': 'linear-gradient(0deg,#000,#000,transparent)',
+                                               'overflow-y': 'hidden', 
                                                'margin-right': '-16px' } );
         $( '.pp-sheet-header' ).hide();
         $( '#pp-composer-container' ).css( { 'border-radius': '5px', 'width': '270px' } );
@@ -62,6 +65,7 @@ Ctrl.$conversationQuickMessage = (function() {
                     'padding-bottom': '16px' } )
             .attr( 'placeholder', 'Write to reply' );
         $( '.pp-conversation-container' ).css( { height: '100%', overflow: 'hidden', position: 'relative' } );   
+        View.$conversationContentContainer.bindEvent();
     }
 
     function disable() {
@@ -77,9 +81,12 @@ Ctrl.$conversationQuickMessage = (function() {
         $( '.pp-conversation-part-pulltorefreshbutton' ).show();
         $( '.pp-messenger-panel' ).css( { 'background-color': View.Style.Color.base, 'box-shadow': '' } );
         $( '.pp-conversation-content' ).css( { top: '', 
+                                               width: '',
                                                'background-color': '', 
                                                'margin-bottom': '', 
                                                'padding': '', 
+                                               '-webkit-mask-image': '',
+                                               'mask-image': '',
                                                'overflow-y': '', 
                                                'margin-right': '' } );
         $( '.pp-sheet-header' ).show();
@@ -90,6 +97,9 @@ Ctrl.$conversationQuickMessage = (function() {
                                                           'START_CONVERSATION_MOBILE_HINT' : 
                                                           'START_CONVERSATION_HINT') );
         $( '.pp-conversation-container' ).css( { height: '', overflow: '', position: '' } );
+
+        View.$conversationContentContainer.unbindEvent();
+        View.$conversationContentContainer.hideDismissBarDirect();
     }
 
     function handleMessage( ppMessage ) {
@@ -106,6 +116,7 @@ Ctrl.$conversationQuickMessage = (function() {
                 }
 
                 Ctrl.$conversationContent.appendMessage( ppMessageBody, true );
+                View.$conversationContentContainer.adjustDismissBarPosition();
                 View.$conversationContent.scrollToBottom();
                 return true;
             };

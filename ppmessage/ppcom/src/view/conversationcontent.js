@@ -26,8 +26,12 @@ View.$conversationContent = (function() {
         $timeout( function() {
             // Bind mouse wheel event
             var isFF = Service.$device.isFirefox(),
-                event = isFF ? 'DOMMouseScroll' : 'mousewheel';
-            $( selector ).bind( event ,function( e ) {
+                event = isFF ? 'DOMMouseScroll' : 'mousewheel',
+                $el = $( selector );
+            
+            $el.bind( event ,function( e ) {
+                if ( Ctrl.$conversationQuickMessage.isEnabled() ) return;
+
                 var st = $(this).scrollTop(),
                     delta = isFF ? -e.originalEvent.detail : e.originalEvent.wheelDelta /120;
                 if ( delta > 0) {
@@ -42,7 +46,7 @@ View.$conversationContent = (function() {
                     }
                 }             
             } );
-
+            
         } );
     }
     extend(PPConversationContent, View.PPDiv);
