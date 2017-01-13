@@ -343,6 +343,18 @@
     height: 35px;
 }
 
+.pp-group-item .pp-group-item-first-of-two-avatar {
+    top: 6px;
+    left: 0px;
+    z-index: 2;
+}
+
+.pp-group-item .pp-group-item-second-of-two-avatar {
+    top: 6px;
+    right: 0px;
+    z-index: 2;
+}
+
 .pp-group-item .pp-group-item-first-of-three-avatar {
     top: -1;
     left: 6px;

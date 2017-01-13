@@ -23,14 +23,23 @@ View.$groupContentItem = (function() {
                 if ( users.length === 1 ) {
                     return new View.Img( { src: icon, className: 'pp-group-item-first-of-one-avatar' } );
                 } else if ( users.length === 2 ) { 
+                    var $container = new View.Div( 'pp-group-item-avatar-container' ),
+                        len = users.length,
+                        SEQUENCE = [ 'first', 'second' ];
+
+                    for ( var i=0; i<len; i++ ) {
+                        $container.add( new View.Img( { src: users[ i ].user_avatar, 
+                                                        className: 'pp-group-item-' + SEQUENCE[i] + '-of-two-avatar' } ) );
+                    }
                     
+                    return $container;    
                 } else if ( users.length === 3 ) {
                     var $container = new View.Div( 'pp-group-item-avatar-container' ),
-                        len = icons.length,
+                        len = users.length,
                         SEQUENCE = [ 'first', 'second', 'third' ];
 
                     for ( var i=0; i<len; i++ ) {
-                        $container.add( new View.Img( { src: icons[ i ].user_avatar, 
+                        $container.add( new View.Img( { src: users[ i ].user_avatar, 
                                                         className: 'pp-group-item-' + SEQUENCE[i] + '-of-three-avatar' } ) );
                     }
                     
@@ -62,8 +71,8 @@ View.$groupContentItem = (function() {
         // Build HTML
         this.add(buildAvatar( [
             { user_avatar: Configuration.assets_path + 'img/avatar_1.jpg' },
-            // { user_avatar: Configuration.assets_path + 'img/avatar_2.jpg' },
-            // { user_avatar: Configuration.assets_path + 'img/avatar_3.jpg' }
+            { user_avatar: Configuration.assets_path + 'img/avatar_2.jpg' },
+            { user_avatar: Configuration.assets_path + 'img/avatar_3.jpg' }
         ] ) ).add(buildBody());
 
         // Build Event
