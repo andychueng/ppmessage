@@ -20,7 +20,7 @@ View.$groupContentItem = (function() {
             buildAvatar = function( users ) {
                 users = users || [];
 
-                if ( users.length === 1 ) {
+                if ( users.length <= 1 ) {
                     return new View.Img( { src: icon, className: 'pp-group-item-first-of-one-avatar' } );
                 } else if ( users.length === 2 ) { 
                     var $container = new View.Div( 'pp-group-item-avatar-container' ),
@@ -33,7 +33,7 @@ View.$groupContentItem = (function() {
                     }
                     
                     return $container;    
-                } else if ( users.length === 3 ) {
+                } else if ( users.length >= 3 ) {
                     var $container = new View.Div( 'pp-group-item-avatar-container' ),
                         len = users.length,
                         SEQUENCE = [ 'first', 'second', 'third' ];
@@ -69,11 +69,7 @@ View.$groupContentItem = (function() {
             };
 
         // Build HTML
-        this.add(buildAvatar( [
-            { user_avatar: Configuration.assets_path + 'img/avatar_1.jpg' },
-            { user_avatar: Configuration.assets_path + 'img/avatar_2.jpg' },
-            { user_avatar: Configuration.assets_path + 'img/avatar_3.jpg' }
-        ] ) ).add(buildBody());
+        this.add(buildAvatar( Service.$conversation.getUser( data.uuid ) ) ).add(buildBody());
 
         // Build Event
         $timeout(buildEvent);

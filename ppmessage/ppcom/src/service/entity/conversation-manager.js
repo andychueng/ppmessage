@@ -89,11 +89,14 @@ Service.$conversationManager = ( function() {
                     // Now, this `default conversation` become avaliable now
                     var isDefaultConversation = !Service.$conversationAgency.isDefaultConversationAvaliable();
                     if ( isDefaultConversation ) { 
-                        onDefaultConversationAvaliable( conv );
+                        Service.$conversation.asyncGetUser( conversationUUID, function() {
+                            onDefaultConversationAvaliable( conv );
+                            $pubsub.publish( EVENT.AVALIABLE, conv );
+                        } );
                     } else {
                         push ( conversation( conv ) );
+                        $pubsub.publish( EVENT.AVALIABLE, conv );
                     }
-                    $pubsub.publish( EVENT.AVALIABLE, conv );   
                 }
                 
             } );

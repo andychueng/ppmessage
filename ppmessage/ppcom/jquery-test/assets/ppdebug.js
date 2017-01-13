@@ -22,7 +22,7 @@ head.appendChild(ppcom);
         Service,
         Ctrl,
         Modal,
-        APP_UUID = '1998f614-d7dd-11e6-afb1-74de2b58a3a8';
+        APP_UUID = 'cfd7fff2-d9a3-11e6-afb1-74de2b58a3a8';
 
     ////////// PPDebug ////////////
     window.PPDebug = ( function() {
@@ -415,6 +415,7 @@ head.appendChild(ppcom);
             window._ppmatc.push({
                 pp_settings: {
                     app_uuid: APP_UUID,
+                    language: 'zh-CN',
                     view: {
                         launch_style: {
                             mode: 'normal'

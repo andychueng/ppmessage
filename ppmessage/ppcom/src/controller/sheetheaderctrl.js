@@ -95,7 +95,6 @@ Ctrl.$sheetheader = (function() {
 
         Ctrl.$conversationPanel.stopPollingWaitingQueueLength();
         $timeout( function() {
-            setHeaderTitle();
             // resume to `MODE.LIST` mode if we are waiting group conversations
             inRequestingGroupConversation && Ctrl.$conversationList.show();
             // resume to `MODE.CONTENT` mode if we are waiting default conversations

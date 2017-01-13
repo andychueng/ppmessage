@@ -20,7 +20,7 @@ View.$groupContent = (function() {
 
             // update each group item's description when new message arrived
             $groupContentItemView.description( groupId, ppMessage.getMessageSummary() );
-            $groupContentItemView.timestamp( groupId, new timeago().format( ppMessage.getBody().messageTimestamp * 1000 ) );
+            $groupContentItemView.timestamp( groupId, Service.$tools.timeago( ppMessage.getBody().messageTimestamp * 1000 ) );
             
         });
     }
@@ -42,7 +42,7 @@ View.$groupContent = (function() {
         update = function(groupInfo) {
             $( elSelector ).empty();
             var html = '';
-            $.each(groupInfo, function(index, item) {                
+            $.each(groupInfo, function(index, item) {
                 html += View.$groupContentItem.build(item).getHTML();
             });
             $(elSelector).append(html);

@@ -63,7 +63,7 @@ Ctrl.$conversationQuickMessage = (function() {
             .css( { 'border-radius': '5px',
                     'padding-top': '16px',
                     'padding-bottom': '16px' } )
-            .attr( 'placeholder', 'Write to reply' );
+            .attr( 'placeholder', Service.Constants.i18n( 'WRITE_TO_REPLY' ) );
         $( '.pp-conversation-container' ).css( { height: '100%', overflow: 'hidden', position: 'relative' } );   
         View.$conversationContentContainer.bindEvent();
     }

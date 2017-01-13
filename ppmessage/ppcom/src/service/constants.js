@@ -117,6 +117,9 @@
             TYPING: '\u5bf9\u65b9\u6b63\u5728\u8f93\u5165...',
 
             AUDIO_PLAY_ERROR: '\u64ad\u653e\u5931\u8d25',
+            CONVERSATIONS: '\u4f1a\u8bdd',
+            WRITE_TO_REPLY: '\u56de\u590d',
+            VIEW_MORE: '\u67e5\u9605\u66f4\u591a',
             
             timeFormat: function(timestampInMilliSeconds) {
                 return Service.$tools.formatTime(timestampInMilliSeconds, {
@@ -172,6 +175,10 @@
             TYPING: 'Typing...',
 
             AUDIO_PLAY_ERROR: 'Play Error',
+
+            CONVERSATIONS: 'Conversations',
+            WRITE_TO_REPLY: 'Write to reply',
+            VIEW_MORE: 'View More',
             
             timeFormat: function(timestampInMilliSeconds) {
                 return Service.$tools.formatTime(timestampInMilliSeconds, {

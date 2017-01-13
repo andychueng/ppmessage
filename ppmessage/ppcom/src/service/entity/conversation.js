@@ -7,7 +7,20 @@ Service.$conversation = ( function() {
     //////// API ///////////
     
     return {
+        setUser: setUser,
+        getUser: getUser,
         asyncGetUser: asyncGetUser
+    }
+
+    function setUser( token, users ) {
+        if ( users && users.length > 0 ) {
+            conversationUsers[ token ] = users;   
+        }
+    }
+
+    function getUser( token ) {
+        var candidates =  conversationUsers [ token ] || [];
+        return excludePortalUser( candidates );
     }
 
     ////// asyncGetUser ////

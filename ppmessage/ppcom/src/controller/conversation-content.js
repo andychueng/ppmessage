@@ -255,7 +255,7 @@ Ctrl.$conversationContent = (function() {
                 var old = activeConversation;
 
                 if ( old !== conversation ) {
-                    onHide( old ); // `onHide` old conversation
+                    onHide( old, conversation ); // `onHide` old conversation
                     onStart( conversation ); // `onStart` new conversation
                 } else {
                     onResume( conversation ); // same conversation call `onResume` event
@@ -341,7 +341,11 @@ Ctrl.$conversationContent = (function() {
         
     }
 
-    function onHide ( conversation ) {
+    function onHide ( conversation, newConversation ) {
+
+        if ( newConversation ) {
+            View.$sheetHeader.reBuildTeamProfile( newConversation.token );
+        }
 
         // unWatch conversation typing
         conversation && conversation.uuid &&

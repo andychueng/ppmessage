@@ -13,7 +13,7 @@ Ctrl.$conversationList = ( function() {
 
         View.$loading.show();
         Service.$conversationManager.asyncGetList( function( conversationList ) {
-            
+
             // update view
             View.$groupContent
                 .update( prepareData( conversationList ) )
@@ -25,7 +25,7 @@ Ctrl.$conversationList = ( function() {
             markUnreadState ( conversationList );
             conversationDescriptionLoader( conversationList ).load( function( token, description, timestamp ) {
                 View.$groupContentItem.description( token, description );
-                View.$groupContentItem.timestamp( token, new timeago().format( timestamp ) );
+                View.$groupContentItem.timestamp( token, Service.$tools.timeago( timestamp ) );
             } );
             
         } );
@@ -166,7 +166,10 @@ Ctrl.$conversationList = ( function() {
                             }
                                 
                         } );
+                    return;
                 }
+
+                if ( callback ) callback( item.token, "", new Date().getTime() );
                 
             } );
         }

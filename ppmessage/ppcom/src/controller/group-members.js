@@ -49,9 +49,15 @@ Ctrl.$groupMembers = ( function() {
                 user_uuid: userId
             } , function ( conversation ) {
                 
-                conversation && Service.$conversationManager.activeConversation( conversation.token );
-                Ctrl.$conversationContent.show( conversation );
-                $onResult( undefined, callback );
+                if ( conversation ) {
+                    Service.$conversationManager.activeConversation( conversation.token );
+
+                    // Ensure we get user
+                    Service.$conversation.asyncGetUser( conversation.token, function() {
+                        Ctrl.$conversationContent.show( conversation );
+                        $onResult( undefined, callback );
+                    } );
+                }
                 
             } );
 

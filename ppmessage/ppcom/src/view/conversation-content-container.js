@@ -72,7 +72,7 @@ View.$conversationContentContainer = (function() {
                                                 click: function() {
                                                     Ctrl.$launcher.get().onClickEvent();
                                                 }
-                                            } } ).text( 'View More' ) )
+                                            } } ).text( Service.Constants.i18n( 'VIEW_MORE' ) ) )
                     )
                 .add(View.$conversationContent.build())
                 .add(View.$composerContainer.build());

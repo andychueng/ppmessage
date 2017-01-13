@@ -16,16 +16,6 @@ View.$sheetHeader = (function() {
             buildHeaderContent = function() {
                 return new PPDiv( { className: 'pp-sheet-header-title-container', 
                                     style: 'background-color:' + View.Style.Color.main_color })
-                    .add( buildTeamProfile( [
-                        { user_avatar: Configuration.assets_path + 'img/avatar_1.jpg' },
-                        { user_avatar: Configuration.assets_path + 'img/avatar_2.jpg' },
-                        { user_avatar: Configuration.assets_path + 'img/avatar_3.jpg' }
-                    ] ) )
-                    .add( buildTeamProfileFull( [
-                        { user_avatar: Configuration.assets_path + 'img/avatar_1.jpg', user_fullname: 'Tom', user_uuid: '7e2c6cd2-d08f-11e6-afb1-74de2b58a3a8' },
-                        { user_avatar: Configuration.assets_path + 'img/avatar_2.jpg', user_fullname: 'Jak', user_uuid: 'A' },
-                        { user_avatar: Configuration.assets_path + 'img/avatar_3.jpg', user_fullname: 'Emma', user_uuid: 'B' }
-                    ] ) )
                     .add( buildHeaderBody() );
             },
 
@@ -42,8 +32,8 @@ View.$sheetHeader = (function() {
 
             buildHeaderBody = function() {
                 return new PPDiv('pp-sheet-header-body')
-                    .add(new PPDiv('pp-sheet-header-title').text('Conversations'))
-                    .add(new PPDiv('pp-sheet-header-app-name').text('PPMessage'));
+                    .add(new PPDiv('pp-sheet-header-title').text( Service.Constants.i18n( 'CONVERSATIONS' ) ))
+                    .add(new PPDiv('pp-sheet-header-app-name').text( Service.$app.app().app_name ));
             },
 
             buildCloseButton = function() {
@@ -53,60 +43,6 @@ View.$sheetHeader = (function() {
                 }).add(new PPDiv({
                     'class': 'pp-header-buttons-close-contents'
                 }))
-            },
-
-            buildTeamAvatars = function( users ) {
-                users = users || [];
-                
-                var parent = new Div( teamProfileClassPrefix + '-avatar-container' ),
-                    MAX = 3, 
-                    i = 0;
-
-                while ( i < MAX && i < users.length ) {
-                    var user = users[ i ];
-                    parent.add( new Div( teamProfileClassPrefix + '-avatar'  )
-                                .add( new View.Img( { src: user.user_avatar  } ) ));
-                    i++;
-                }
-                    
-                return parent;
-            },
-
-            buildTeamProfileFullAvatars = function( users ) {
-                users = users || [];
-                var parent = new Div( teamProfileFullClassPrefix + '-avatar-container' ),
-                    MAX = 3,
-                    i = 0;
-
-                while ( i < MAX && i < users.length ) {
-                    var user = users[ i ];
-                    parent.add( new Div( teamProfileFullClassPrefix + '-avatar' )
-                              .add( new View.Img( { src: user.user_avatar, user_uuid: user.user_uuid } ) )
-                              .add( new View.Div( teamProfileFullClassPrefix + '-name' ).text( user.user_fullname ) ) );
-                    i++;
-                }
-
-                return parent;
-            },
-
-            buildTeamProfile = function( users ) {
-                return new Div( teamProfileClassPrefix )
-                    .add( new Div( { className: teamProfileClassPrefix + '-container', 
-                                     selector: '.' + teamProfileClassPrefix + '-container',
-                                     event: { 
-                                         click: showTeamProfileFull
-                                     } }  )
-                          .add( buildTeamAvatars( users )  )
-                          .add( new Div( teamProfileClassPrefix + '-body' )
-                                .add( new View.P( teamProfileClassPrefix + '-app-name'  ) )
-                                .add( new View.P( teamProfileClassPrefix + '-description' ).text( 'Typically replies in under 30m' ) )));
-            },
-
-            buildTeamProfileFull = function( users ) {
-                return new Div( teamProfileFullClassPrefix )
-                    .add( new Div( teamProfileFullClassPrefix + '-team-name' ).text( 'PPMessage' ) )
-                    .add( new Div( teamProfileFullClassPrefix + '-description' ).text( 'Typically replies in under 30m' ) )
-                    .add( buildTeamProfileFullAvatars( users ) );
             },
 
             buildSheetHeaderEvent = function() {
@@ -230,7 +166,9 @@ View.$sheetHeader = (function() {
         showTeamProfile: showTeamProfile,
         isShowingTeamProfileFull: isShowingTeamProfileFull,
         showTeamProfileFull: showTeamProfileFull,
-        hideTeamProfileFull: hideTeamProfileFull
+        hideTeamProfileFull: hideTeamProfileFull,
+
+        reBuildTeamProfile: reBuildTeamProfile
     }
 
     ////////// Implementation /////
@@ -330,12 +268,6 @@ View.$sheetHeader = (function() {
         $conversationList.animate( { scrollTop: 0 }, 0 );
         $conversationList.animate( { 'top': "+=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
         $( '#' + id ).animate({ height: "+=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
-        
-        _bindEvent( [
-            { user_avatar: Configuration.assets_path + 'img/avatar_1.jpg', user_fullname: 'Tom', user_uuid: '7e2c6cd2-d08f-11e6-afb1-74de2b58a3a8' },
-            { user_avatar: Configuration.assets_path + 'img/avatar_2.jpg', user_fullname: 'Jak', user_uuid: 'A' },
-            { user_avatar: Configuration.assets_path + 'img/avatar_3.jpg', user_fullname: 'Emma', user_uuid: 'B' }
-        ] );
     }
 
     function hideTeamProfileFull( callback ) {
@@ -427,6 +359,73 @@ View.$sheetHeader = (function() {
 
         return user;
         
+    }
+
+    function reBuildTeamProfile( activeConversationToken ) {
+        $( '.' + teamProfileFullClassPrefix ).remove();
+        $( '.' + teamProfileClassPrefix ).remove();
+
+        var $sheetHeader = $( '.pp-sheet-header-title-container' ),
+            users = Service.$conversation.getUser( activeConversationToken ),
+            conversation = Service.$conversationManager.find( activeConversationToken ),
+            welcomeMessage = Service.$app.app().welcome_message;
+
+        $sheetHeader
+            .prepend( buildTeamProfileFull( users, conversation, welcomeMessage ).getElement()[0].outerHTML )
+            .prepend( buildTeamProfile( users, conversation, welcomeMessage ).getElement()[0].outerHTML );
+
+        $( '.' + teamProfileClassPrefix + '-container' ).bind( 'click', showTeamProfileFull );
+        _bindEvent( users );
+    }
+
+    function buildTeamProfile( users, conversation, welcomeMessage ) {
+        return new View.Div( teamProfileClassPrefix )
+            .add( new View.Div( { className: teamProfileClassPrefix + '-container' }  )
+                  .add( buildTeamAvatars( users ) )
+                  .add( new View.Div( teamProfileClassPrefix + '-body' )
+                        .add( new View.P( teamProfileClassPrefix + '-app-name'  ).text( conversation.conversation_name ) )
+                        .add( new View.P( teamProfileClassPrefix + '-description' ).text( welcomeMessage ) )));
+    }
+
+    function buildTeamProfileFull( users, conversation ) {
+        return new View.Div( teamProfileFullClassPrefix )
+            .add( new View.Div( teamProfileFullClassPrefix + '-team-name' ).text( conversation.conversation_name ) )
+            .add( new View.Div( teamProfileFullClassPrefix + '-description' ).text( Service.$app.app().welcome_message ) )
+            .add( buildTeamProfileFullAvatars( users ) );
+    }
+
+    function buildTeamAvatars( users ) {
+        users = users || [];
+        
+        var parent = new View.Div( teamProfileClassPrefix + '-avatar-container' ),
+        MAX = 3, 
+        i = 0;
+
+        while ( i < MAX && i < users.length ) {
+            var user = users[ i ];
+            parent.add( new View.Div( teamProfileClassPrefix + '-avatar'  )
+                        .add( new View.Img( { src: user.user_avatar  } ) ));
+            i++;
+        }
+        
+        return parent;
+    }
+
+    function buildTeamProfileFullAvatars( users ) {
+        users = users || [];
+        var parent = new View.Div( teamProfileFullClassPrefix + '-avatar-container' ),
+        MAX = 3,
+        i = 0;
+
+        while ( i < MAX && i < users.length ) {
+            var user = users[ i ];
+            parent.add( new View.Div( teamProfileFullClassPrefix + '-avatar' )
+                        .add( new View.Img( { src: user.user_avatar, user_uuid: user.user_uuid } ) )
+                        .add( new View.Div( teamProfileFullClassPrefix + '-name' ).text( user.user_fullname ) ) );
+            i++;
+        }
+
+        return parent;
     }
     
 })();

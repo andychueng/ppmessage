@@ -112,6 +112,7 @@ Ctrl.$conversationPanel = ( function() {
             if ( mode() !== MODE.WAITING ) return;
             
             Ctrl.$sheetheader.setHeaderTitle();
+            View.$sheetHeader.reBuildTeamProfile( Service.$conversationManager.activeConversation().token );
             
             View.$groupContent.hide();
             Ctrl.$conversationContent.show(
