@@ -94,6 +94,13 @@ Service.$ppmatc = (function() {
         Service.$debug.d( 'Exec event: ', type, event );
         switch (type) {
             case EVENT_ENT_USER:
+            // Backup
+            var backup = Service.$ppSettings.getSettings();
+            PP.shutdown();
+            backup.ent_user = event[ EVENT_ENT_USER ];
+
+            // Re-Boot it
+            PP.boot( backup );
             break;
 
             case EVENT_TRACK:

@@ -10,6 +10,8 @@
             // Default settings
             DEFAULT = {
 
+                ent_user: {},
+
                 app_uuid: null,
                 api_key: null,
                 api_secret: null,
@@ -30,18 +32,21 @@
 
             // Initialize pp settings
             init = function(options) {
+                clear();
+
                 settings = $.extend({}, DEFAULT, options);
                 settings.api_key = Configuration.api_key;
                 settings.api_secret = Configuration.api_secret;
+            },
+
+            getSettings = function() {
+                return settings;
             },
 
             // Get user's settings
             getUserSettings = function() {
                 if (settings == null) return null;
                 if (userSettings != null) return userSettings;
-
-                // is anonymous user
-                var isAnonymousUser = true;
 
                 // 保持键的名字与`$service.User.DEFAULT`相同，因为我们会使用`userSettings`来Create
                 // `$service.User`
@@ -54,7 +59,7 @@
                     device_uuid: null,
 
                     is_portal_user: true,
-                    is_anonymous: isAnonymousUser,
+                    is_anonymous: $.isEmptyObject( settings.ent_user ),
                     ppcom_trace_uuid: (function() {
                         // get ppcom_trace_uuid
                         var id = Service.$cookies.get(ANONYMOUS_USER_COOKIE_KEY) || function() {
@@ -106,7 +111,8 @@
         // api
         return {
             init: init,
-            
+
+            getSettings: getSettings,
             getUserSettings: getUserSettings,
             updateUserSettings: updateUserSettings,
             
