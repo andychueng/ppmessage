@@ -1,9 +1,13 @@
+#pp-container .msg-sms-email-container {
+    
+}
+
 #pp-container .msg-sms-email-admin {
     position: relative;
     padding: 16px 20px 20px;
     border: 1px solid #dadfe3;
     border-radius: 5px;
-    max-width: 60%;
+    max-width: 80%;
 }
 
 #pp-container .msg-sms-email-title {

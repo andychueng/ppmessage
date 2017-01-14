@@ -159,7 +159,8 @@
                 audio: {},
                 timestamp: {
                     time: Date.now()
-                }
+                },
+                smsEmail: {}
             },
             user: {
                 id: null,
@@ -348,6 +349,19 @@
 
         this.timestampBody = function(timestampBody) {
             ppMessage.message.timestamp = timestampBody;
+            return this;
+        };
+
+        //----------------------
+        //SMS_EMAIL
+        //----------------------
+        
+        // {
+        //     selected_type: undefined / EMAIL / SMS,
+        //     contact: undefined / 123 456 78900 / 123@gmail.com,
+        // }   
+        this.smsEmailBody = function( config ) {
+            ppMessage.message.smsEmail = config;
             return this;
         };
 

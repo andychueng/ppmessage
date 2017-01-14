@@ -22,7 +22,7 @@ head.appendChild(ppcom);
         Service,
         Ctrl,
         Modal,
-        APP_UUID = 'fa603756-da2c-11e6-afb1-74de2b58a3a8';
+        APP_UUID = 'f92df324-da4e-11e6-afb1-74de2b58a3a8';
 
     ////////// PPDebug ////////////
     window.PPDebug = ( function() {
@@ -85,6 +85,8 @@ head.appendChild(ppcom);
             $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-launch-style-left-to-ppmatc', 'Push Launch Style Left to PPMatc' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-launch-style-right-to-ppmatc', 'Push Launch Style Right to PPMatc' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-launch-style-normal-to-ppmatc', 'Push Launch Style Normal to PPMatc' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'append-email-input-msg', 'Append email Input msg' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'append-email-input-msg-with-selected', 'Append email Input msg with email' ) );
             
             $elDebugContainer.append( '<br/><select class="drop-down"><option>None</option></select><br/>' );
             $elDebugContainer.append( _buildInputViewHtml( 'clear', '清空' ) );
@@ -120,6 +122,8 @@ head.appendChild(ppcom);
             _bindViewClickEvent( 'push-pp-settings-launch-style-left-to-ppmatc', test.pushLaunchStyleLeftToPPMatc );
             _bindViewClickEvent( 'push-pp-settings-launch-style-right-to-ppmatc', test.pushLaunchStyleRightToPPMatc );
             _bindViewClickEvent( 'push-pp-settings-launch-style-normal-to-ppmatc', test.pushLaunchStyleNormalToPPMatc );
+            _bindViewClickEvent( 'append-email-input-msg', test.appendEmailInputMsg );
+            _bindViewClickEvent( 'append-email-input-msg-with-selected', test.appendEmailInputMsgWithSelected );
             
             // Initial code
             test.pushPPSettingsToPPMatc();
@@ -199,6 +203,9 @@ head.appendChild(ppcom);
             pushLaunchStyleLeftToPPMatc: pushLaunchStyleLeftToPPMatc,
             pushLaunchStyleRightToPPMatc: pushLaunchStyleRightToPPMatc,
             pushLaunchStyleNormalToPPMatc: pushLaunchStyleNormalToPPMatc,
+
+            appendEmailInputMsg: appendEmailInputMsg,
+            appendEmailInputMsgWithSelected: appendEmailInputMsgWithSelected,
 
             clear: clear
         }
@@ -490,6 +497,30 @@ head.appendChild(ppcom);
                     }
                 }
             });
+        }
+
+        function appendEmailInputMsg() {
+            var ci = Service.$conversationManager.activeConversation().uuid,
+            message = new Service.PPMessage.Builder( Service.PPMessage.TYPE.SMS_EMAIL )
+                .conversationId( ci )
+                .userIcon( random( imgs() ) )
+                .build();
+            
+            Service.$pubsub.publish('msgArrived/chat', message);
+        }
+
+        function appendEmailInputMsgWithSelected() {
+            var ci = Service.$conversationManager.activeConversation().uuid,
+            message = new Service.PPMessage.Builder( Service.PPMessage.TYPE.SMS_EMAIL )
+                .conversationId( ci )
+                .userIcon( random( imgs() ) )
+                .smsEmailBody( {
+                    selected_type: 'EMAIL',
+                    contact: 'a@gmail.com'
+                } )
+                .build();
+            
+            Service.$pubsub.publish('msgArrived/chat', message);
         }
         
         function onChattingMessage() {
