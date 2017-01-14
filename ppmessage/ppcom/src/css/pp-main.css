@@ -191,19 +191,6 @@
     width: 100%;
     top: 75px; }
 
-.pp-container .pp-group-content-container-leave {
-    -webkit-animation-name: pp-messenger-view-fade-out;
-    animation-name: pp-messenger-view-fade-out;
-    -webkit-animation-duration: .32s;
-    animation-duration: .32s;
-    -webkit-animation-timing-function: cubic-bezier(.23,1,.32,1);
-    animation-timing-function: cubic-bezier(.23,1,.32,1);
-    -webkit-animation-delay: .12s;
-    animation-delay: .12s;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both    
-}
-
 .pp-group-item {
     border-top: 1px solid #f3f4f5;
     cursor: pointer;
