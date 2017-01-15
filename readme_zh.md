@@ -49,7 +49,7 @@ bash ppmessage/scripts/set-up-mac-on-linux.sh
 ./ppmessage.py
 ```
 
-> 就是这些，不工作？请将日志贴到 Github issue 中，谢谢！
+> 首次执行会进行配置，如果没有配置好想重新配置，删除 ppmessage/bootstrap/config.json, 再次运行。就是这些，不工作？请将日志贴到 Github issue 中，谢谢！
 
  
 > 完全参考手册，请关注 PPMessage 在 GitBook 上的持续更新
