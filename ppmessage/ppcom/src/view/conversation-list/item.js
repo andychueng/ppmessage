@@ -35,10 +35,10 @@ View.$groupContentItem = (function() {
                     return $container;    
                 } else if ( users.length >= 3 ) {
                     var $container = new View.Div( 'pp-group-item-avatar-container' ),
-                        len = users.length,
+                        MAX_LEN = 3,
                         SEQUENCE = [ 'first', 'second', 'third' ];
 
-                    for ( var i=0; i<len; i++ ) {
+                    for ( var i=0; i<MAX_LEN; i++ ) {
                         $container.add( new View.Img( { src: users[ i ].user_avatar, 
                                                         className: 'pp-group-item-' + SEQUENCE[i] + '-of-three-avatar' } ) );
                     }

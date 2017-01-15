@@ -35,7 +35,7 @@ View.$adminAudioMessage = ( function() {
             };
 
         
-        this.add( new View.Img( { src: item.user.avatar, className: 'pp-conversation-part-msg-by-admin-avatar' } ) )
+        this.add( View.conversationPartTools.buildAvatars( item.user.avatar, Service.$conversationManager.activeConversation().token ) )
             .add( new View.Div( { className: 'pp-conversation-part-msg-by-admin-body-container' } )
                   .add( new View.Div( { className: 'pp-voice', uuid: audio.id() } )
                         .add( new View.Div( { className: 'pp-body',

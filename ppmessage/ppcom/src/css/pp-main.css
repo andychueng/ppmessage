@@ -330,31 +330,31 @@
     height: 35px;
 }
 
-.pp-group-item .pp-group-item-first-of-two-avatar {
+.pp-group-item .pp-group-item-first-of-two-avatar, .pp-conversation-part-msg-first-of-two-avatar {
     top: 6px;
     left: 0px;
     z-index: 2;
 }
 
-.pp-group-item .pp-group-item-second-of-two-avatar {
+.pp-group-item .pp-group-item-second-of-two-avatar, .pp-conversation-part-msg-second-of-two-avatar {
     top: 6px;
     right: 0px;
     z-index: 2;
 }
 
-.pp-group-item .pp-group-item-first-of-three-avatar {
+.pp-group-item .pp-group-item-first-of-three-avatar, .pp-conversation-part-msg-first-of-three-avatar {
     top: -1;
     left: 6px;
     z-index: 2;
 }
 
-.pp-group-item .pp-group-item-second-of-three-avatar {
+.pp-group-item .pp-group-item-second-of-three-avatar, .pp-conversation-part-msg-second-of-three-avatar {
     top: 15px;
     right: 14px;
     z-index: 3;
 }
 
-.pp-group-item .pp-group-item-third-of-three-avatar {
+.pp-group-item .pp-group-item-third-of-three-avatar, .pp-conversation-part-msg-third-of-three-avatar {
     top: 15px;
     left: 14px;
     z-index: 1;

@@ -45,10 +45,7 @@
             
             this.add(new View.PPDiv('pp-conversation-part-image-by-admin-o')
                      .add(new View.PPDiv('pp-conversation-part-image-by-admin-o1')
-                          .add(new View.PPElement('img', {
-                              src: item.user.avatar,
-                              className: avatarClass
-                          }))
+                          .add(View.conversationPartTools.buildAvatars( item.user.avatar, Service.$conversationManager.activeConversation().token ))
                           .add(new View.PPDiv('pp-conversation-part-msg-by-admin-body-container')
                                .add(new View.PPDiv('pp-conversation-part-image-by-admin-o3')
                                     .add(new View.PPDiv('pp-conversation-part-image-by-admin-o4')

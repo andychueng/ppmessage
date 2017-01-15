@@ -22,7 +22,7 @@ head.appendChild(ppcom);
         Service,
         Ctrl,
         Modal,
-        APP_UUID = 'f92df324-da4e-11e6-afb1-74de2b58a3a8';
+        APP_UUID = 'a09e2260-dadf-11e6-afb1-74de2b58a3a8';
 
     ////////// PPDebug ////////////
     window.PPDebug = ( function() {

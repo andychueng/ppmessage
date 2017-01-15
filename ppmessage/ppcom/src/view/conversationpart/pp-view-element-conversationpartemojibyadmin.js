@@ -21,10 +21,7 @@
         });
 
         this.add(new View.PPDiv('pp-conversation-part-emoji-by-admin-outer')
-                 .add(new View.PPElement('img', {
-                     src: item.user.avatar,
-                     className: avatarClass
-                 }))
+                 .add(View.conversationPartTools.buildAvatars( item.user.avatar, Service.$conversationManager.activeConversation().token ))
                  .add(new View.PPDiv('pp-conversation-part-msg-by-admin-body-container')
                       .add(new View.PPElement('span', {
                           id: 'pp-conversation-part-emoji-by-admin-body',

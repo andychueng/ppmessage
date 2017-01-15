@@ -28,10 +28,7 @@
         
         this.add(new View.PPDiv('pp-conversation-part-text-by-admin-outer')
                  .add(new View.PPDiv('pp-conversation-part-text-by-admin-outer-2')
-                      .add(new View.PPElement('img', {
-                          className: avatarClass,
-                          src: item.user.avatar
-                      }))
+                      .add(View.conversationPartTools.buildAvatars( item.user.avatar, Service.$conversationManager.activeConversation().token ))
                       .add(new View.PPDiv('pp-conversation-part-msg-by-admin-body-container')
                            .add(new View.PPDiv( { style: 'padding-bottom: 10px;' } )
                                 .add(new View.PPDiv({ className: 'pp-conversation-part-text-by-admin-body-container', style: bodyMarginLeftStyle })

@@ -33,10 +33,7 @@
 
         this.add(new View.PPDiv('pp-conversation-part-file-by-admin-outer')
                  .add(new View.PPDiv('pp-conversation-part-file-by-admin-outer-2')
-                      .add(new View.PPElement('img', {
-                          'class': classAvatar,
-                          src: userAvatar
-                      }))
+                      .add(View.conversationPartTools.buildAvatars( item.user.avatar, Service.$conversationManager.activeConversation().token ))
                       .add(new View.PPDiv('pp-conversation-part-msg-by-admin-body-container')
                            .add(new View.PPDiv('pp-conversation-part-file-by-admin-outer-4')
                                 .add(new View.PPDiv('pp-conversation-part-file-by-admin-outer-5')
