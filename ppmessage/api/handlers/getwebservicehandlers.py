@@ -136,10 +136,7 @@ def getWebServiceHandlers():
     handler_list.append((r"/PPCONSOLE_GET_MESSAGE_NUMBER_BY_RANGE", PPConsoleGetMessageNumberByRange))
 
     handler_list.append((r"/PPCONSOLE_LOGOUT", PPConsoleLogoutHandler))
-    handler_list.append((r"/PPCONSOLE_SIGNUP", PPConsoleSignupHandler))
 
-    handler_list.append((r"/PPCONSOLE_SEND_NEW_PASSWORD", PPConsoleSendNewPassword))
-    
     handler_list.append((r"/PPKEFU_LOGIN", PPKefuLoginHandler))
     handler_list.append((r"/PPKEFU_LOGOUT", PPKefuLogoutHandler))
     handler_list.append((r"/PPKEFU_SET_BUSY", PPKefuSetBusy))
