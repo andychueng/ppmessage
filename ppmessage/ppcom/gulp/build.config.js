@@ -182,6 +182,7 @@ module.exports = {
         "../src/css/msgs/email_sms.css",
         "../src/css/msgs/msgbyadmin.css",
         "../src/css/sheet-header.css",
+        "../src/css/flags.css",
 
         // PUT media css to the end
         "../src/css/media.css"

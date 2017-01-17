@@ -533,6 +533,7 @@
     position:fixed;
     width:368px;
     height: calc(100% - 95px - 20px);
+    max-height: 531px;
     position: fixed;
     right:20px;
     bottom:95px;

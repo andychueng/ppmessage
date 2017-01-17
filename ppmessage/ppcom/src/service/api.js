@@ -242,6 +242,11 @@
             this._post( '/PP_GET_AMD_QUEUE_LENGTH', $.extend( {}, data ), success, fail );
         };
 
+        // data: { phone_number: xxx }
+        this.validatePhoneNumber = function( data, success, fail ) {
+            this._post( '/PP_VALIDATE_PHONE_NUMBER', $.extend( {}, data ), success, fail );
+        };
+
         this.getAppUuid = function() {
             return _appUuid;
         };

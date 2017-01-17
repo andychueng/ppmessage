@@ -2,6 +2,10 @@ View.$smsEmail = (function() {
 
     var classPrefix = 'msg-sms-email-'
         iconBack = Configuration.assets_path + 'img/icon-back.png',
+        iconFlags = Configuration.assets_path + 'img/icon-flags.png',
+        iconFlagsElStyle = 'background-image:url(' + iconFlags + ')',
+        clsFlag = '#pp-container .pp-flag',
+        DEFAULT_FLAG = 'cn',
 
         activeOption = 'EMAIL',
         timeoutHideError = function() {
@@ -14,16 +18,22 @@ View.$smsEmail = (function() {
             $( '.' + classPrefix + 'input input' ).focus().val( '' );
         },
         optionEmailElementClick = function() {
+            $( clsFlag ).hide();
             clearContext();
             $( this ).addClass( classPrefix + 'options-container-active' );
             activeOption = 'EMAIL';
-            $( '.' + classPrefix + 'input input' ).attr( { type: 'email', placeholder: 'email@domain.com' } );
+            $( '.' + classPrefix + 'input input' )
+                .attr( { type: 'email', placeholder: 'email@domain.com' } )
+                .css( { padding: '0 12px' } );
         },
         optionSmsElementClick = function() {
+            $( clsFlag ).show();
             clearContext();
             $( this ).addClass( classPrefix + 'options-container-active' );
             activeOption = 'SMS';
-            $( '.' + classPrefix + 'input input' ).attr( { type: 'text', placeholder: '+86 123 456 7890' } );
+            $( '.' + classPrefix + 'input input' )
+                .attr( { type: 'text', placeholder: '+86 123 456 7890' } )
+                .css( { padding: '0 12px 0 32px' } );
         },
         submitBtnClick = function() {
             var val = $( '.' + classPrefix + 'input input' ).val();
@@ -67,6 +77,9 @@ View.$smsEmail = (function() {
                 $( '.' + classPrefix + 'options-container a:eq(1)' ).hide();
             } else {
                 $( '.' + classPrefix + 'options-container a:eq(0)' ).hide();
+                $( clsFlag ).hide();
+                $( '.' + classPrefix + 'input input' )
+                    .css( { padding: '0 12px' } );
             }
 
             var $input = $( '.' + classPrefix + 'input input' ),
@@ -101,6 +114,7 @@ View.$smsEmail = (function() {
                                                            } ).text( Service.Constants.i18n( 'SMS' ) ) ) )
                         .add( new View.Div( classPrefix + 'input-container' )
                               .add( new View.Div( classPrefix + 'input' )
+                                    .add( new View.Div( { className: 'pp-flag ' + DEFAULT_FLAG, style: iconFlagsElStyle } ) )
                                     .add( new View.Element( 'input', { selector: '.' + classPrefix + 'input input',
                                                                        event: {
                                                                            init: function() { $( this ).focus(); }

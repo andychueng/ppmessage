@@ -233,6 +233,6 @@ def getWebServiceHandlers():
 
     handler_list.append((r"/PP_GET_TARGET_SERVICE_METHOD", PPGetTargetServiceMethod))
     handler_list.append((r"/PP_GET_USER_MATCHED_METHOD", PPGetUserMatchedMethod))
-    
+
     return handler_list
 
