@@ -5,7 +5,7 @@ View.$smsEmail = (function() {
         iconFlags = Configuration.assets_path + 'img/icon-flags.png',
         iconFlagsElStyle = 'background-image:url(' + iconFlags + ')',
         clsFlag = '#pp-container .pp-flag',
-        DEFAULT_FLAG = 'cn',
+        DEFAULT_FLAG = 'jp',
 
         activeOption = 'EMAIL',
         timeoutHideError = function() {
@@ -32,7 +32,7 @@ View.$smsEmail = (function() {
             $( this ).addClass( classPrefix + 'options-container-active' );
             activeOption = 'SMS';
             $( '.' + classPrefix + 'input input' )
-                .attr( { type: 'text', placeholder: '+86 123 456 7890' } )
+                .attr( { type: 'text', placeholder: '+' + Service.$flags.query( DEFAULT_FLAG ).dialCode + ' 123 456 7890' } )
                 .css( { padding: '0 12px 0 32px' } );
         },
         submitBtnClick = function() {

@@ -54,6 +54,7 @@ module.exports = {
         "../src/service/entity/sheetheader.js",
         "../src/service/entity/audiocontext.js",
         "../src/service/entity/conversation-agency.js",
+        "../src/service/entity/flags.js",
         "../src/service/message/api-message-adapter.js",
         "../src/service/message/api-message.js",
         "../src/service/message/message-sender.js",
