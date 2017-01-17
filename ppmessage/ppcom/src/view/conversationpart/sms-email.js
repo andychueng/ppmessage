@@ -4,6 +4,11 @@ View.$smsEmail = (function() {
         iconBack = Configuration.assets_path + 'img/icon-back.png',
 
         activeOption = 'EMAIL',
+        timeoutHideError = function() {
+            $timeout( function() {
+                $( '.' + classPrefix + 'error' ).text( '' );                
+            }, 2000 );
+        },
         clearContext = function() {
             $( '.' + classPrefix + 'options-container a' ).removeClass( classPrefix + 'options-container-active' );
             $( '.' + classPrefix + 'input input' ).focus().val( '' );
@@ -23,16 +28,18 @@ View.$smsEmail = (function() {
         submitBtnClick = function() {
             var val = $( '.' + classPrefix + 'input input' ).val();
             if (activeOption === 'EMAIL') {
-                if ( val === '' ) {
+                if ( !Service.$tools.validateEmail( val ) ) {
                     $( '.' + classPrefix + 'error' )
-                        .text( "This email doesn't look quite right" )
+                        .text( Service.Constants.i18n( 'EMAIL_ADDRESS_DOESNT_LOOK_QUITE_RIGHT' ) );
+                    timeoutHideError();
                 } else {
                     _submit( val );
                 }
             } else if (activeOption === 'SMS') {
-                if ( val === '' ) {
+                if ( !Service.$tools.validatePhoneNumber( val ) ) {
                     $( '.' + classPrefix + 'error' )
-                        .text( "This number is missing a few digits" );
+                        .text( Service.Constants.i18n( 'NUMBER_MISSING_A_FEW_DIGITS' ) );
+                    timeoutHideError();
                 } else {
                     _submit( activeOption, val );
                 }
@@ -71,7 +78,7 @@ View.$smsEmail = (function() {
 
             $( '.' + classPrefix + 'submit-container' ).hide();
             $( '.' + classPrefix + 'options-container a' ).prop( 'disabled', true );
-            $( '.' + classPrefix + 'title' ).text( "You'll be notified here and by" );
+            $( '.' + classPrefix + 'title' ).text( Service.Constants.i18n( 'YOULL_BE_NOTIFIED' ) );
             $( '.' + classPrefix + 'error' ).hide();
             $input.addClass( classPrefix + 'input-success' ).prop( 'disabled', true );
             $( '.' + classPrefix + 'options-container a' ).unbind( 'click' );
@@ -83,15 +90,15 @@ View.$smsEmail = (function() {
         this.add( new View.Img( { className: 'pp-conversation-part-msg-by-admin-avatar', src: item.user.avatar } ) )
             .add( new View.Div( { className: 'pp-conversation-part-msg-by-admin-body-container' } )
                   .add( new View.Div( { className: classPrefix + 'admin' } )
-                        .add( new View.P( classPrefix + 'title' ).text( 'Get notified' ) )
+                        .add( new View.P( classPrefix + 'title' ).text( Service.Constants.i18n( 'GET_NOTIFIED' ) ) )
                         .add( new View.Div( classPrefix + 'options-container' )
                               .add( new View.Element( 'a', { className: classPrefix + 'options-container-active',
                                                              selector: '.' + classPrefix + 'options-container a:eq(0)', 
                                                              event: { click: optionEmailElementClick }  
-                                                           } ).text( 'Email' ) )
+                                                           } ).text( Service.Constants.i18n( 'EMAIL' ) ) )
                               .add( new View.Element( 'a', { selector: '.' + classPrefix + 'options-container a:eq(1)', 
                                                              event: { click: optionSmsElementClick }  
-                                                           } ).text( 'SMS' ) ) )
+                                                           } ).text( Service.Constants.i18n( 'SMS' ) ) ) )
                         .add( new View.Div( classPrefix + 'input-container' )
                               .add( new View.Div( classPrefix + 'input' )
                                     .add( new View.Element( 'input', { selector: '.' + classPrefix + 'input input',
