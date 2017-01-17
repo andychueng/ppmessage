@@ -5,7 +5,7 @@ View.$smsEmail = (function() {
         iconFlags = Configuration.assets_path + 'img/icon-flags.png',
         iconFlagsElStyle = 'background-image:url(' + iconFlags + ')',
         clsFlag = '#pp-container .pp-flag',
-        DEFAULT_FLAG = 'jp',
+        DEFAULT_FLAG = 'cn',
 
         activeOption = 'EMAIL',
         timeoutHideError = function() {
