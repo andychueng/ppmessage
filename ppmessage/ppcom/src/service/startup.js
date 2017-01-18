@@ -141,12 +141,6 @@
 
             _startUpNoneAnonymousUser = function(userSettings, succCallback, errorCallback) {
 
-                // Validate Email
-                if (!Service.$tools.validateEmail(userSettings.user_email)) {
-                    if (errorCallback) errorCallback(Service.ErrorHint.ERROR_ILLEGAL_USER_EMAIL_STYLE);
-                    return;
-                }
-
                 // 1. get user uuid
                 // 2. get user detail info
                 // 3. update user info
