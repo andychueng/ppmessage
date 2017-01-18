@@ -8,7 +8,8 @@
  *     view: {
  *         launch_style: {
  *             mode: 'custom',
- *             position: 'left'/'right'
+ *             position: 'left'/'right',
+ *             bottom: 95
  *         }
  *     }
  * }
@@ -26,7 +27,8 @@
             view: {
                 launch_style: {
                     mode: 'normal',
-                    position: undefined   
+                    position: undefined,
+                    bottom: 95
                 }
             }
         };
@@ -91,7 +93,8 @@
     proto.getLaunchStyle = function() {
         return this._getValueFromPPSettingsView( 'launch_style', {
             mode: 'normal',
-            position: undefined   
+            position: undefined,
+            bottom: 95
         } );
     };
 

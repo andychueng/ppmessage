@@ -463,7 +463,8 @@ head.appendChild(ppcom);
                     view: {
                         launch_style: {
                             mode: 'custom',
-                            position: 'left'
+                            position: 'left',
+                            bottom: 135
                         }
                     }
                 }
@@ -478,7 +479,8 @@ head.appendChild(ppcom);
                     view: {
                         launch_style: {
                             mode: 'custom',
-                            position: 'right'
+                            position: 'right',
+                            bottom: 210
                         }
                     }
                 }

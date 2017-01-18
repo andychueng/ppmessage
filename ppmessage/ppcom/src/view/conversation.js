@@ -27,14 +27,18 @@ View.$conversation = (function() {
             var viewSettings = View.$settings,
                 launchStyle = viewSettings.getLaunchStyle(),
                 launchMode = launchStyle.mode,
-                launchPosition = launchStyle.position;
+                launchPosition = launchStyle.position,
+                launchBottom = launchStyle.bottom;
             
             switch ( launchMode.toLowerCase() ) {
             case View.Settings.LAUNCH_MODE.NORMAL: 
+                $( clsPanelSelector ).css( { bottom : '' } );
                 View.$conversation.makeConversationPanelVisible();
                 break;
                 
             case View.Settings.LAUNCH_MODE.CUSTOM:
+                $( clsPanelSelector ).css( { bottom : launchBottom } );
+
                 var DURA = 700; // 700ms
                 switch ( launchPosition.toLowerCase() ) {
                 case View.Settings.LAUNCH_POSITION.LEFT:
