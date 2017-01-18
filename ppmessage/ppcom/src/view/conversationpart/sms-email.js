@@ -109,7 +109,7 @@ View.$smsEmail = (function() {
     function SmsEmail( item ) {
         View.Div.call( this, { className: classPrefix + 'container' } );
 
-        this.add( new View.Img( { className: 'pp-conversation-part-msg-by-admin-avatar', src: item.user.avatar } ) )
+        this.add( View.conversationPartTools.buildAvatars( item.user.avatar, Service.$conversationManager.activeConversation().token ) )
             .add( new View.Div( { className: 'pp-conversation-part-msg-by-admin-body-container' } )
                   .add( new View.Div( { className: classPrefix + 'admin' } )
                         .add( new View.P( classPrefix + 'title' ).text( Service.Constants.i18n( 'GET_NOTIFIED' ) ) )

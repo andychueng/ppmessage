@@ -237,6 +237,20 @@ Ctrl.$conversationContent = (function() {
                         // show
                         View.$conversationContentContainer.show( fadeIn );
 
+                        // Append sms-email message if need
+                        // We will show notification message when this user doesn't have user_email and user_mobile both
+                        var user = Service.$user.getUser().getInfo();
+                        if ( conversation.vip && 
+                             !user.user_email &&
+                             !user.user_mobile &&
+                             !getModal().isAppendedSmsEmail() ) {
+                            appendMessage( new Service.PPMessage.Builder( Service.PPMessage.TYPE.SMS_EMAIL )
+                                           .conversationId( conversation.token )
+                                           .build()
+                                           .getBody() );
+                            getModal().notifyAppendSmsEmail( true );
+                        }
+
                         // callback
                         if (callback) callback();                
                     }, delay);

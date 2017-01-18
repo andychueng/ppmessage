@@ -34,8 +34,10 @@ View.conversationPartTools = ( function() {
 
     function buildAvatars( originAvatar, activeConversationToken ) {
         var users = Service.$conversation.getUser( activeConversationToken );
-        if ( users.length <= 1 ) {
+        if ( users.length === 0 ) {
             return new View.Img( { className: avatarClassPrefix, src: originAvatar } );
+        } else if ( users.length === 1 ) {
+            return new View.Img( { className: avatarClassPrefix, src: users[ 0 ].user_avatar } );
         } else if ( users.length === 2 ) {
             var $container = new View.Div( avatarClassPrefix + '-container' ),
                 len = users.length,
