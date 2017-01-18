@@ -37,6 +37,9 @@ class PPUpdateUserHandler(BaseHandler):
         _app_uuid = _request.get("app_uuid")
         _user_uuid = _request.get("user_uuid")
         _user_icon = _request.get("user_icon")
+
+        _user_mobile = _request.get("user_mobile")
+        _user_email = _request.get("user_email")
         
         if _user_uuid == None or _app_uuid == None:
             self.setErrorCode(API_ERR.NO_PARA)
@@ -76,6 +79,36 @@ class PPUpdateUserHandler(BaseHandler):
             if not _updated:
                 self.setErrorCode(API_ERR.GENERIC_UPDATE)
                 return
+
+        if _user_mobile:
+            import phonenumbers
+            _p = phonenumbers.parse(_user_mobile, None)
+
+            if not phonenumbers.is_valid_number(_p):
+                self.setErrorCode(API_ERR.INVALID_PHONENUMBER)
+                return
+
+            _row = DeviceUser(uuid=_user_uuid,
+                              user_mobile=_user_mobile)
+            _row.update_redis_keys(_redis)
+            _row.async_update(_redis)
+
+        if _user_email:
+            _key = DeviceUser.__tablename__ + ".user_email." + _user_email
+            if _redis.exists(_key):
+                self.setErrorCode(API_ERR.EX_USER)
+                return
+
+            _key = DeviceUser.__tablename__ + ".uuid." + _user_uuid
+            _old_email = _redis.hget(_key, "user_email")
+            if _old_email:
+                _key = DeviceUser.__tablename__ + ".user_email." + _old_email
+                _redis.delete(_key)
+                
+            _row = DeviceUser(uuid=_user_uuid,
+                              user_email=_user_email)
+            _row.update_redis_keys(_redis)
+            _row.async_update(_redis)
 
         return
 

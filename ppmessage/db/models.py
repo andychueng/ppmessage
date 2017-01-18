@@ -139,9 +139,6 @@ class DeviceUser(CommonMixin, BaseModel):
 
         _key = self.__tablename__ + ".statistics.all"
         _redis.incr(_key)
-
-        if self.user_fullname != None:
-            self.add_redis_search_index(_redis, self.__tablename__, self.user_fullname, self.uuid)
         
         return
 
@@ -159,23 +156,11 @@ class DeviceUser(CommonMixin, BaseModel):
 
         _key = self.__tablename__ + ".statistics.all"
         _redis.decr(_key)
-
-        if _obj["user_fullname"] != None:
-            self.remove_redis_search_index(_redis, self.__tablename__, _obj["user_fullname"], self.uuid)
         
         CommonMixin.delete_redis_keys(self, _redis)
         return    
 
     def update_redis_keys(self, _redis):
-        if self.user_fullname != None and len(self.user_fullname) != 0:
-            self.add_redis_search_index(_redis, self.__tablename__, self.user_fullname, self.uuid)
-            
-            _key = self.__tablename__ + ".uuid." + self.uuid
-            _old = _redis.hget(_key, "user_fullname")
-            _old = _old.decode("utf-8")
-            if _old != None and len(_old) != 0 and _old != self.user_fullname:
-                self.remove_redis_search_index(_redis, self.__tablename__, _old, self.uuid)
-
         CommonMixin.update_redis_keys(self, _redis)
         _obj = redis_hash_to_dict(_redis, DeviceUser, self.uuid)
         if _obj == None:
@@ -474,13 +459,11 @@ class OrgGroup(CommonMixin, BaseModel):
         _key = self.__tablename__ + ".app_uuid." + self.app_uuid + ".sorted"
         _redis.zadd(_key, self.group_name + ":" + self.uuid, 0)
 
-        self.add_redis_search_index(_redis, self.__tablename__, self.group_name, self.uuid)        
         return
 
     def update_redis_keys(self, _redis):
 
         if self.group_name != None and len(self.group_name):
-            self.add_redis_search_index(_redis, self.__tablename__, self.group_name, self.uuid)
             
             _key = self.__tablename__ + ".uuid." + self.uuid
             _old = _redis.hget(_key, "group_name")
@@ -490,7 +473,6 @@ class OrgGroup(CommonMixin, BaseModel):
             _redis.zadd(_key_n, self.group_name + ":" + self.uuid, 0)
             
             if _old != None and len(_old) != 0 and _old != self.group_name:
-                self.remove_redis_search_index(_redis, self.__tablename__, _old, self.uuid)
                 _redis.zrem(_key_n, self.group_name + ":" + self.uuid)
 
         CommonMixin.update_redis_keys(self, _redis)
@@ -507,8 +489,6 @@ class OrgGroup(CommonMixin, BaseModel):
         _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + ".sorted"
         _redis.zrem(_key, _obj["group_name"] + ":" + _obj["uuid"])
         
-        self.remove_redis_search_index(_redis, self.__tablename__, _obj["group_name"], _obj["uuid"])
-
         CommonMixin.delete_redis_keys(self, _redis)
         return
 

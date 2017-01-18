@@ -53,6 +53,7 @@ API_ERR = enum("NO_ERR",
                "NOT_ADMIN",
                "INVALID_PARA",
                "NO_TABLE",
+               "INVALID_PHONENUMBER"
                )
 
 API_ERR_DESC = {
@@ -102,6 +103,7 @@ API_ERR_DESC = {
     API_ERR.NOT_ADMIN: "user is not a admin user.",
     API_ERR.INVALID_PARA: "invalid value of para.",
     API_ERR.NO_TABLE: "no such table",
+    API_ERR.INVALID_PHONENUMBER: "Invalid phonenumber"
 }
 
 def getErrorDesc(code):
