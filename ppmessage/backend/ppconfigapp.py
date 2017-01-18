@@ -306,8 +306,9 @@ class DatabaseHandler(tornado.web.RequestHandler):
 
 class FirstHandler(tornado.web.RequestHandler):
     def __init__(self, *args, **kwargs):
-        self._user_uuid = None
-        self._app_uuid = None
+        self._user_uuid = str(uuid.uuid1())
+        self._app_uuid = str(uuid.uuid1())
+        
         super(FirstHandler, self).__init__(*args, **kwargs)
         
     def _check_request(self, _request):
@@ -330,8 +331,8 @@ class FirstHandler(tornado.web.RequestHandler):
 
         IOLoop.current().spawn_callback(download_random_identicon, _user_icon)
         
-        _user_uuid = str(uuid.uuid1())
-        _row = DeviceUser(uuid=_user_uuid,
+        _row = DeviceUser(uuid=self._user_uuid,
+                          app_uuid=self._app_uuid,
                           user_email=_user_email,
                           user_icon=_user_icon,
                           user_status=USER_STATUS.OWNER_2,
@@ -341,7 +342,6 @@ class FirstHandler(tornado.web.RequestHandler):
         
         _row.create_redis_keys(self.application.redis)
         _insert_into(_row)
-        self._user_uuid = _user_uuid
         self._user_fullname = _user_fullname
         return True
 
@@ -349,7 +349,7 @@ class FirstHandler(tornado.web.RequestHandler):
         from ppmessage.db.models import AppInfo
         
         _app_name = _request.get("team_name")
-        _app_uuid = str(uuid.uuid1())
+        _app_uuid = self._app_uuid
         _user_uuid = self._user_uuid
         _app_key = str(uuid.uuid1())
         _app_secret = str(uuid.uuid1())
@@ -361,7 +361,6 @@ class FirstHandler(tornado.web.RequestHandler):
                        app_secret=_app_secret)
         _row.create_redis_keys(self.application.redis)
         _insert_into(_row)
-        self._app_uuid = _app_uuid
         return True
 
     def _create_data(self, _request):
@@ -483,6 +482,7 @@ class FirstHandler(tornado.web.RequestHandler):
         _request = json.loads(self.request.body.decode("utf-8"))
 
         logging.info("firstrequest: %s" % _request)
+        
         if not self._check_request(_request):
             return _return(self, -1)
 
