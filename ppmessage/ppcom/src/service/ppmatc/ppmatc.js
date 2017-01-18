@@ -104,6 +104,7 @@ Service.$ppmatc = (function() {
             break;
 
             case EVENT_TRACK:
+            _trackEvent( event );            
             break;
 
             case EVENT_PP_SETTINGS: {
@@ -126,6 +127,16 @@ Service.$ppmatc = (function() {
             Service.$errorHint.warn( "[Service.$ppmatc] Unsupported event: ", event );
             break;
         }
+    }
+
+    function _trackEvent( event ) {
+        Service.$api.trackEvent( {
+            app_uuid: Service.$app.appId(),
+            user_uuid: Service.$user.quickId(),
+            device_uuid: Service.$user.quickDeviceUUID(),
+            event_name: event[ 'event_name' ],
+            event_data: event[ 'event_data' ]
+        } );
     }
     
 }());
