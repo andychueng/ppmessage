@@ -99,7 +99,6 @@ module.exports = {
         "../src/view/loading.js",
         "../src/view/launcher.js",
         "../src/view/container.js",
-        "../src/view/launcherpreview.js",
         "../src/view/pp-view-element-messenger.js",
         "../src/view/poweredby.js",
         "../src/view/conversation.js",

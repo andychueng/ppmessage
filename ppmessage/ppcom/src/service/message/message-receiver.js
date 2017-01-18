@@ -55,13 +55,13 @@ Service.$messageReceiverModule = (function() {
 	        }
 
             // Quick message
-            Service.$debug.d( '[New-Message] is quick message: ', Service.$messageToolsModule.isQuickMessage( body ) );
-            if ( Service.$messageToolsModule.isQuickMessage( body ) && 
-                 handleByQuickMessageMode( ppMessage ) ) {
-                Service.$debug.d( '[New-Message] handle by quick message mode' );
-                getModal( groupId ).addMessage ( body ); // Store message to local
-                return;
-            }
+            // Service.$debug.d( '[New-Message] is quick message: ', Service.$messageToolsModule.isQuickMessage( body ) );
+            // if ( Service.$messageToolsModule.isQuickMessage( body ) && 
+            //      handleByQuickMessageMode( ppMessage ) ) {
+            //     Service.$debug.d( '[New-Message] handle by quick message mode' );
+            //     getModal( groupId ).addMessage ( body ); // Store message to local
+            //     return;
+            // }
 
             if ( isGroupOnChatting ( groupId ) ) { // we are chating with `converstionId`
 

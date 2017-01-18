@@ -67,6 +67,7 @@ head.appendChild(ppcom);
             $elDebugContainer.append( _buildInputViewHtml( 'monitor', '监视所有事件' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'user-info-change', '加载所有用户信息至下拉菜单' ) );
             $elDebugContainer.append( _buildCheckoutViewHtml( 'enable-quick-mode', 'Enable Quick Message Mode' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'not-current-conversation-text-msg-arrived', 'Not当前会话文字消息到来' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'audio-msg-arrived', '当前会话语音消息到来' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'text-msg-arrived', '当前会话文字消息到来' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'file-msg-arrived', '当前会话文件消息到来' ) );
@@ -104,6 +105,7 @@ head.appendChild(ppcom);
             _bindViewClickEvent( 'monitor', test.monitor );
             _bindViewClickEvent( 'user-info-change', test.userListInDropDown );
             _bindViewClickEvent( 'clear', test.clear );
+            _bindViewClickEvent( 'not-current-conversation-text-msg-arrived', test.onNotCurrentConversationTextMessage );
             _bindViewClickEvent( 'audio-msg-arrived', test.onAudioMessage );
             _bindViewClickEvent( 'text-msg-arrived', test.onTextMessage );
             _bindViewClickEvent( 'file-msg-arrived', test.onFileMessage );
@@ -174,6 +176,7 @@ head.appendChild(ppcom);
         return {
             onMessage: onMessage,
             onChattingMessage: onChattingMessage,
+            onNotCurrentConversationTextMessage: onNotCurrentConversationTextMessage,
             onAudioMessage: onAudioMessage,
             onTextMessage: onTextMessage,
             onFileMessage: onFileMessage,
@@ -542,6 +545,10 @@ head.appendChild(ppcom);
             _onMessage( getRandomMessage(), config );
         }
 
+        function onNotCurrentConversationTextMessage() {
+            _onMessage( getTextMessage(), { chatting: true, ci: Service.$tools.getUUID() } );
+        }
+
         function onAudioMessage() {
             _onMessage( getAudioMessage(), { chatting: true } );
         }
@@ -570,7 +577,7 @@ head.appendChild(ppcom);
                         pid: Service.$tools.getUUID(),
                         id: Service.$tools.getUUID(),
                         ts: Date.now() / 1000,
-                        ci: getConversationId(),
+                        ci: config.ci ? config.ci: getConversationId(),
                         fi: getFi(),
                         tt: 'S2P',
                         ft: 'DU',

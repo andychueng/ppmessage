@@ -45,7 +45,6 @@ View.$launcher = (function() {
                      'class':'pp-launcher-badge pp-font',
                      style: 'display:none'
                  }, ctrl))
-                 .add(View.$launcherPreview.init().build())
                  .add(View.$hoverCard.build()))
             .show(showLauncher);
     }
@@ -101,7 +100,6 @@ View.$launcher = (function() {
         
         showMessageBox = function() {
             showLauncher( STATE.CLOSE );
-            View.$launcherPreview.text( '' ).hide();
             $('#pp-messenger').show();
             View.$conversation.show();
             Ctrl.$hoverCard.get().hideHoverCardNow();
