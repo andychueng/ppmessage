@@ -1216,11 +1216,33 @@ Service.$flags = (function() {
             areaCodes: null,
             priority: 1
         }
-    };
+    },
+    
+    _countryCode = undefined;
+
+    // ================ API =============
 
     return {
         query: function( country ) {
-            return DIAL_CODES[ country ];
+            var exist = DIAL_CODES[ country ];
+            if ( exist ) return exist;
+            return DIAL_CODES[ 'cn' ]; // default is cn
+        },
+
+        asyncGetCountryCode: function( callback ) {
+            if ( _countryCode === undefined ) {
+                $onResult( _countryCode, callback );
+                return;
+            }
+
+            Service.$api.getIPInfo( { app_uuid: Service.$app.appId() }, function( r ) {
+                if ( r && r.error_code === 0 ) {
+                    _countryCode = r.country_code.toLowerCase();
+                }
+                $onResult( _countryCode, callback );
+            }, function( e ) {
+                $onResult( _countryCode, callback );
+            } );
         }
     }
     

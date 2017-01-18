@@ -39,7 +39,7 @@ View.$smsEmail = (function() {
                 .css( { padding: '0 12px 0 32px' } )
                 .val( '+' + Service.$flags.query( DEFAULT_FLAG ).dialCode );
         },
-        submitBtnClick = function() {
+        submitBtnClick = function( item ) {
             var val = $( '.' + classPrefix + 'input input' ).val();
             if (activeOption === 'EMAIL') {
                 if ( !Service.$tools.validateEmail( val ) ) {
@@ -59,7 +59,7 @@ View.$smsEmail = (function() {
                 }
             }
 
-            function _submit( optionType, val ) {
+            function _submit( val ) {
                 var $input = $( '.' + classPrefix + 'input input' ),
                     $submitBtn = $( '.' + classPrefix + 'submit-button' );
 
@@ -67,7 +67,7 @@ View.$smsEmail = (function() {
                 $submitBtn.prop( 'disabled', true );
                 Ctrl.$smsEmail.submit( val, function( ok ) {
                     if ( ok ) {
-                        onContactSelected( activeOption );
+                        onContactSelected( item, activeOption, val );
                     } else {
                         $input.prop( 'disabled', false );
                         $submitBtn.prop( 'disabled', false );
@@ -76,7 +76,7 @@ View.$smsEmail = (function() {
             }
         },
 
-        onContactSelected = function( activeOption, contact ) {
+        onContactSelected = function( item, activeOption, contact ) {
             if (activeOption === 'EMAIL') {
                 $( '.' + classPrefix + 'options-container a:eq(1)' ).hide();
             } else {
@@ -99,6 +99,11 @@ View.$smsEmail = (function() {
             $( '.' + classPrefix + 'error' ).hide();
             $input.addClass( classPrefix + 'input-success' ).prop( 'disabled', true );
             $( '.' + classPrefix + 'options-container a' ).unbind( 'click' );
+
+            // Update data
+            var smsEmailBody = item.message.smsEmail;
+            smsEmailBody.selected_type = activeOption;
+            smsEmailBody.contact = contact;
         };
 
     function SmsEmail( item ) {
@@ -135,16 +140,28 @@ View.$smsEmail = (function() {
                               .add( new View.Div( classPrefix + 'submit-container' )
                                     .add( new View.Div( { className: classPrefix + 'submit-button', 
                                                           selector: '.' + classPrefix + 'submit-button',
-                                                          event: { click: submitBtnClick } } )
+                                                          event: { click: function() { submitBtnClick( item ) } } } )
                                           .add( new View.Div( {className: classPrefix + 'submit-icon', style: 'background-image:url(' + iconBack  + ')' } ) )
                                           .add( new View.Div( classPrefix + 'valid-icon' ) ) ) ))
                         .add( new View.P( classPrefix + 'error' ) ) ) );
 
         $timeout( function() {
+            // async get flag
+            Service.$flags.asyncGetCountryCode( function( countryCode ) {
+                if ( countryCode ) {
+                    var diaCode = Service.$flags.query( countryCode ).dialCode;
+                    $( '.' + classPrefix + 'input input' )
+                        .attr( { type: 'text', placeholder: '+' + dialCode + ' 123 456 7890' } )
+                        .val( '+' + dialCode );
+                    $( '.pp-flag' ).attr( 'class', 'pp-flag ' + countryCode );
+                }
+            } );
+
+            // Check is fill in option
             var smsEmailBody = item.message.smsEmail;
             if ( smsEmailBody.selected_type !== undefined && 
                  smsEmailBody.contact !== undefined ) {
-                onContactSelected( smsEmailBody.selected_type, smsEmailBody.contact );
+                onContactSelected( item, smsEmailBody.selected_type, smsEmailBody.contact );
             }
         } );
     }
