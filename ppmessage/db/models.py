@@ -43,7 +43,8 @@ import os
 
 class DeviceUser(CommonMixin, BaseModel):
     __tablename__ = "device_users"
-    
+
+    app_uuid = Column("app_uuid", String(64))
     user_name = Column("user_name", String(32))
     user_password = Column("user_password", String(256))
     user_email = Column("user_email", String(64))
@@ -105,6 +106,8 @@ class DeviceUser(CommonMixin, BaseModel):
     
     # ppcom portal user
     is_anonymous_user = Column("is_anonymous_user", Boolean)
+    is_service_user = Column("is_service_user", Boolean)
+    is_owner_user = Column("is_owner_user", Boolean)
 
     # ppcom trace id with web cookie
     ppcom_trace_uuid = Column("ppcom_trace_uuid", String(64))
@@ -117,9 +120,8 @@ class DeviceUser(CommonMixin, BaseModel):
 
     # which is uuid of other/third party system
     ent_user_uuid = Column("ent_user_uuid", String(64))
-    # json string for ent user
-    ent_user_data = Column("ent_user_data", String(2048))
-
+    ent_user_createtime = Column("ent_user_createtime", DateTime)
+    
     __table_args__ = (
     )
 

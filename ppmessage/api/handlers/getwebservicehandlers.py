@@ -113,6 +113,7 @@ from .ppgetusermatchedmethod import PPGetUserMatchedMethod
 from .ppgettargetservicemethod import PPGetTargetServiceMethod
 
 from .ppgetipinfohandler import PPGetIPInfoHandler
+from .ppcomtrackeventhandler import PPComTrackEventHandler
 
 def getWebServiceHandlers():
     handler_list = []
@@ -231,6 +232,7 @@ def getWebServiceHandlers():
     handler_list.append((r"/PP_GET_USER_MATCHED_METHOD", PPGetUserMatchedMethod))
 
     handler_list.append((r"/PP_GET_IP_INFO", PPGetIPInfoHandler))
+    handler_list.append((r"/PPCOM_TRACK_EVENT", PPComTrackEventHandler))
     
     return handler_list
 
