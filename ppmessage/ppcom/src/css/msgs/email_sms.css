@@ -130,3 +130,23 @@
     font-size:13px;
     line-height:10px;
 }
+
+#pp-container .msg-sms-email-placeholder {
+    display: none;
+    position: absolute;
+    pointer-events:none;
+    box-sizing: border-box;
+    height: 40px;
+    width: 50%;
+    margin-left: 62px;
+    padding-top: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 32px;
+    color: #a5acb6;
+    cursor: text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    z-index: 1;
+}

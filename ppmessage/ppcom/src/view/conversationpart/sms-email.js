@@ -21,19 +21,23 @@ View.$smsEmail = (function() {
             $( clsFlag ).hide();
             clearContext();
             $( this ).addClass( classPrefix + 'options-container-active' );
+            $( '.' + classPrefix + 'placeholder' ).hide();
             activeOption = 'EMAIL';
             $( '.' + classPrefix + 'input input' )
                 .attr( { type: 'email', placeholder: 'email@domain.com' } )
-                .css( { padding: '0 12px' } );
+                .css( { padding: '0 12px' } )
+                .val( '' );
         },
         optionSmsElementClick = function() {
             $( clsFlag ).show();
             clearContext();
             $( this ).addClass( classPrefix + 'options-container-active' );
+            $( '.' + classPrefix + 'placeholder' ).show();
             activeOption = 'SMS';
             $( '.' + classPrefix + 'input input' )
                 .attr( { type: 'text', placeholder: '+' + Service.$flags.query( DEFAULT_FLAG ).dialCode + ' 123 456 7890' } )
-                .css( { padding: '0 12px 0 32px' } );
+                .css( { padding: '0 12px 0 32px' } )
+                .val( '+' + Service.$flags.query( DEFAULT_FLAG ).dialCode );
         },
         submitBtnClick = function() {
             var val = $( '.' + classPrefix + 'input input' ).val();
@@ -115,9 +119,15 @@ View.$smsEmail = (function() {
                         .add( new View.Div( classPrefix + 'input-container' )
                               .add( new View.Div( classPrefix + 'input' )
                                     .add( new View.Div( { className: 'pp-flag ' + DEFAULT_FLAG, style: iconFlagsElStyle } ) )
+                                    .add( new View.Element( 'label', { className: classPrefix + 'placeholder' } ).text( '123 456 7890' ) )
                                     .add( new View.Element( 'input', { selector: '.' + classPrefix + 'input input',
                                                                        event: {
-                                                                           init: function() { $( this ).focus(); }
+                                                                           init: function() { $( this ).focus(); },
+                                                                           'input propertychange': function() {
+                                                                               if ( activeOption === 'SMS' ) {
+                                                                                   $( '.' + classPrefix + 'placeholder' ).hide();
+                                                                               }
+                                                                           }
                                                                        },
                                                                        type: 'email', 
                                                                        placeholder: 'email@domain.com', 
