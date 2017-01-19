@@ -17,16 +17,24 @@ PPMessage 的前端开发 SDK 称为 PPCom，PPCom 会被集成到你的企业 W
 
 PPMessage 同时提供了一个 Web 管理界面，称之为 PPConsole，当然也是开源的，PPConsole 提供一个管理界面去管理配置 PPMessage。PPConsole 同时也集成了一些企业运营所需的常用功能，探索使用 PPConsole 让它为你的企业业务服务。通过使用 PPConsole 上的企业应用，PPMessage 完全成为了一个自主、自建的企业微信，或者是阿里钉钉，但是数据和程序以及安全性却能得到充分的保障。 
 
-# 快速上手
 
-## 下载代码
+## 子项目
+
+* [PPCom iOS SDK](https://github.com/PPMESSAGE/ppcom-ios-sdk)
+
+* [PPCom Android SDK](https://github.com/PPMESSAGE/ppcom-android-sdk)
+
+
+## 快速上手
+
+### 下载代码
 
 ```bash
 git clone https://github.com/PPMESSAGE/ppmessage
 cd ppmessage
 ```
 
-## 安装依赖
+### 安装依赖
 
 > Debian/Ubuntu
 
@@ -42,7 +50,7 @@ bash ppmessage/scripts/set-up-mac-on-linux.sh
 ```
 
 
-## 执行
+### 执行
 
 
 ```bash
