@@ -44,6 +44,7 @@ brew tap homebrew/services
 sudo pip install \
      apns2 \
      pillow \
+     phonenumbers \
      StringGenerator \
      beautifulsoup4 \
      filemagic \

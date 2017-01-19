@@ -88,6 +88,7 @@ apt-get install -y \
 pip install \
     apns2 \
     pillow \
+    phonenumbers \
     StringGenerator \
     beautifulsoup4 \
     paramiko \
