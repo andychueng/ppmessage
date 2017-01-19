@@ -19,13 +19,6 @@ PPMessage includes a series of frontend SDK named **PPCom** which run on your vi
 **PPConfig** is the first web UI you may meet. If you want to run a PPMessage server from source, PPMessage will guide you to config itself at first.
 
 
-## SUBPROJECTS
-
-* [PPCom iOS SDK](https://github.com/PPMESSAGE/ppcom-ios-sdk)
-
-* [PPCom Android SDK](https://github.com/PPMESSAGE/ppcom-android-sdk)
-
-
 ## EASY START
 
 > Clone
@@ -107,3 +100,10 @@ limitations under the License.
 ## OTHER LANGUAGES
 
 [In Chinese 中文版](ppmessage/doc/zh-cn/README.md)
+
+
+## OTHER PROJECTS
+
+* [PPCom iOS SDK](https://github.com/PPMESSAGE/ppcom-ios-sdk)
+
+* [PPCom Android SDK](https://github.com/PPMESSAGE/ppcom-android-sdk)
