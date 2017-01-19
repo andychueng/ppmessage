@@ -14,7 +14,6 @@ from ppmessage.core.constant import REDIS_PORT
 from ppmessage.core.constant import USER_STATUS
 from ppmessage.core.constant import CONFIG_STATUS
 from ppmessage.core.constant import PP_WEB_SERVICE
-from ppmessage.core.constant import REDIS_EMAIL_KEY
 from ppmessage.core.main import AbstractWebService
 from ppmessage.core.singleton import singleton
 
@@ -307,8 +306,9 @@ class DatabaseHandler(tornado.web.RequestHandler):
 
 class FirstHandler(tornado.web.RequestHandler):
     def __init__(self, *args, **kwargs):
-        self._user_uuid = None
-        self._app_uuid = None
+        self._user_uuid = str(uuid.uuid1())
+        self._app_uuid = str(uuid.uuid1())
+        
         super(FirstHandler, self).__init__(*args, **kwargs)
         
     def _check_request(self, _request):
@@ -331,8 +331,8 @@ class FirstHandler(tornado.web.RequestHandler):
 
         IOLoop.current().spawn_callback(download_random_identicon, _user_icon)
         
-        _user_uuid = str(uuid.uuid1())
-        _row = DeviceUser(uuid=_user_uuid,
+        _row = DeviceUser(uuid=self._user_uuid,
+                          app_uuid=self._app_uuid,
                           user_email=_user_email,
                           user_icon=_user_icon,
                           user_status=USER_STATUS.OWNER_2,
@@ -342,7 +342,6 @@ class FirstHandler(tornado.web.RequestHandler):
         
         _row.create_redis_keys(self.application.redis)
         _insert_into(_row)
-        self._user_uuid = _user_uuid
         self._user_fullname = _user_fullname
         return True
 
@@ -350,7 +349,7 @@ class FirstHandler(tornado.web.RequestHandler):
         from ppmessage.db.models import AppInfo
         
         _app_name = _request.get("team_name")
-        _app_uuid = str(uuid.uuid1())
+        _app_uuid = self._app_uuid
         _user_uuid = self._user_uuid
         _app_key = str(uuid.uuid1())
         _app_secret = str(uuid.uuid1())
@@ -362,7 +361,6 @@ class FirstHandler(tornado.web.RequestHandler):
                        app_secret=_app_secret)
         _row.create_redis_keys(self.application.redis)
         _insert_into(_row)
-        self._app_uuid = _app_uuid
         return True
 
     def _create_data(self, _request):
@@ -480,34 +478,11 @@ class FirstHandler(tornado.web.RequestHandler):
         _dump_config(_config)
         return True
 
-    def _welcome_email(self, _request):
-        _subject = "Welcome to use PPMessage"
-        _template = os.path.join(_cur_dir(), "../resource/email/welcome-template-en-us.html")
-        
-        if _get_config().get("server").get("language").get("locale") == "zh_CN":
-            _subject = "欢迎使用 PPMessage"
-            _template = os.path.join(_cur_dir(), "../resource/email/welcome-template-zh-cn.html")
-
-        with open(_template, "r") as _f:
-            _template = _f.read()
-            
-        _template = _template.replace("{{user_email}}", _request.get("user_email"))
-        _template = _template.replace("{{user_fullname}}", _request.get("user_fullname"))
-        _template = _template.replace("{{server_name}}", _get_config().get("server").get("name"))
-        _template = _template.replace("{{server_port}}", str(_get_config().get("server").get("port")))
-        _email_request = {
-            "to": [_request.get("user_email")],
-            "subject": _subject,
-            "text": _template,
-            "html": _template
-        }
-        self.application.redis.rpush(REDIS_EMAIL_KEY, json.dumps(_email_request))
-        return
-    
     def post(self, id=None):
         _request = json.loads(self.request.body.decode("utf-8"))
 
         logging.info("firstrequest: %s" % _request)
+        
         if not self._check_request(_request):
             return _return(self, -1)
 
@@ -527,8 +502,6 @@ class FirstHandler(tornado.web.RequestHandler):
             return _return(self, -1)
 
         self._dump_config(_request)
-
-        self._welcome_email(_request)
 
         return _return(self, 0)
 

@@ -452,9 +452,6 @@ USER_NAME = {
     },
 }
 
-# email key is a list which queue all email sending request
-REDIS_EMAIL_KEY = "redis_email_key"
-
 # iospush key is a list which queue all ios push request
 REDIS_JPUSH_KEY = "redis_jpush_key"
 REDIS_IOSPUSH_KEY = "redis_iospush_key"

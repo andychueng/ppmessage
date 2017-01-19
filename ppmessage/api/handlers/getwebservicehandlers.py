@@ -74,7 +74,6 @@ from .ppkefulogouthandler import PPKefuLogoutHandler
 from .ppgetuserdetailhandler import PPGetUserDetailHandler
 
 from .ppconsolelogouthandler import PPConsoleLogoutHandler
-from .ppconsolesignuphandler import PPConsoleSignupHandler
 
 from .ppconsolegetoverviewnumber import PPConsoleGetOverviewNumber
 from .ppconsolegetrealtimecustomernumber import PPConsoleGetRealTimeCustomerNumber
@@ -106,14 +105,15 @@ from .ppgetpredefinedscriptwithgroup import PPGetPredefinedScriptWithGroup
 
 from .ppcancelwaitingcreateconversation import PPCancelWaitingCreateConversation
 
-from .ppconsolesendnewpassword import PPConsoleSendNewPassword
-
 from .ppcomgetdefaultconversationhandler import PPComGetDefaultConversationHandler
 from .ppcomcreateconversationhandler import PPComCreateConversationHandler
 from .ppgetamdqueuelength import PPGetAmdQueueLength
 
 from .ppgetusermatchedmethod import PPGetUserMatchedMethod
 from .ppgettargetservicemethod import PPGetTargetServiceMethod
+
+from .ppgetipinfohandler import PPGetIPInfoHandler
+from .ppcomtrackeventhandler import PPComTrackEventHandler
 
 def getWebServiceHandlers():
     handler_list = []
@@ -139,10 +139,7 @@ def getWebServiceHandlers():
     handler_list.append((r"/PPCONSOLE_GET_MESSAGE_NUMBER_BY_RANGE", PPConsoleGetMessageNumberByRange))
 
     handler_list.append((r"/PPCONSOLE_LOGOUT", PPConsoleLogoutHandler))
-    handler_list.append((r"/PPCONSOLE_SIGNUP", PPConsoleSignupHandler))
 
-    handler_list.append((r"/PPCONSOLE_SEND_NEW_PASSWORD", PPConsoleSendNewPassword))
-    
     handler_list.append((r"/PPKEFU_LOGIN", PPKefuLoginHandler))
     handler_list.append((r"/PPKEFU_LOGOUT", PPKefuLogoutHandler))
     handler_list.append((r"/PPKEFU_SET_BUSY", PPKefuSetBusy))
@@ -234,5 +231,9 @@ def getWebServiceHandlers():
     handler_list.append((r"/PP_GET_TARGET_SERVICE_METHOD", PPGetTargetServiceMethod))
     handler_list.append((r"/PP_GET_USER_MATCHED_METHOD", PPGetUserMatchedMethod))
 
+
+    handler_list.append((r"/PP_GET_IP_INFO", PPGetIPInfoHandler))
+    handler_list.append((r"/PPCOM_TRACK_EVENT", PPComTrackEventHandler))
+    
     return handler_list
 

@@ -26,7 +26,6 @@ from ppmessage.backend.amd import AmdWebService
 from ppmessage.backend.send import SendWebService
 from ppmessage.cache.cacheapp import CacheWebService
 from ppmessage.backend.ppcomapp import PPComWebService
-from ppmessage.backend.ppemail import PPEmailWebService
 from ppmessage.backend.gcmpush import GcmPushWebService
 from ppmessage.backend.ppkefuapp import PPKefuWebService
 from ppmessage.backend.ppauthapp import PPAuthWebService

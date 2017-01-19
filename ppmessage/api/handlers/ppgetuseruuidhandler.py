@@ -11,7 +11,8 @@ from ppmessage.db.models import DeviceUser
 from ppmessage.db.models import AppUserData
 from ppmessage.core.constant import API_LEVEL
 from ppmessage.core.constant import USER_STATUS
-from ppmessage.core.redis import redis_hash_to_dict
+
+from ppmessage.core.db.deviceuser import create_device_user
 
 from ppmessage.core.utils.randomidenticon import random_identicon
 from ppmessage.core.utils.randomidenticon import download_random_identicon
@@ -25,80 +26,70 @@ import logging
 from tornado.ioloop import IOLoop
 
 class PPGetUserUUIDHandler(BaseHandler):
-    """
-    description:
-    Receive user_email. If email has not been registered, create a portal user by this email,
-    return his device user uuid. If email has been registered and the user is a service user,
-    throw NO_PORTAL error, else return his device user uuid.
-
-    request:
-    user_email,
-    user_icon,
-    user_fullname,
-
-    response:
-    user_uuid,
-    """
-    def _create_third_party(self, _app_uuid, _user_email, _user_fullname, _user_icon):
-        _redis = self.application.redis
-        _du_uuid = str(uuid.uuid1())
-        _values = {
-            "uuid": _du_uuid,
-            "user_status": USER_STATUS.THIRDPARTY,
-            "user_name": _user_email,
-            "user_email": _user_email,
-            "user_fullname": _user_fullname,
-            "is_anonymous_user": False,
-        }
-
-        if _user_icon != None:
-            _values["user_icon"] = _user_icon
-            IOLoop.current().spawn_callback(download_random_identicon, _user_icon)
-        else:
-            _user_icon = random_identicon(_user_email)
-            _values["user_icon"] = _user_icon
-            IOLoop.current().spawn_callback(download_random_identicon, _user_icon)
-
-        _row = DeviceUser(**_values)
-        _row.async_add(_redis)
-        _row.create_redis_keys(_redis)
+    def _new_user(self, _request):
         
-        _data_uuid = str(uuid.uuid1())
-        _values = {
-            "uuid": _data_uuid,
-            "user_uuid": _du_uuid,
+        _app_uuid = _request.get("app_uuid")
+        _ent_company_uuid = _request.get("ent_company_id")
+        _ent_company_name = _request.get("ent_company_name")
+        _ent_company_fullname = _request.get("ent_company_fullname")
+        
+        _user_icon = _request.get("ent_user_icon")
+        _user_name = _request.get("ent_user_name")
+        _ent_user_uuid = _request.get("ent_user_id")
+        _ent_user_createtime = _request.get("ent_user_createtime") or time.time() * 1000
+
+        _du_uuid = str(uuid.uuid1())
+
+        if _user_icon:
+            IOLoop.current().spawn_callback(download_random_identicon, _user_icon)
+
+        _user = create_device_user(self.application.redis, {
+            "uuid": _du_uuid,
             "app_uuid": _app_uuid,
-            "user_fullname": _user_fullname,
-            "is_portal_user": True,
+            "user_name": _user_name,
+            "user_fullname": _user_name,
+            "user_icon": _user_icon,
+            "ent_user_uuid": str(_ent_user_uuid),
+            "ent_user_createtime": datetime.datetime.utcfromtimestamp(_ent_user_createtime/1000),
+            "is_anonymous_user": False,
             "is_service_user": False,
             "is_owner_user": False
-        }
-        _row = AppUserData(**_values)
-        _row.async_add(_redis)
-        _row.create_redis_keys(_redis)
+        })
 
         _r = self.getReturnData()
+        _r["user_fullname"] = _user_name
         _r["user_uuid"] = _du_uuid
+        _r["uuid"] = _du_uuid
         return
-    
-    def _get(self, _app_uuid, _user_email, _user_fullname, _user_icon):
-        _redis = self.application.redis
-        _key = DeviceUser.__tablename__ + ".user_email." + _user_email
-        _uuid = _redis.get(_key)
-        if _uuid == None:
-            self._create_third_party(_app_uuid, _user_email, _user_fullname, _user_icon)
+
+    def _exist_user(self, _request, _user_uuid):
+        _key = DeviceUser.__tablename__ + ".uuid." + _user_uuid
+
+        if not self.application.redis.exists(_key):
+            logging.error("CHECK CODE")
+            self.setErrorCode(API_ERR.SYS_ERR)
             return
         
-        _key = AppUserData.__tablename__ + ".app_uuid." +  self.app_uuid + ".user_uuid." + _uuid + ".is_service_user.True"        
-        if _redis.exists(_key):
+        _is_service_user = self.application.redis.hget(_key, "is_service_user")
+        _user_app_uuid = self.application.redis.hget(_key, "app_uuid")
+        
+        if "True" == _is_service_user and _request.get("app_uuid") == _user_app_uuid:
             logging.error("user is service user who can not help himself ^_^.")
             self.setErrorCode(API_ERR.NOT_PORTAL)
             return
-       
-        _r = self.getReturnData()
-        _r["user_uuid"] = _uuid
-        return
 
+        _user_fullname = self.application.redis.hget(_key, "user_fullname")
+        if _user_fullname != _request.get("ent_user_fullname"):
+            _row = DeviceUser(uuid=_user_uuid, user_fullname=_request.get("ent_user_fullname"))
+            _row.update_redis_keys(self.application.redis)
+            _row.async_update(self.application.redis)
+        
+        _r = self.getReturnData()
+        _r["user_fullname"] = _user_fullname
+        _r["user_uuid"] = _user_uuid
+        _r["uuid"] = _user_uuid
+        return
+    
     def initialize(self):
         self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
@@ -107,22 +98,27 @@ class PPGetUserUUIDHandler(BaseHandler):
         return
 
     def _Task(self):
-        super(PPGetUserUUIDHandler, self)._Task()
+        super(self.__class__, self)._Task()
         _request = json.loads(self.request.body)
-        _app_uuid = _request.get("app_uuid")
 
-        _user_email = _request.get("user_email")
-        _user_icon = _request.get("user_icon")
-        _user_fullname = _request.get("user_fullname")
+        # TODO: use this to merge messages 
+        _ppcom_trace_uuid = _request.get("ppcom_trace_uuid")
         
-        if _user_email == None:
-            logging.error("no user_eamil provided.")
+        _app_uuid = _request.get("app_uuid")
+        _ent_user_id = _request.get("ent_user_id")
+        _ent_user_name = _request.get("ent_user_name")
+
+        if not all([_app_uuid, _ent_user_id, _ent_user_name]):
+            logging.error("wrong parameters %s" % _request)
             self.setErrorCode(API_ERR.NO_PARA)
             return
 
-        if _user_fullname == None:
-            _user_fullname = _user_email.split("@")[0]
+        _key = DeviceUser.__tablename__ + ".ent_user_uuid." + _ent_user_id
+        _user_uuid = self.application.redis.get(_key)
+        
+        if not _user_uuid:
+            logging.info("no user related to ent_user_uuid: %s" % _ent_user_id)
+            return self._new_user(_request)
 
-        self._get(_app_uuid, _user_email, _user_fullname, _user_icon)
-        return
+        return self._exist_user(_request, _user_uuid)
 
