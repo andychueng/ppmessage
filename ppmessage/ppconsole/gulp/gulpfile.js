@@ -65,8 +65,8 @@ gulp.task('js', function(done) {
     gulp.src(buildConfig.scriptFiles)
         .pipe(concat('ppconsole-template.js'))
         .pipe(gulp.dest(buildConfig.buildPath))
-        .pipe(gulpif(min_js, ngAnnotate()))
-        .pipe(gulpif(min_js, uglify()))
+        // .pipe(gulpif(min_js, ngAnnotate()))
+        // .pipe(gulpif(min_js, uglify()))
         .on('error', function(e) {
             console.log(e);
             done();        

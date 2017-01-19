@@ -29,45 +29,48 @@ angular.module("this_app")
                 
         var signin = function(user) {
             var password = sha1($scope.user.user_password);
-            yvAjax.login({user_email: $scope.user.user_email, user_password: password})
-                .success(function(data) {
-                    if (data.error_code == 0) {
-                        yvLogin.updateActiveUserCookieKey( data.user_uuid );
-                        yvLogin.updateLoginedUserCookieKey( data.user_uuid, data.access_token );
-                        yvAjax.get_user_detail_with_password(data.user_uuid)
-                            .success(function(data) {
-                                yvDebug.d('get_user_detail', data);
+            yvAjax.login({user_email: $scope.user.user_email, user_password: password}).then(function(response) {
+                var data = response.data;
 
-                                if (data.error_code != 0) {
-                                    yvLog.w("get detail failed %s", data);
-                                    return;
-                                }
-                                
-                                yvLogin.updateLoginedUser( angular.copy( data ) );
-                                yvLogin.setLogined( true );
-                                
-                                var _url = yvConstants.USER_STATUS[data.user_status];
-
-                                if (data.user_status == "SERVICE") {
-                                    yvLogin.updateActiveUser( data );
-                                    $scope.start_ppmessage(true);
-                                    return;
-                                }
-                                
-                                if (data.user_status == "OWNER_2") {
-                                    $state.go(_url);
-                                }
-
-                                yvDebug.d("do not know how to handle user_status: %s", data.user_status);
-                                return;
-                            });
-                    } else {
-                        $scope.toast_error_string("SIGNIN_FAILED_TAG");
-                    }
-                })
-                .error(function(data) {
+                console.log("login return : %o", response);
+                
+                if (data.error_code != 0) {
                     $scope.toast_error_string("SIGNIN_FAILED_TAG");
+                    return;
+                }
+                
+                yvLogin.updateActiveUserCookieKey( data.user_uuid );
+                yvLogin.updateLoginedUserCookieKey( data.user_uuid, data.access_token );
+
+                yvAjax.get_user_detail_with_password(data.user_uuid).then(function(response) {
+
+                    var _udata = response.data;
+                    if (_udata.error_code != 0) {
+                        return;
+                    }
+                    
+                    yvLogin.updateLoginedUser( angular.copy( _udata ) );
+                    yvLogin.setLogined( true );
+                    
+                    var _url = yvConstants.USER_STATUS[_udata.user_status];
+                    
+                    if (_udata.user_status == "SERVICE") {
+                        yvLogin.updateActiveUser( _udata );
+                        $scope.start_ppmessage(true);
+                        return;
+                    }
+                    
+                    if (_udata.user_status == "OWNER_2") {
+                        $state.go(_url);
+                    }
+                    
+                    yvDebug.d("do not know how to handle user_status: %s", data.user_status);
+                    return;
+                }, function() {
                 });
+            }, function(response) {
+                $scope.toast_error_string("SIGNIN_FAILED_TAG");
+            });
             
         };
         

@@ -458,4 +458,7 @@ angular.module("this_app.i18n", ["pascalprecht.translate"])
 
         $translateProvider.fallbackLanguage("en", "zh-CN");
 
+        //$translateProvider.useSanitizeValueStrategy('sanitize');
+        $translateProvider.useSanitizeValueStrategy('escape');
+
     });

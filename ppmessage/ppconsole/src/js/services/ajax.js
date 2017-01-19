@@ -121,24 +121,8 @@ function $yvAjaxService($state, $timeout, $http, $cookieStore, yvUser, yvConstan
             return _apiPost("/PP_GET_ADMIN_DETAIL", {user_uuid: user_uuid, return_password: true});
         },
 
-        create_app: function(user_uuid, app_name) {
-            return _apiPost("/PP_CREATE_APP", {user_uuid: user_uuid, app_name: app_name});
-        },
-
-        remove_app: function(user_uuid, app_uuid, app_key) {
-            return _apiPost("/PP_REMOVE_APP", {user_uuid: user_uuid, app_uuid: app_uuid, app_key: app_key});
-        },
-
-        leave_app: function(user_list, app_uuid) {
-            return _apiPost("/PP_LEAVE_APP", {user_list: user_list, app_uuid: app_uuid});
-        },
-
         is_email_valid: function(requestParams) {
             return _apiPost("/PP_IS_EMAIL_VALID", requestParams);
-        },
-
-        get_app_owned_by_user: function(user_uuid) {
-            return _apiPost('/PP_GET_APP_OWNED_BY_USER', {user_uuid: user_uuid});
         },
         
         update_app_info: function(requestParams) {
@@ -157,9 +141,8 @@ function $yvAjaxService($state, $timeout, $http, $cookieStore, yvUser, yvConstan
             return _apiPost("/PP_REMOVE_USER", {user_uuid: user_uuid});
         },
 
-        // requestParams: {app_uuid: xxxxx}
         get_app_conversation_list: function(requestParams) {
-            return _apiPost('/PP_GET_APP_CONVERSATION_LIST', requestParams);
+            return _apiPost('/PP_GET_CONVERSATION_LIST', requestParams);
         },
 
         // get single conversation's history messages
@@ -167,46 +150,8 @@ function $yvAjaxService($state, $timeout, $http, $cookieStore, yvUser, yvConstan
             return _apiPost('/PP_PAGE_HISTORY_MESSAGE', requestParams);
         },
 
-        //create group
-        create_org_group: function(requestParams) {
-            return _apiPost('/PP_CREATE_ORG_GROUP', requestParams);
-        },
-
-        get_app_org_group_list: function(requestParams) {
-            return _apiPost('/PP_GET_APP_ORG_GROUP_LIST', requestParams);
-        },
-
-        get_org_group_detail: function(requestParams) {
-            return _apiPost('/PP_GET_ORG_GROUP_DETAIL', requestParams);
-        },
-
-        get_org_group_user_list: function(requestParams) {
-            return _apiPost('/PP_GET_ORG_GROUP_USER_LIST', requestParams);
-        },
-
-        update_org_group: function(requestParams) {
-            return _apiPost('/PP_UPDATE_ORG_GROUP', requestParams);
-        },
-
-        // if "app_uuid" not in _body or "group_uuid" not in _body or "user_list" not in _body:
-        remove_org_group: function(requestParams) {
-            return _apiPost('/PP_REMOVE_ORG_GROUP', requestParams);
-        },
-
-        add_org_group_user: function(requestParams) {
-            return _apiPost('/PP_ADD_ORG_GROUP_USER', requestParams);
-        },
-
-        remove_org_group_user: function(requestParams) {
-            return _apiPost('/PP_REMOVE_ORG_GROUP_USER', requestParams);
-        },
-
-        get_no_group_user_list: function(requestParams) {
-            return _apiPost('/PP_GET_NO_GROUP_USER_LIST', requestParams);
-        },
-
         get_team_service_user_list: function(requestParams) {
-            return _apiPost('/PP_GET_APP_SERVICE_USER_LIST', requestParams);
+            return _apiPost('/PP_GET_SERVICE_USER_LIST', requestParams);
         },
 
         get_api_info: function(requestParams) {
@@ -223,10 +168,6 @@ function $yvAjaxService($state, $timeout, $http, $cookieStore, yvUser, yvConstan
 
         send_new_password: function(requestParams, credentials_token) {
             return _apiPostWithToken('/PPCONSOLE_SEND_NEW_PASSWORD', requestParams, credentials_token);
-        },
-
-        get_all_apps: function(requestParams) {
-            return _apiPost('/PP_GET_ALL_APP_LIST', requestParams);            
         },
 
         auth: function(user) {

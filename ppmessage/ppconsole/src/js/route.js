@@ -5,12 +5,6 @@ angular.module("this_app.route", ["ui.router", "this_app.constants"])
 
         $stateProvider
 
-            .state("forget", {
-                url: "/forget",
-                templateUrl: yvConstants.TEMPLATE_PREFIX + "forget.html",
-                controller: "ForgetCtrl"
-            })
-
             .state("app", {
                 abstract: true,
                 url: "/app",
@@ -36,24 +30,6 @@ angular.module("this_app.route", ["ui.router", "this_app.constants"])
                 controller: "CreateAccountCtrl"
             })
 
-            .state("app.recoverpassword", {
-                url: "/recoverpassword/:account",
-                templateUrl: yvConstants.TEMPLATE_PREFIX + "recoverpassword.html",
-                controller: "RecoverPasswordCtrl"
-            })
-
-             .state("app.resetpassword", {
-                url: "/resetpassword/:email",
-                templateUrl: yvConstants.TEMPLATE_PREFIX + "settings/resetpassword.html",
-                controller: "SettingsResetpasswordCtrl"
-            })
-
-             .state("app.confirmreset", {
-                url: "/confirmreset",
-                templateUrl: yvConstants.TEMPLATE_PREFIX + "settings/confirmreset.html",
-                controller: "SettingsConfirmresetCtrl"
-            })
-
             .state("app.settings.teamprofile", {
                 url: "/teamprofile",
                 templateUrl: yvConstants.TEMPLATE_PREFIX + "settings/teamprofile.html",
@@ -64,18 +40,6 @@ angular.module("this_app.route", ["ui.router", "this_app.constants"])
                 url: "/configuration",
                 templateUrl: yvConstants.TEMPLATE_PREFIX + "settings/welcome.html",
                 controller: "ApplicationWelcomeCtrl"
-            })
-
-            .state("app.settings.group", {
-                url: "/group",
-                templateUrl: yvConstants.TEMPLATE_PREFIX + "settings/group.html",
-                controller: "GroupCtrl"
-            })
-
-            .state("app.settings.groupmembers", {
-                url: "/groupmembers/:group_uuid",
-                templateUrl: yvConstants.TEMPLATE_PREFIX + "settings/groupmembers.html",
-                controller: "GroupMembersCtrl"
             })
         
             .state("app.glance", {
@@ -88,12 +52,6 @@ angular.module("this_app.route", ["ui.router", "this_app.constants"])
                 url: "/teampeople",
                 templateUrl: yvConstants.TEMPLATE_PREFIX + "settings/people.html",
                 controller: "ApplicationPeopleCtrl"
-            })
-
-            .state("app.settings.messageroute", {
-                url: "/messageroute",
-                templateUrl: yvConstants.TEMPLATE_PREFIX + "settings/messageroute.html",
-                controller: "ApplicationMessageRouteCtrl"
             })
 
             .state("app.settings.overview", {
@@ -131,12 +89,6 @@ angular.module("this_app.route", ["ui.router", "this_app.constants"])
                 url: "/account",
                 templateUrl: yvConstants.TEMPLATE_PREFIX + "settings/account.html",
                 controller: "SettingsAccountCtrl"
-            })
-
-            .state("app.settings.push", {
-                url: "/push",
-                templateUrl: yvConstants.TEMPLATE_PREFIX + "settings/push.html",
-                controller: "SettingsPushCtrl"
             })
 
         ;
