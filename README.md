@@ -8,7 +8,7 @@
 
 # PPMessage
 
-With PPMessage, you can chat with visitor or customer via Web or mobile App as open source [Intercom](http://intercom.io) alternative.
+With PPMessage, you can chat with visitor or customer via Web or mobile App.
 
 PPMessage targets to run on Linux, macOS and even **Windows** operating systems. PPMessage includes a clear API system which could be integrated with any open source Content Management System like Wordpress, Drupal and any commercial system, even an e-commerce system.
 
@@ -85,9 +85,11 @@ Open your browser and visit `http://127.0.0.1:8945`, check the log of `ppmessage
 
 > Please read license carefully, you can use PPMessage freely under the license.
 
+PPMessage is open sourced and one domain (including one web site and one app) only, if needs more than one domain deployment you needs contact the author to get commercial permission.
+
 [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
-Copyright (c) 2010-2016, PPMESSAGE team and contributors - https://www.ppmessage.com and https://github.com/PPMESSAGE/ppmessage
+Copyright (c) 2010-2017, PPMESSAGE team and contributors - https://www.ppmessage.com and https://github.com/PPMESSAGE/ppmessage
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

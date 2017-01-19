@@ -2,7 +2,7 @@
 
 [In English](/README.md)
 
-# PPMessage - 皮皮消息，即插即用，在线客服，移动应用内即时通讯，私有的·微信·，自建的·钉钉·，开源，纯Python实现。
+# PPMessage - 皮皮消息，即插即用，在线客服，移动应用内即时通讯，开源，纯Python实现。
 
 PPMessage 是一个开源的在线客服平台。PPMessage能够帮助你在第一时间与你的客户建立联系，开发人员可以非常容易的将 PPMessage 集成到你的网站或者 iOS、Android 的应用中。PPMessage 的前端后端都是开源的，后端全部基于 Python，简洁高效。前端根据不同平台提供原生的SDK。
 
@@ -48,6 +48,7 @@ bash ppmessage/scripts/set-up-mac-on-linux.sh
 ```bash
 ./ppmessage.py
 ```
+> 删除文件 ppmessage/bootstrap/config.json，再运行 ppmessage.py 就可以重新配置。
 
 > 就是这些，不工作？请将日志贴到 Github issue 中，谢谢！
 
@@ -62,16 +63,28 @@ bash ppmessage/scripts/set-up-mac-on-linux.sh
 
 ![](/ppmessage/doc/348015072.png)
 
-<!--
 
-* [在线使用PPMessage](/ppmessage/doc/zh-cn/online-ppmessage-guide.md) 
+## 版权 
 
-* [从源码开始](/ppmessage/doc/zh-cn/install.md)
+> 使用前请仔细阅读版权声明。
 
-* [使用手册](/ppmessage/doc/zh-cn/user-manual.md)
+PPMessage 源代码是按照 Apache License Version 2 开源的，其版权归属于原作者，并且只允许在单网站或者单应用上使用 PPMessage 及其衍生项目，如果想利用 PPMessage 的全部或者部分代码提供多租户（多站点）服务，请联系作者获取商业许可。
 
-* [开发手册](/ppmessage/doc/zh-cn/developer-manual.md)
+[Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
--->
+Copyright (c) 2010-2017, PPMESSAGE team and contributors - https://www.ppmessage.com and https://github.com/PPMESSAGE/ppmessage
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
 
 
