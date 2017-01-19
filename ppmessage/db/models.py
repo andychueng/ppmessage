@@ -11,7 +11,6 @@ from ppmessage.core.constant import MESSAGE_STATUS
 from ppmessage.core.constant import MESSAGE_SUBTYPE
 from ppmessage.core.constant import CONVERSATION_STATUS
 from ppmessage.core.constant import SERVICE_USER_STATUS
-from ppmessage.core.constant import GROUP_ALGORITHM
 
 from ppmessage.core.redis import row_to_redis_hash
 from ppmessage.core.redis import redis_hash_to_dict
@@ -31,20 +30,18 @@ from sqlalchemy import LargeBinary
 
 from sqlalchemy import Index
 
-import datetime
+import os
 import time
 import uuid
 import json
-import traceback
 import hashlib
 import logging
-import os
-
+import datetime
+import traceback
 
 class DeviceUser(CommonMixin, BaseModel):
     __tablename__ = "device_users"
 
-    app_uuid = Column("app_uuid", String(64))
     user_name = Column("user_name", String(32))
     user_password = Column("user_password", String(256))
     user_email = Column("user_email", String(64))
@@ -58,45 +55,12 @@ class DeviceUser(CommonMixin, BaseModel):
     user_wechat = Column("user_wechat", String(64))
     user_signature = Column("user_signature", String(128))
     
-    # user_defined a json string includes [{n:xxx, v:xxx}, {n:xxx, v:xxx}]
-    user_defined = Column("user_defined", String(512))
-    
-    # only one mobile and browser device
-    mobile_device_uuid = Column("mobile_device_uuid", String(64))
-    browser_device_uuid = Column("browser_device_uuid", String(64))
-    ppcom_mobile_device_uuid = Column("ppcom_mobile_device_uuid", String(64))
+    ppkefu_browser_device_uuid = Column("ppkefu_browser_device_uuid", String(64))
     ppcom_browser_device_uuid = Column("ppcom_browser_device_uuid", String(64))
     
     # zh_cn/en_us/zh_tw
     user_language = Column("user_language", String(32))
-    
-    # push but no sound
-    user_silence_notification = Column("user_silence_notification", Boolean)
-
-    # push with badge on app icon
-    user_show_badge = Column("user_show_badge", Boolean)
-
-    # not push to device, this is global set, highest priority
-    # for special notification of coversation, should set in conversation user data
-    user_mute_notification = Column("user_mute_notification", Boolean)
-    
-    # if user user pc, let the device mute notification but if open ws still work
-    user_mute_other_mobile_device = Column("user_mute_other_mobile_device", Boolean)
-    
-    user_company = Column("user_company", String(64))
-
-    is_email_verified = Column("is_email_verified", Boolean)
-    is_mobile_verified = Column("is_mobile_verified", Boolean)
-
-    # create_status for user creatation,
-    # USER_OWNER_0 -> already signup from PORTAL
-    # USER_OWNER_1 -> already pick up a team name
-    # USER_OWNER_2 -> already promote the gift
-    # USER_OWNER_3 -> already how to get support
-    # USER_SERVICE -> create by the owner of app
-    
-    create_status = Column("create_status", String(16))
-
+        
     # service_user_status for service user
     # READY -> ready to allocate message to me
     # BUSY -> busy not allocate message to me
@@ -126,7 +90,7 @@ class DeviceUser(CommonMixin, BaseModel):
     )
 
     def __init__(self, *args, **kwargs):
-        super(DeviceUser, self).__init__(*args, **kwargs)
+        super(self.__class__, self).__init__(*args, **kwargs)
         return
         
     def create_redis_keys(self, _redis, *args, **kwargs):
@@ -135,12 +99,8 @@ class DeviceUser(CommonMixin, BaseModel):
         _key = self.__tablename__ + ".user_email." + self.user_email
         _redis.set(_key, self.uuid)
         
-        if self.is_anonymous_user:
-            _key = DeviceUser.__tablename__ + ".ppcom_trace_uuid." + self.ppcom_trace_uuid
-            _redis.set(_key, self.uuid)
-
-        _key = self.__tablename__ + ".statistics.all"
-        _redis.incr(_key)
+        _key = DeviceUser.__tablename__ + ".ppcom_trace_uuid." + self.ppcom_trace_uuid
+        _redis.set(_key, self.uuid)
         
         return
 
@@ -152,12 +112,9 @@ class DeviceUser(CommonMixin, BaseModel):
         _key = self.__tablename__ + ".user_email." + _obj["user_email"]
         _redis.delete(_key)
 
-        if _obj["ppcom_trace_uuid"] != None:
+        if _obj.get("ppcom_trace_uuid"):
             _key = self.__tablename__ + ".ppcom_trace_uuid." + _obj["ppcom_trace_uuid"]
             _redis.delete(_key)
-
-        _key = self.__tablename__ + ".statistics.all"
-        _redis.decr(_key)
         
         CommonMixin.delete_redis_keys(self, _redis)
         return    
@@ -167,33 +124,11 @@ class DeviceUser(CommonMixin, BaseModel):
         _obj = redis_hash_to_dict(_redis, DeviceUser, self.uuid)
         if _obj == None:
             return
-
-        if _obj["ppcom_trace_uuid"] != None:
-            _key = self.__tablename__ + ".ppcom_trace_uuid." + _obj["ppcom_trace_uuid"]
-            _redis.set(_key, _obj["uuid"])
-
         return
-
-class UserOnlineStatusLog(CommonMixin, BaseModel):
-    __tablename__ = "user_online_status_logs"
-    app_uuid = Column("app_uuid", String(64))
-    user_uuid = Column("user_uuid", String(64))
-    device_uuid = Column("device_uuid", String(64))
-    online_status = Column("online_status", String(32))
-    status_data = Column("status_data", String(16))
-    __table_args__ = (
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(UserOnlineStatusLog, self).__init__(*args, **kwargs)
-        return
-
     
 class DeviceInfo(CommonMixin, BaseModel):
     __tablename__ = "device_infos"
 
-    app_uuid = Column("app_uuid", String(64))
-    
     # after allocation
     user_uuid = Column("user_uuid", String(64))
     
@@ -240,18 +175,17 @@ class DeviceInfo(CommonMixin, BaseModel):
         _key = self.__tablename__ + ".terminal_uuid." + self.terminal_uuid
         _redis.set(_key, self.uuid)
 
-        if self.app_uuid != None:
-            _key_0 = self.__tablename__ + ".app_uuid." + self.app_uuid + \
-                     ".is_ppcom_device." + str(self.is_ppcom_device) + \
-                     ".device_is_online." + str(self.device_is_online)
-            _key_1 = self.__tablename__ + ".app_uuid." + self.app_uuid + \
-                     ".is_ppcom_device." + str(self.is_ppcom_device) + \
-                     ".device_is_online." + str(not self.device_is_online)
+        _key_0 = self.__tablename__ + \
+                 ".is_ppcom_device." + str(self.is_ppcom_device) + \
+                 ".device_is_online." + str(self.device_is_online)
+        _key_1 = self.__tablename__ + \
+                 ".is_ppcom_device." + str(self.is_ppcom_device) + \
+                 ".device_is_online." + str(not self.device_is_online)
         
-            _updatetime = time.mktime(self.updatetime.timetuple())*1000*1000 + self.updatetime.microsecond
-            _v = json.dumps([self.user_uuid, self.uuid])
-            _redis.zadd(_key_0, _v, _updatetime)
-            _redis.zrem(_key_1, _v)
+        _updatetime = time.mktime(self.updatetime.timetuple())*1000*1000 + self.updatetime.microsecond
+        _v = json.dumps([self.user_uuid, self.uuid])
+        _redis.zadd(_key_0, _v, _updatetime)
+        _redis.zrem(_key_1, _v)
         return
 
     def update_redis_keys(self, _redis, *args, **kwargs):
@@ -260,18 +194,17 @@ class DeviceInfo(CommonMixin, BaseModel):
         if _obj == None:
             return
 
-        if self.app_uuid != None:
-            _key_0 = self.__tablename__ + ".app_uuid." + self.app_uuid + \
-                     ".is_ppcom_device." + str(_obj["is_ppcom_device"]) + \
-                     ".device_is_online." + str(_obj["device_is_online"])
-            _key_1 = self.__tablename__ + ".app_uuid." + self.app_uuid + \
-                     ".is_ppcom_device." + str(_obj["is_ppcom_device"]) + \
-                     ".device_is_online." + str(not _obj["device_is_online"])
+        _key_0 = self.__tablename__ + \
+                 ".is_ppcom_device." + str(_obj["is_ppcom_device"]) + \
+                 ".device_is_online." + str(_obj["device_is_online"])
+        _key_1 = self.__tablename__ + \
+                 ".is_ppcom_device." + str(_obj["is_ppcom_device"]) + \
+                 ".device_is_online." + str(not _obj["device_is_online"])
         
-            _updatetime = time.mktime(self.updatetime.timetuple())*1000*1000 + self.updatetime.microsecond
-            _v = json.dumps([_obj["user_uuid"], self.uuid])
-            _redis.zadd(_key_0, _v, _updatetime)
-            _redis.zrem(_key_1, _v)
+        _updatetime = time.mktime(self.updatetime.timetuple())*1000*1000 + self.updatetime.microsecond
+        _v = json.dumps([_obj["user_uuid"], self.uuid])
+        _redis.zadd(_key_0, _v, _updatetime)
+        _redis.zrem(_key_1, _v)
         return
     
     def delete_redis_keys(self, _redis):
@@ -281,12 +214,11 @@ class DeviceInfo(CommonMixin, BaseModel):
         _key = self.__tablename__ + ".terminal_uuid." + _obj["terminal_uuid"]
         _redis.delete(_key)
 
-        if _obj["app_uuid"] != None:
-            _key_0 = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + \
-                     ".is_ppcom_device." + str(_obj["is_ppcom_device"]) + \
-                     ".device_is_online." + str(_obj["device_is_online"])
-            _v = json.dumps([_obj["user_uuid"], self.uuid])
-            _redis.zrem(_key_0, _v)
+        _key_0 = self.__tablename__ + \
+                 ".is_ppcom_device." + str(_obj["is_ppcom_device"]) + \
+                 ".device_is_online." + str(_obj["device_is_online"])
+        _v = json.dumps([_obj["user_uuid"], self.uuid])
+        _redis.zrem(_key_0, _v)
         
         CommonMixin.delete_redis_keys(self, _redis)
         return
@@ -294,8 +226,6 @@ class DeviceInfo(CommonMixin, BaseModel):
 class MessagePushTask(CommonMixin, BaseModel):
 
     __tablename__ = "message_push_tasks"
-
-    app_uuid = Column("app_uuid", String(64))
     
     conversation_uuid = Column("conversation_uuid", String(64))
     # P2S/S2P/S2S since conversationinfo no S2P
@@ -346,33 +276,27 @@ class MessagePushTask(CommonMixin, BaseModel):
         
     def create_redis_keys(self, _redis, *args, **kwargs):
         CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
-        if self.from_uuid != None:
-            _key = self.__tablename__ + ".today_message_load." + ".from_uuid." + self.from_uuid
-            _redis.incr(_key)
-            
-            if self.to_uuid != None:
-                _key = self.__tablename__ + ".today_customer_load." + ".from_uuid." + self.from_uuid
-                _redis.sadd(_key, self.to_uuid)
             
         if self.conversation_uuid != None:
             _key = self.__tablename__ + ".conversation_uuid." + self.conversation_uuid
             _createtime = time.mktime(self.createtime.timetuple())*1000*1000 + self.createtime.microsecond
             _redis.zadd(_key, self.uuid, _createtime)
 
-        if self.app_uuid != None:
-            # by hour
-            _key = self.__tablename__ + ".app_uuid." + self.app_uuid + \
-                   ".day." + self.createtime.strftime("%Y-%m-%d") + ".hour." + str(self.createtime.hour)
-            _redis.incr(_key)
-            # by day
-            _key = self.__tablename__ + ".app_uuid." + self.app_uuid + \
-                   ".day." + self.createtime.strftime("%Y-%m-%d")
-            _redis.incr(_key)
-            # all messages
-            _key = self.__tablename__ + ".app_uuid." + self.app_uuid
-            _redis.incr(_key)
+        # by hour
+        _key = self.__tablename__ + \
+               ".day." + self.createtime.strftime("%Y-%m-%d") + \
+               ".hour." + str(self.createtime.hour)
+        _redis.incr(_key)
 
-            
+        # by day
+        _key = self.__tablename__ + \
+               ".day." + self.createtime.strftime("%Y-%m-%d")
+        _redis.incr(_key)
+
+        # all messages
+        _key = self.__tablename__
+        _redis.incr(_key)
+
         return
     
     def delete_redis_keys(self, _redis):
@@ -389,7 +313,6 @@ class MessagePushTask(CommonMixin, BaseModel):
     
 class MessagePush(CommonMixin, BaseModel):
     __tablename__ = "message_pushs"
-    app_uuid = Column("app_uuid", String(64))
     task_uuid = Column("task_uuid", String(64))
     user_uuid = Column("user_uuid", String(64))
     device_uuid = Column("device_uuid", String(64))
@@ -406,231 +329,20 @@ class MessagePush(CommonMixin, BaseModel):
         # ACKED PUSH NOT CACHED ANY LONGER
         if self.status == MESSAGE_STATUS.ACKED:
             return
-        if self.task_uuid == None or self.app_uuid == None or self.user_uuid == None:
+        if self.task_uuid == None or self.user_uuid == None:
             return
         CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
-        _key = self.__tablename__ + ".app_uuid." + self.app_uuid + ".user_uuid." + self.user_uuid
+        _key = self.__tablename__ + ".user_uuid." + self.user_uuid
         _updatetime = time.mktime(self.updatetime.timetuple())*1000*1000 + self.updatetime.microsecond
         _redis.zadd(_key, self.uuid, _updatetime)
         return
 
     def delete_redis_keys(self, _redis):
         _obj = redis_hash_to_dict(_redis, MessagePush, self.uuid)
-        if _obj == None or _obj["task_uuid"] == None or _obj["app_uuid"] == None or _obj["user_uuid"] == None:
+        if _obj == None or _obj["task_uuid"] == None or _obj["user_uuid"] == None:
             return
-        _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + ".user_uuid." + _obj["user_uuid"]
+        _key = self.__tablename__ + ".user_uuid." + _obj["user_uuid"]
         _redis.zrem(_key, self.uuid)
-        CommonMixin.delete_redis_keys(self, _redis)
-        return
-
-class UserContactData(CommonMixin, BaseModel):
-    __tablename__ = "user_contact_datas"
-    user_uuid = Column("user_uuid", String(64))
-    contact_uuid = Column("contact_uuid", String(64))
-    
-    __table_args__ = (
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(UserContactData, self).__init__(*args, **kwargs)
-        return
-        
-class OrgGroup(CommonMixin, BaseModel):
-    __tablename__ = "org_groups"
-
-    app_uuid = Column("app_uuid", String(64))
-    
-    parent_group_uuid = Column("parent_group_uuid", String(64))
-    
-    group_name = Column("group_name", String(64))
-    group_desc = Column("group_desc", String(128))
-    group_icon = Column("group_icon", String(512))
-    
-    __table_args__ = (
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(OrgGroup, self).__init__(*args, **kwargs)
-        return
-
-    def create_redis_keys(self, _redis, *args, **kwargs):
-        CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
-        _key = self.__tablename__ + ".app_uuid." + self.app_uuid
-        _redis.sadd(_key, self.uuid)
-
-        _key = self.__tablename__ + ".app_uuid." + self.app_uuid + ".sorted"
-        _redis.zadd(_key, self.group_name + ":" + self.uuid, 0)
-
-        return
-
-    def update_redis_keys(self, _redis):
-
-        if self.group_name != None and len(self.group_name):
-            
-            _key = self.__tablename__ + ".uuid." + self.uuid
-            _old = _redis.hget(_key, "group_name")
-            _app_uuid = _redis.hget(_key, "app_uuid")
-
-            _key_n = self.__tablename__ + ".app_uuid." + _app_uuid + ".sorted"
-            _redis.zadd(_key_n, self.group_name + ":" + self.uuid, 0)
-            
-            if _old != None and len(_old) != 0 and _old != self.group_name:
-                _redis.zrem(_key_n, self.group_name + ":" + self.uuid)
-
-        CommonMixin.update_redis_keys(self, _redis)
-        return
-    
-    def delete_redis_keys(self, _redis):
-        _obj = redis_hash_to_dict(_redis, OrgGroup, self.uuid)
-        if _obj == None or _obj["app_uuid"] == None or _obj["group_name"] == None:
-            return
-
-        _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"]
-        _redis.srem(_key, _obj["uuid"])
-
-        _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + ".sorted"
-        _redis.zrem(_key, _obj["group_name"] + ":" + _obj["uuid"])
-        
-        CommonMixin.delete_redis_keys(self, _redis)
-        return
-
-class OrgGroupUserData(CommonMixin, BaseModel):
-
-    __tablename__ = "org_group_user_datas"
-
-    group_uuid = Column("group_uuid", String(64))
-    user_uuid = Column("user_uuid", String(64))
-
-    __table_args__ = (
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(OrgGroupUserData, self).__init__(*args, **kwargs)
-        return
-    
-    def create_redis_keys(self, _redis, *args, **kwargs):
-        CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
-
-        _pi = _redis.pipeline()
-
-        _key = self.__tablename__ + ".group_uuid." + self.group_uuid
-        _pi.sadd(_key, self.user_uuid)
-
-        _key = self.__tablename__ + ".user_uuid." + self.user_uuid
-        _pi.sadd(_key, self.group_uuid)
-
-        _key = self.__tablename__ + ".group_uuid." + self.group_uuid + \
-               ".user_uuid." + self.user_uuid
-        _pi.set(_key, self.uuid)
-        
-        _pi.execute()
-        return
-
-    def delete_redis_keys(self, _redis):
-        _obj = redis_hash_to_dict(_redis, OrgGroupUserData, self.uuid)
-        if _obj == None or _obj["group_uuid"] == None or _obj["user_uuid"] == None:
-            return
-
-        _pi = _redis.pipeline()
-        _key = self.__tablename__ + ".group_uuid." + _obj["group_uuid"] 
-        _pi.srem(_key, _obj["user_uuid"])
-        
-        _key = self.__tablename__ + ".user_uuid." + _obj["user_uuid"] 
-        _pi.srem(_key, _obj["group_uuid"])
-
-        _key = self.__tablename__ + ".group_uuid." + _obj["group_uuid"] + \
-               ".user_uuid." + _obj["user_uuid"]
-        _pi.delete(_key)
-        _pi.execute()
-        
-        CommonMixin.delete_redis_keys(self, _redis)
-        return
-
-class OrgGroupSubGroupData(CommonMixin, BaseModel):
-    __tablename__ = "org_group_sub_group_datas"
-
-    group_uuid = Column("group_uuid", String(64))
-    sub_group_uuid = Column("sub_group_uuid", String(64))
-
-    __table_args__ = ()
-
-    def __init__(self, *args, **kwargs):
-        super(OrgGroupSubGroupData, self).__init__(*args, **kwargs)
-        return
-    
-    def create_redis_keys(self, _redis, *args, **kwargs):
-        CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
-
-        _pi = _redis.pipeline()
-        _key = self.__tablename__ + ".group_uuid." + self.group_uuid
-        _pi.sadd(_key, self.sub_group_uuid)
-        _pi.execute()
-        
-        return
-
-    def delete_redis_keys(self, _redis):
-        _obj = redis_hash_to_dict(_redis, OrgGroupUserData, self.uuid)
-        if _obj == None or _obj["group_uuid"] == None or _obj["sub_group_uuid"] == None:
-            return
-
-        _pi = _redis.pipeline()
-        _key = self.__tablename__ + ".group_uuid." + _obj["group_uuid"] 
-        _pi.srem(_key, _obj["sub_group_uuid"])        
-        _pi.execute()
-        
-        CommonMixin.delete_redis_keys(self, _redis)
-        return
-
-class MaterialRefInfo(CommonMixin, BaseModel):
-    """
-    this object will be created when message is acked
-    when the message with material info
-    image/file/card etc (not including the AUDIO)
-    """
-    
-    __tablename__ = "material_ref_infos"
-
-    # the user is the owner
-    user_uuid = Column("user_uuid", String(64))
-
-    # application/x-yv-file means file info
-    # application/x-yv-icon
-    # application/x-yv-evernote
-    # application/x-yv-material-image
-    # application/x-yv-material-audio
-    # application/x-yv-material-video
-    # application/x-yv-material-document ? word/excel/ppt/pdf/etc.
-    # application/x-yv-material-archive ? zip/rar/tar/gz/7z
-    # application/x-yv-material-card ~ html
-
-    material_type = Column("material_type", String(64))
-
-    # based on material_type find the uuid in related table
-    material_uuid = Column("material_uuid", String(64))
-
-    # is file visible , [visible:1, not visible or deleted:0]
-    visible = Column("visible", Integer, default=1)
-    
-    def __init__(self, *args, **kwargs):
-        super(MaterialRefInfo, self).__init__(*args, **kwargs)
-        return
-
-    def create_redis_keys(self, _redis, *args, **kwargs):
-        CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
-        _key = self.__tablename__ + \
-               ".user_uuid." + self.user_uuid + \
-               ".material_uuid." + self.material_uuid
-        _redis.set(_key, self.uuid)
-        return
-
-    def delete_redis_keys(self, _redis):
-        _obj = redis_hash_to_dict(_redis, MaterialRefInfo, self.uuid)
-        if _obj == None:
-            return
-        _key = self.__tablename__ + \
-               ".user_uuid." + _obj["user_uuid"] + \
-               ".material_uuid." + _obj["material_uuid"]
-        _redis.delete(_key)
         CommonMixin.delete_redis_keys(self, _redis)
         return
 
@@ -666,7 +378,7 @@ class FileInfo(CommonMixin, BaseModel):
     thumbnail_uuid = Column("thumbnail_uuid", String(64))
 
     def __init__(self, *args, **kwargs):
-        super(FileInfo, self).__init__(*args, **kwargs)
+        super(self.__class__, self).__init__(*args, **kwargs)
         return
     
     def create_redis_keys(self, _redis, *args, **kwargs):
@@ -684,128 +396,23 @@ class FileInfo(CommonMixin, BaseModel):
         CommonMixin.delete_redis_keys(self, _redis)
         return
     
-class VideoMaterialInfo(CommonMixin, BaseModel):
-    __tablename__ = "video_material_infos"
-    video_file_uuid = Column("video_file_uuid", String(64))
-    cover_file_uuid = Column("cover_file_uuid", String(64))
-    cover_thumbnail_file_uuid = Column("cover_thumbnail_file_uuid", String(64))
-
-    duration = Column("duration", Integer)
-    inspired_times = Column("inspired_times", Integer)
-    viewed_times = Column("viewed_times", Integer)
-
-    user_uuid = Column("user_uuid", String(64))
-    
-    __table_args__ = (
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(VideoMaterialInfo, self).__init__(*args, **kwargs)
-        return
-        
-class SingleCardMaterialInfo(CommonMixin, BaseModel):
-    __tablename__ = "single_card_material_infos"
-
-    content_file_uuid = Column("content_file_uuid", String(64))
-    cover_file_uuid = Column("cover_file_uuid", String(64))
-
-    cover_thumbnail_file_uuid = Column("cover_thumbnail_file_uuid", String(64))
-    
-    title=Column("title", String(256))
-    abstract=Column("abstract", String(256))
-    
-    external_url=Column("external_url", String(256))
-        
-    inspired_times = Column("inspired_times", Integer)
-    viewed_times = Column("viewed_times", Integer)
-
-    user_uuid = Column("user_uuid", String(64))
-
-    __table_args__ = (
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(SingleCardMaterialInfo, self).__init__(*args, **kwargs)
-        return
-
-class MultipleCardMaterialInfo(CommonMixin, BaseModel):
-    """
-    body format is json
-    [
-    message_card_info_uuid,
-    message_card_info_uuid
-    ]
-    """
-    
-    __tablename__ = "multiple_card_material_infos"
-    
-    body = Column("body", String(512))
-    user_uuid = Column("user_uuid", String(64))
-    
-    def __init__(self, *args, **kwargs):
-        super(MultipleCardMaterialInfo, self).__init__(*args, **kwargs)
-        return
-
 class AppInfo(CommonMixin, BaseModel):
     __tablename__ = "app_infos"
-
-    # which api create it
-    api_uuid = Column("api_uuid", String(64))
-    
-    # who create it
-    user_uuid = Column("user_uuid", String(64))
     
     app_key = Column("app_key", String(64))
     app_secret = Column("app_secret", String(64))
     
     app_name = Column("app_name", String(64))
+    company_name = Column("company_name", String(64))
+    
     app_icon = Column("app_icon", String(512))
 
     app_route_policy = Column("app_route_policy", String(64))
-    
-    company_name = Column("company_name", String(64))
-    
-    app_billing_email = Column("app_billing_email", String(64))
-    app_billing_uuid = Column("app_billing_uuid", String(64))
-
-    return_offline_message = Column("return_offline_message", Boolean)
-
-    offline_message = Column("offline_message", String(512))
+            
     welcome_message = Column("welcome_message", String(512))
-
-    # ALWAYS/ONCE/NEVER
-    show_ppcom_hover = Column("show_ppcom_hover", String(16))
     ppcom_launcher_color = Column("ppcom_launcher_color", String(16))
 
-    # DEFAULT/FLAT/MATERIAL/ANIMATE
-    ppcom_launcher_style = Column("ppcom_launcher_style", String(16))
-
-    # DEFAULT is `Powered by PPMESSAGE` and link
-    ppcom_powered_by_name = Column("ppcom_powered_by_name", String(64))
-    ppcom_powered_by_link = Column("ppcom_powered_by_link", String(128))
-    ppcom_powered_by_visible = Column("ppcom_powered_by_visible", Boolean)
-
-    robot_train_chat = Column("robot_train_chat", Boolean)
-    robot_train_track = Column("robot_train_track", Boolean)
-    robot_train_click = Column("robot_train_click", Boolean)
-
-    robot_train_method = Column("robot_train_method", String(32))
-
-    robot_user_uuid = Column("robot_user_uuid", String(64))
-
-    enable_apns_push = Column("enable_apns_push", Boolean)
-    enable_mqtt_push = Column("enable_mqtt_push", Boolean)
-    enable_gcm_push = Column("enable_gcm_push", Boolean)
-    enable_jpush = Column("enable_jpush", Boolean)
     
-    gcm_api_key = Column("gcm_api_key", String(128))
-
-    apns_combination_pem_data = Column("apns_combination_pem_data", LargeBinary)
-    apns_combination_pem_password = Column("apns_combination_pem_password", String(32))
-
-    jpush_api_key = Column("jpush_api_key", String(128))
-    jpush_master_secret = Column("jpush_master_secret", String(128))
-
     __table_args__ = (
     )
 
@@ -817,18 +424,10 @@ class AppInfo(CommonMixin, BaseModel):
         CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
 
         _key = self.__tablename__
-        _redis.sadd(_key, self.uuid)
+        _redis.set(_key, self.uuid)
         
         _key = self.__tablename__ + ".app_key." + self.app_key
         _redis.set(_key, self.uuid)
-
-        if self.user_uuid != None:
-            _key = self.__tablename__ + ".user_uuid." + self.user_uuid
-            _redis.set(_key, self.uuid)
-
-        if self.api_uuid != None:
-            _key = self.__tablename__ + ".api_uuid." + self.api_uuid
-            _redis.sadd(_key, self.uuid)
 
         return
     
@@ -838,141 +437,19 @@ class AppInfo(CommonMixin, BaseModel):
             return
 
         _key = self.__tablename__
-        _redis.srem(_key, self.uuid)
+        _redis.delete(_key)
         
         _key = self.__tablename__ + ".app_key." + _obj["app_key"]
         _redis.delete(_key)
 
-        if self.user_uuid != None:
-            _key = self.__tablename__ + ".user_uuid." + _obj["user_uuid"]
-            _redis.delete(_key)
-
-        if self.api_uuid != None:
-            _key = self.__tablename__ + ".api_uuid." + _obj["api_uuid"]
-            _redis.delete(_key)
-
         CommonMixin.delete_redis_keys(self, _redis)
         return
 
-        
-class AppUserData(CommonMixin, BaseModel):
-    __tablename__ = "app_user_datas"
-
-    uuid = Column("uuid", String(64), primary_key=True)
-    
-    app_uuid = Column("app_uuid", String(64))
-    user_uuid = Column("user_uuid", String(64))
-    user_fullname = Column("user_fullname", String(64))
-
-    is_portal_user = Column("is_portal_user", Boolean)
-    is_service_user = Column("is_service_user", Boolean)
-    is_owner_user = Column("is_owner_user", Boolean)
-
-    # PORTAL_A, PORTAL_B, SERVICE_A, SERVICE_B, UNLIMITED
-    app_user_type = Column("app_user_type", String(16))
-    
-    __table_args__ = (
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(AppUserData, self).__init__(*args, **kwargs)
-        return
-    
-    def create_redis_keys(self, _redis, *args, **kwargs):
-        CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
-        _key = self.__tablename__ + \
-               ".app_uuid." + self.app_uuid + \
-               ".user_uuid." + self.user_uuid + \
-               ".is_service_user." + str(self.is_service_user)
-        _redis.set(_key, self.uuid)
-
-        _key = self.__tablename__ + \
-               ".app_uuid." + self.app_uuid + \
-               ".user_uuid." + self.user_uuid
-        _d = {
-            "is_owner_user": self.is_owner_user,
-            "is_service_user": self.is_service_user,
-        }
-        _redis.set(_key, json.dumps(_d))
-
-        _key = self.__tablename__ + \
-               ".user_uuid." + self.user_uuid + \
-               ".is_service_user." + str(self.is_service_user)
-        _redis.set(_key, self.app_uuid)
-        
-        _key = self.__tablename__ + \
-               ".app_uuid." + self.app_uuid + \
-               ".is_service_user." + str(self.is_service_user)
-        _redis.sadd(_key, self.user_uuid)
-
-        _key = self.__tablename__ + \
-               ".app_uuid." + self.app_uuid + \
-               ".is_service_user." + str(self.is_service_user) + ".sorted"
-        _redis.zadd(_key, self.user_fullname + ":" + self.user_uuid, 0)
-
-        return
-
-    def update_redis_keys(self, _redis, *args, **kwargs):
-        if self.user_fullname == None:
-            return
-
-        _obj = redis_hash_to_dict(_redis, AppUserData, self.uuid)
-        _old = _obj.get("user_fullname").decode("utf-8")
-        if self.user_fullname == _old:
-            return
-
-        _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + \
-               ".is_service_user." + str(_obj["is_service_user"]) + ".sorted"
-        _redis.zrem(_key, _obj["user_fullname"] + ":" + _obj["user_uuid"])
-        _redis.zadd(_key, _obj["user_fullname"] + ":" + _obj["user_uuid"], 0)
-        
-        CommonMixin.update_redis_keys(self, _redis, *args, **kwargs)
-        
-        return
-            
-    def delete_redis_keys(self, _redis):
-        _obj = redis_hash_to_dict(_redis, AppUserData, self.uuid)
-        if _obj == None:
-            return
-
-        _key = self.__tablename__ + \
-               ".app_uuid." + _obj["app_uuid"] + \
-               ".user_uuid." + _obj["user_uuid"] + \
-               ".is_service_user." + str(_obj["is_service_user"])
-        _redis.delete(_key)
-
-        _key = self.__tablename__ + \
-               ".app_uuid." + _obj["app_uuid"] + \
-               ".user_uuid." + _obj["user_uuid"]
-        _redis.delete(_key)
-
-        _key = self.__tablename__ + \
-               ".user_uuid." + _obj["user_uuid"] + \
-               ".is_service_user." + str(_obj["is_service_user"])
-        _redis.delete(_key)
-        
-        _key = self.__tablename__ + \
-               ".app_uuid." + _obj["app_uuid"] + \
-               ".is_service_user." + str(_obj["is_service_user"])
-        _redis.srem(_key, _obj["user_uuid"])
-
-        _key = self.__tablename__ + \
-               ".app_uuid." + _obj["app_uuid"] + \
-               ".is_service_user." + str(_obj["is_service_user"]) + ".sorted"
-        _redis.zrem(_key, _obj["user_fullname"] + ":" + _obj["user_uuid"])
-
-        CommonMixin.delete_redis_keys(self, _redis)
-        return
 
 # for ppkefu
 class ConversationInfo(CommonMixin, BaseModel):
     __tablename__ = "conversation_infos"
-
-    app_uuid = Column("app_uuid", String(64))
-    
-    # which group this conversation created for
-    group_uuid = Column("group_uuid", String(64))
-    
+        
     # who create this conversation
     user_uuid = Column("user_uuid", String(64))
     
@@ -986,9 +463,6 @@ class ConversationInfo(CommonMixin, BaseModel):
     # OPEN/CLOSE create as OPEN, explicit to CLOSE
     status = Column("status", String(32))
 
-    # if conversation created not by rule match, it is None
-    rule_uuid = Column("rule_uuid", String(64))
-    
     conversation_name = Column("conversation_name", String(64))
     conversation_icon = Column("conversation_icon", String(512))
     conversation_type = Column("conversation_type", String(8))
@@ -1005,18 +479,10 @@ class ConversationInfo(CommonMixin, BaseModel):
     def create_redis_keys(self, _redis, *args, **kwargs):
         CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
         _key = self.__tablename__ + \
-               ".app_uuid." + self.app_uuid + \
                ".user_uuid." + self.user_uuid + \
                ".conversation_uuid." + self.uuid + \
                ".conversation_type." + self.conversation_type
         _redis.set(_key, self.uuid)
-
-        if self.group_uuid != None:
-            _key = self.__tablename__ + \
-                   ".app_uuid." + self.app_uuid + \
-                   ".user_uuid." + self.user_uuid + \
-                   ".group_uuid." + self.group_uuid
-            _redis.set(_key, self.uuid)
             
         if self.assigned_uuid != None:
             _key = self.__tablename__ + \
@@ -1033,22 +499,13 @@ class ConversationInfo(CommonMixin, BaseModel):
             return
         
         _key = self.__tablename__ + \
-               ".app_uuid." + _obj["app_uuid"] + \
                ".user_uuid." + _obj["user_uuid"] + \
                ".conversation_uuid." + _obj["uuid"] + \
                ".conversation_type." + _obj["conversation_type"]
         _redis.delete(_key)
 
-        if _obj["group_uuid"] != None:
-            _key = self.__tablename__ + \
-                   ".app_uuid." + _obj["app_uuid"] + \
-                   ".user_uuid." + _obj["user_uuid"] + \
-                   ".group_uuid." + _obj["group_uuid"]
-            _redis.delete(_key)
-
         if _obj["assigned_uuid"] != None:
             _key = self.__tablename__ + \
-                   ".app_uuid." + _obj["app_uuid"] + \
                    ".user_uuid." + _obj["user_uuid"] + \
                    ".assigned_uuid." + _obj["assigned_uuid"]
             _redis.delete(_key)
@@ -1061,19 +518,12 @@ class ConversationInfo(CommonMixin, BaseModel):
         _obj = redis_hash_to_dict(_redis, ConversationInfo, self.uuid)
         if _obj == None:
             return
-        if _obj["group_uuid"] != None:
-            _key = self.__tablename__ + \
-                   ".app_uuid." + _obj["app_uuid"] + \
-                   ".user_uuid." + _obj["user_uuid"] + \
-                   ".group_uuid." + _obj["group_uuid"]
-            _redis.set(_key, self.uuid)
         return
     
 
 class ConversationUserData(CommonMixin, BaseModel):
     __tablename__ = "conversation_user_datas"
     
-    app_uuid = Column("app_uuid", String(64))
     user_uuid = Column("user_uuid", String(64))
 
     # the user in this notification but unlike the push notification
@@ -1101,20 +551,22 @@ class ConversationUserData(CommonMixin, BaseModel):
     def create_redis_keys(self, _redis, *args, **kwargs):
         CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
         
-        _key = self.__tablename__ + ".app_uuid." + self.app_uuid \
-               + ".user_uuid." + self.user_uuid + ".conversation_uuid." + self.conversation_uuid
+        _key = self.__tablename__ + \
+               + ".user_uuid." + self.user_uuid + \
+               ".conversation_uuid." + self.conversation_uuid
         _redis.set(_key, self.uuid)
         
-        _key = self.__tablename__ + ".app_uuid." + self.app_uuid + ".user_uuid." + self.user_uuid
+        _key = self.__tablename__ + ".user_uuid." + self.user_uuid
         _redis.sadd(_key, self.conversation_uuid)
 
-        _key = self.__tablename__ + ".app_uuid." + self.app_uuid + \
-               ".user_uuid." + self.user_uuid + ".conversation_status." + self.conversation_status
+        _key = self.__tablename__ + \
+               ".user_uuid." + self.user_uuid + \
+               ".conversation_status." + self.conversation_status
         if self.updatetime != None:
             _updatetime = time.mktime(self.updatetime.timetuple())*1000*1000 + self.updatetime.microsecond
             _redis.zadd(_key, self.conversation_uuid, _updatetime)
 
-        _key = self.__tablename__ + ".app_uuid." + self.app_uuid + ".conversation_status." + self.conversation_status
+        _key = self.__tablename__ + ".conversation_status." + self.conversation_status
         if self.updatetime != None:
             _updatetime = time.mktime(self.updatetime.timetuple())*1000*1000 + self.updatetime.microsecond
             _redis.zadd(_key, self.conversation_uuid, _updatetime)
@@ -1134,20 +586,23 @@ class ConversationUserData(CommonMixin, BaseModel):
         # REMOVE IT then ADD IT
         _statuses=[CONVERSATION_STATUS.NEW, CONVERSATION_STATUS.OPEN, CONVERSATION_STATUS.CLOSE]
         for _status in _statuses:
-            _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + \
-                   ".user_uuid." + _obj["user_uuid"] + ".conversation_status." + _status
+            _key = self.__tablename__ + \
+                   ".user_uuid." + _obj["user_uuid"] + \
+                   ".conversation_status." + _status
             _redis.zrem(_key, _obj["conversation_uuid"])
 
-            _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + ".conversation_status." + _status
+            _key = self.__tablename__ + ".conversation_status." + _status
             _redis.zrem(_key, _obj["conversation_uuid"])
 
         # user's conversations
-        _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + \
-               ".user_uuid." + _obj["user_uuid"] + ".conversation_status." + _obj["conversation_status"]
+        _key = self.__tablename__ + \
+               ".user_uuid." + _obj["user_uuid"] + \
+               ".conversation_status." + _obj["conversation_status"]
         _redis.zadd(_key, _obj["conversation_uuid"], time.time()*1000*1000)
 
         # app's conversations
-        _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + ".conversation_status." + _obj["conversation_status"]
+        _key = self.__tablename__ + \
+               ".conversation_status." + _obj["conversation_status"]
         _redis.zadd(_key, _obj["conversation_uuid"], time.time()*1000*1000)
 
         return
@@ -1156,15 +611,18 @@ class ConversationUserData(CommonMixin, BaseModel):
         _obj = redis_hash_to_dict(_redis, ConversationUserData, self.uuid)
         if _obj == None:
             return
-        _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] \
-               + ".user_uuid." + _obj["user_uuid"] + ".conversation_uuid." + _obj["conversation_uuid"]
+        _key = self.__tablename__ + \
+               + ".user_uuid." + _obj["user_uuid"] + \
+               ".conversation_uuid." + _obj["conversation_uuid"]
         _redis.delete(_key)
         
-        _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + ".user_uuid." + _obj["user_uuid"]
+        _key = self.__tablename__ + \
+               ".user_uuid." + _obj["user_uuid"]
         _redis.srem(_key, _obj["conversation_uuid"])
 
-        _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + \
-               ".user_uuid." + _obj["user_uuid"] + ".conversation_status." + _obj["conversation_status"]
+        _key = self.__tablename__ + \
+               ".user_uuid." + _obj["user_uuid"] + \
+               ".conversation_status." + _obj["conversation_status"]
         _redis.zrem(_key, _obj["conversation_uuid"])
 
         _key = self.__tablename__ + ".conversation_uuid." + _obj["conversation_uuid"]
@@ -1265,7 +723,6 @@ class PCSocketDeviceData(CommonMixin, BaseModel):
 class UserNavigationData(CommonMixin, BaseModel):
     __tablename__ = "user_navigation_datas"
 
-    app_uuid = Column("app_uuid", String(64))
     user_uuid = Column("user_uuid", String(64))
     visit_page_url = Column("visit_page_url", String(1024))
     navigation_data = Column("navigation_data", String(2048))
@@ -1280,13 +737,13 @@ class UserNavigationData(CommonMixin, BaseModel):
     def create_redis_keys(self, _redis, *args, **kwargs):
         CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
 
-        _key = self.__tablename__  + ".app_uuid." + self.app_uuid + ".user_uuid." + self.user_uuid
+        _key = self.__tablename__  + ".user_uuid." + self.user_uuid
         _createtime = time.mktime(self.createtime.timetuple())*1000*1000 + self.createtime.microsecond
         _v = json.dumps([_createtime, self.navigation_data])
         _redis.zadd(_key, _v, _createtime)
 
         if self.visit_page_url != None:
-            _key = self.__tablename__  + ".app_uuid." + self.app_uuid + ".user_uuid." + self.user_uuid + ".visit_page_url"
+            _key = self.__tablename__  + ".user_uuid." + self.user_uuid + ".visit_page_url"
             _redis.set(_key, visit_page_url)
         return
 
@@ -1295,7 +752,7 @@ class UserNavigationData(CommonMixin, BaseModel):
         if _obj == None:
             return
 
-        _key = self.__tablename__  + ".app_uuid." + _obj["app_uuid"] + ".user_uuid." + _obj["user_uuid"]
+        _key = self.__tablename__  + ".user_uuid." + _obj["user_uuid"]
         _createtime = time.mktime(_obj["createtime"].timetuple())*1000*1000 + _obj["createtime"].microsecond
         _v = json.dumps([_createtime, _obj["navigation_data"]])
         _redis.zrem(_key, _v)
@@ -1309,7 +766,6 @@ class ApiInfo(CommonMixin, BaseModel):
     api_key = Column("api_key", String(64))
     api_secret = Column("api_secret", String(64))
 
-    app_uuid = Column("app_uuid", String(64))
     user_uuid = Column("user_uuid", String(64))
 
     # PPCOM/PPKEFU/PPCONSOLE/THIRD_PARTY_KEFU/THIRD_PARTY_CONSOLE
@@ -1325,8 +781,9 @@ class ApiInfo(CommonMixin, BaseModel):
         _v = json.dumps([self.app_uuid, self.uuid, self.api_level, self.api_secret])
         _redis.set(_key, _v)
 
-        _key = self.__tablename__ + ".app_uuid." + self.app_uuid + \
-               ".user_uuid." + self.user_uuid + ".api_level." + self.api_level
+        _key = self.__tablename__ + \
+               ".user_uuid." + self.user_uuid + \
+               ".api_level." + self.api_level
         _v = json.dumps([self.uuid, self.api_level, self.api_key, self.api_secret])
         _redis.set(_key, _v)
         
@@ -1339,8 +796,9 @@ class ApiInfo(CommonMixin, BaseModel):
         _key = self.__tablename__ + ".api_key." + _obj["api_key"]
         _redis.delete(_key)
 
-        _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + \
-               ".user_uuid." + _obj["user_uuid"] + ".api_level." + _obj["api_level"]
+        _key = self.__tablename__ + \
+               ".user_uuid." + _obj["user_uuid"] + \
+               ".api_level." + _obj["api_level"]
         _redis.delete(_key)
         
         CommonMixin.delete_redis_keys(self, _redis)
@@ -1350,8 +808,6 @@ class ApiInfo(CommonMixin, BaseModel):
 class ApiTokenData(CommonMixin, BaseModel):
     __tablename__ = "api_token_datas"
 
-    # copy from api info
-    app_uuid = Column("app_uuid", String(64))
     api_uuid = Column("api_uuid", String(64))
     api_level = Column("api_level", String(32))
 
@@ -1366,22 +822,12 @@ class ApiTokenData(CommonMixin, BaseModel):
     def create_redis_keys(self, _redis, *args, **kwargs):
         CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
 
-        _key = self.__tablename__ + ".app_uuid." + self.app_uuid + \
-               ".api_token." + self.api_token
-        _redis.set(_key, self.uuid)
-        
         _key = self.__tablename__ + ".api_token." + self.api_token
-        _v = json.dumps([self.api_uuid, self.api_level])
-        _redis.set(_key, _v)
-        
-        # one day expired for ppconsole 
-        if self.api_level == API_LEVEL.THIRD_PARTY_CONSOLE:
-            _redis.expire(_key, 3600*24)
-
+        _redis.set(_key, self.uuid)
+                
         # 30 seconds expired, if no token request in time, the code expired.
         _key = self.__tablename__ + ".api_code." + self.api_code
-        _v = json.dumps([self.api_uuid, self.uuid])
-        _redis.set(_key, _v)
+        _redis.set(_key, self.uuid)
         _redis.expire(_key, 30)
         return
     
@@ -1393,121 +839,22 @@ class ApiTokenData(CommonMixin, BaseModel):
         _redis.delete(_key)
         _key = self.__tablename__ + ".api_code." + _obj["api_code"]
         _redis.delete(_key)
-        _key = self.__tablename__ + ".app_uuid." + _obj["app_uuid"] + \
-               ".api_token." + _obj["api_token"]
-        _redis.delete(_key)
         
         CommonMixin.delete_redis_keys(self, _redis)
         return
 
-class PredefinedScript(CommonMixin, BaseModel):
-    __tablename__ = "predefined_scripts"
-
-    # copy from api info
-    app_uuid = Column("app_uuid", String(64))
-    group_uuid = Column("group_uuid", String(64))
-    script_answer = Column("script_answer", String(512))
-    script_question = Column("script_question", String(512))
     
+class UserOnlineStatusLog(CommonMixin, BaseModel):
+    __tablename__ = "user_online_status_logs"
+    user_uuid = Column("user_uuid", String(64))
+    device_uuid = Column("device_uuid", String(64))
+    online_status = Column("online_status", String(32))
+    status_data = Column("status_data", String(16))
+    
+    __table_args__ = (
+    )
+
     def __init__(self, *args, **kwargs):
-        super(PredefinedScript, self).__init__(*args, **kwargs)
-        return
-    
-    def create_redis_keys(self, _redis, *args, **kwargs):
-        CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
-        _key = self.__tablename__ + ".group_uuid." + str(self.group_uuid)
-        _redis.sadd(_key, self.uuid)
-
-        _key = self.__tablename__ + ".app_uuid." + self.app_uuid
-        _redis.sadd(_key, self.uuid)
-        
+        super(self.__class__, self).__init__(*args, **kwargs)
         return
 
-    def update_redis_keys(self, _redis):
-        CommonMixin.update_redis_keys(self, _redis)
-        _obj = redis_hash_to_dict(_redis, PredefinedScript, self.uuid)
-        if _obj == None:
-            return
-        _key = self.__tablename__ + ".group_uuid." + str(_obj.get("group_uuid"))
-        _redis.sadd(_key, self.uuid)
-        return
-    
-    def delete_redis_keys(self, _redis):
-        _obj = redis_hash_to_dict(_redis, PredefinedScript, self.uuid)
-        if _obj == None:
-            return
-
-        _key = self.__tablename__ + ".group_uuid." + str(_obj.get("group_uuid"))
-        _redis.srem(_key, self.uuid)
-
-        _key = self.__tablename__ + ".app_uuid." + _obj.get("app_uuid")
-        _redis.srem(_key, self.uuid)
-
-        CommonMixin.delete_redis_keys(self, _redis)
-        return
-
-class PredefinedScriptGroup(CommonMixin, BaseModel):
-    __tablename__ = "predefined_script_groups"
-
-    # copy from api info
-    app_uuid = Column("app_uuid", String(64))
-    group_name = Column("group_name", String(128))
-    
-    def __init__(self, *args, **kwargs):
-        super(PredefinedScriptGroup, self).__init__(*args, **kwargs)
-        return
-    
-    def create_redis_keys(self, _redis, *args, **kwargs):
-        CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
-        _key = PredefinedScriptGroup.__tablename__ + ".app_uuid." + self.app_uuid
-        _redis.sadd(_key, self.uuid)
-        return
-    
-    def delete_redis_keys(self, _redis):
-        _obj = redis_hash_to_dict(_redis, PredefinedScriptGroup, self.uuid)
-        if _obj == None or _obj["app_uuid"] == None:
-            return
-        _key = PredefinedScriptGroup.__tablename__ + ".app_uuid." + _obj["app_uuid"]
-        _redis.srem(_key, self.uuid)
-        CommonMixin.delete_redis_keys(self, _redis)
-        return
-    
-class ConversationAssignRule(CommonMixin, BaseModel):
-    __tablename__ = "conversation_assign_rules"
-
-    app_uuid = Column("app_uuid", String(64))
-
-    # 0 is first
-    rule_priority = Column("rule_priority", Integer)
-    
-    # LIVE/PAUSED
-    rule_status = Column("rule_status", String(16))
-
-    # matched name
-    user_matched_method = Column("user_matched_method", String(64))
-    user_matched_parameter = Column("user_matched_parameter", String(256))
-
-    # target service name
-    target_service_method = Column("target_service_method", String(64))
-    target_service_parameter = Column("target_service_parameter", String(256))
-    
-    def __init__(self, *args, **kwargs):
-        super(ConversationAssignRule, self).__init__(*args, **kwargs)
-        return
-    
-    def create_redis_keys(self, _redis, *args, **kwargs):
-        CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
-        _key = ConversationAssignRule.__tablename__ + ".app_uuid." + self.app_uuid
-        _redis.zadd(_key, self.rule_priority, self.uuid)
-        return
-    
-    def delete_redis_keys(self, _redis):
-        _obj = redis_hash_to_dict(_redis, ConversationAssginRule, self.uuid)
-        if _obj == None or _obj["app_uuid"] == None:
-            return
-        _key = ConversationAssignRule.__tablename__ + ".app_uuid." + _obj["app_uuid"]
-        _redis.zrem(_key, self.uuid)
-        CommonMixin.delete_redis_keys(self, _redis)
-        return
-
-    
