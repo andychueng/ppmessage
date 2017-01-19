@@ -9,7 +9,7 @@ from .basehandler import BaseHandler
 
 from ppmessage.api.error import API_ERR
 from ppmessage.db.models import DeviceUser
-from ppmessage.db.models import AppUserData
+
 from ppmessage.core.genericupdate import generic_update
 
 from ppmessage.core.utils.config import get_config_server_generic_store
@@ -34,14 +34,13 @@ class PPUpdateUserHandler(BaseHandler):
         _redis = self.application.redis
         _request = json.loads(self.request.body)
 
-        _app_uuid = _request.get("app_uuid")
         _user_uuid = _request.get("user_uuid")
         _user_icon = _request.get("user_icon")
 
         _user_mobile = _request.get("user_mobile")
         _user_email = _request.get("user_email")
         
-        if _user_uuid == None or _app_uuid == None:
+        if _user_uuid == None :
             self.setErrorCode(API_ERR.NO_PARA)
             return
 
@@ -56,7 +55,6 @@ class PPUpdateUserHandler(BaseHandler):
 
         # remove not table fields
         _data = copy.deepcopy(_request)
-        del _data["app_uuid"]
         del _data["user_uuid"]
 
         if _old_password != None:

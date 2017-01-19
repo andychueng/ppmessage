@@ -9,8 +9,6 @@ from .basehandler import BaseHandler
 
 from ppmessage.db.models import MessagePushTask
 from ppmessage.db.models import MessagePush
-from ppmessage.db.models import SingleCardMaterialInfo
-from ppmessage.db.models import MultipleCardMaterialInfo
 
 from ppmessage.api.error import API_ERR
 

@@ -10,7 +10,6 @@ from .basehandler import BaseHandler
 from ppmessage.api.error import API_ERR
 
 from ppmessage.db.models import DeviceUser
-from ppmessage.db.models import AppUserData
 
 from ppmessage.core.constant import API_LEVEL
 from ppmessage.core.constant import USER_STATUS
@@ -69,26 +68,14 @@ def create_user(_redis, _request):
         "user_fullname": _user_fullname,
         "user_password": _user_password,
         "is_anonymous_user": False,
+        "is_service_user": _is_service_user,
+        "is_owner_user": False
     }
     
     _row = DeviceUser(**_values)
     _row.async_add(_redis)
     _row.create_redis_keys(_redis)
     _user_values = _values
-    
-    _data_uuid = str(uuid.uuid1())
-    _values = {
-        "uuid": _data_uuid,
-        "user_uuid": _du_uuid,
-        "app_uuid": _app_uuid,
-        "user_fullname": _user_values["user_fullname"],
-        "is_portal_user": _is_portal_user,
-        "is_service_user": _is_service_user,
-        "is_owner_user": False
-    }
-    _row = AppUserData(**_values)
-    _row.async_add(_redis)
-    _row.create_redis_keys(_redis)
     
     return _user_values
 

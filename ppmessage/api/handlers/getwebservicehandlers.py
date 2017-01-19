@@ -8,7 +8,6 @@
 from .getyvobjectdetailhandler import GetYVObjectDetailHandler
 
 from .ackmessagehandler import AckMessageHandler
-from .forwardmessagehandler import ForwardMessageHandler
 from .setdeviceinfohandler import SetDeviceInfoHandler
 
 from .ppcreateanonymoushandler import PPCreateAnonymousHandler
@@ -36,16 +35,6 @@ from .ppsendmessagehandler import PPSendMessageHandler
 from .ppgetuseruuidhandler import PPGetUserUUIDHandler
 from .ppgetuserinfohandler import PPGetUserInfoHandler
 
-from .ppgetapporggrouplisthandler import PPGetAppOrgGroupListHandler
-from .ppgetorggroupdetailhandler import PPGetOrgGroupDetailHandler
-from .ppgetorggroupuserlisthandler import PPGetOrgGroupUserListHandler
-from .ppcreateorggrouphandler import PPCreateOrgGroupHandler
-from .ppupdateorggrouphandler import PPUpdateOrgGroupHandler
-from .ppremoveorggrouphandler import PPRemoveOrgGroupHandler
-from .ppaddorggroupuserhandler import PPAddOrgGroupUserHandler
-from .ppremoveorggroupuserhandler import PPRemoveOrgGroupUserHandler
-from .ppgetnogroupuserlisthandler import PPGetNoGroupUserListHandler
-from .ppgetorggroupconversationhandler import PPGetOrgGroupConversationHandler
 from .ppupdateconversationmemberhandler import PPUpdateConversationMemberHandler
 
 from .ppupdateappinfohandler import PPUpdateAppInfoHandler
@@ -64,9 +53,6 @@ from .pppagehistorymessagehandler import PPPageHistoryMessageHandler
 
 from .pppageonlineportaluserhandler import PPPageOnlinePortalUserHandler
 from .pppageusernavigationhandler import PPPageUserNavigationHandler
-
-from .pppageorggrouphandler import PPPageOrgGroupHandler
-from .pppageorggroupuserhandler import PPPageOrgGroupUserHandler
 
 from .ppkefuloginhandler import PPKefuLoginHandler
 from .ppkefulogouthandler import PPKefuLogoutHandler
@@ -121,9 +107,6 @@ def getWebServiceHandlers():
     # ack the received message
     handler_list.append((r"/ACK_MESSAGE", AckMessageHandler))
 
-    # forward message
-    handler_list.append((r"/FORWARD_MESSAGE", ForwardMessageHandler))
-
     # get yvobject detail yvobject is the caller and callee
     handler_list.append((r"/GET_YVOBJECT_DETAIL", GetYVObjectDetailHandler))
 
@@ -176,16 +159,6 @@ def getWebServiceHandlers():
     handler_list.append((r"/PP_GET_USER_UUID", PPGetUserUUIDHandler))
     handler_list.append((r"/PP_GET_USER_INFO", PPGetUserInfoHandler))
 
-    handler_list.append((r"/PP_GET_APP_ORG_GROUP_LIST", PPGetAppOrgGroupListHandler))
-    handler_list.append((r"/PP_GET_ORG_GROUP_DETAIL", PPGetOrgGroupDetailHandler))
-    handler_list.append((r"/PP_GET_ORG_GROUP_USER_LIST", PPGetOrgGroupUserListHandler))
-    handler_list.append((r"/PP_CREATE_ORG_GROUP", PPCreateOrgGroupHandler))
-    handler_list.append((r"/PP_UPDATE_ORG_GROUP", PPUpdateOrgGroupHandler))
-    handler_list.append((r"/PP_REMOVE_ORG_GROUP", PPRemoveOrgGroupHandler))
-    handler_list.append((r"/PP_ADD_ORG_GROUP_USER", PPAddOrgGroupUserHandler))
-    handler_list.append((r"/PP_REMOVE_ORG_GROUP_USER", PPRemoveOrgGroupUserHandler))
-    handler_list.append((r"/PP_GET_NO_GROUP_USER_LIST", PPGetNoGroupUserListHandler)) 
-    handler_list.append((r"/PP_GET_ORG_GROUP_CONVERSATION", PPGetOrgGroupConversationHandler))
     handler_list.append((r"/PP_UPDATE_CONVERSATION_MEMBER", PPUpdateConversationMemberHandler))
 
     handler_list.append((r"/PP_UPDATE_APP_INFO", PPUpdateAppInfoHandler))
@@ -205,9 +178,6 @@ def getWebServiceHandlers():
     handler_list.append((r"/PP_PAGE_ONLINE_PORTAL_USER", PPPageOnlinePortalUserHandler))
     handler_list.append((r"/PP_PAGE_USER_NAVIGATION", PPPageUserNavigationHandler))
 
-    handler_list.append((r"/PP_PAGE_ORG_GROUP", PPPageOrgGroupHandler))
-    handler_list.append((r"/PP_PAGE_ORG_GROUP_USER", PPPageOrgGroupUserHandler))
-    
     handler_list.append((r"/PP_GET_USER_DETAIL", PPGetUserDetailHandler))
 
     handler_list.append((r"/PP_GET_API_INFO", PPGetApiInfoHandler))

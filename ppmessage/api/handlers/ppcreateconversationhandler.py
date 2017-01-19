@@ -6,7 +6,6 @@
 
 from .basehandler import BaseHandler
 
-from ppmessage.db.models import OrgGroup
 from ppmessage.db.models import AppInfo
 from ppmessage.db.models import FileInfo
 from ppmessage.db.models import DeviceUser
@@ -100,12 +99,8 @@ class Conversation():
                 _group_users.append(_user_uuid)
                 _conversation_icon = create_group_icon(_redis, _group_users)
                 
-                if self._group_uuid != None:
-                    _group_key = OrgGroup.__tablename__ + ".uuid." + self._group_uuid
-                    _conversation_name = _redis.hget(_group_key, "group_name")
-                else:
-                    _app_key = AppInfo.__tablename__ + ".uuid." + self._app_uuid
-                    _conversation_name = _redis.hget(_app_key, "app_name")
+                _app_key = AppInfo.__tablename__ + ".uuid." + self._app_uuid
+                _conversation_name = _redis.hget(_app_key, "app_name")
 
             self._datarow(_user_uuid, None, _conversation_type, _conversation_uuid, _conversation_name, _conversation_icon)
             self._return_name = _conversation_name
@@ -170,8 +165,6 @@ class Conversation():
             "uuid": _conv_uuid,
             "user_uuid": self._user_uuid,
             "assigned_uuid": _assigned_uuid,
-            "app_uuid": self._app_uuid,
-            "group_uuid": self._group_uuid,
             "conversation_name": self._conv_name,
             "conversation_icon": _conv_icon,
             "conversation_type": self._conv_type,
@@ -193,13 +186,8 @@ class Conversation():
         self._conv_type = _request.get("conversation_type")
         self._conv_name = _request.get("conversation_name")
         self._user_uuid = _request.get("user_uuid")
-        self._app_uuid = _request.get("app_uuid")
-        self._group_uuid = _request.get("group_uuid")
         self._member_list = _request.get("member_list")
         
-        if self._app_uuid == None:
-            self._app_uuid = _handler.app_uuid
-
         if self._member_list != None and isinstance(self._member_list, list) == True:
             self._member_list = list(set(self._member_list))
 
@@ -225,28 +213,18 @@ class PPCreateConversationHandler(BaseHandler):
         return
     
     def _existed(self, _request):
-        _app_uuid = _request.get("app_uuid")
         _user_uuid = _request.get("user_uuid")
-        _group_uuid = _request.get("group_uuid")
         _member_list = _request.get("member_list")
         _conversation_type = _request.get("conversation_type")
         _redis = self.application.redis
-        
-        if _group_uuid != None:
-            _key = ConversationInfo.__tablename__ + ".app_uuid." + _app_uuid + \
-                   ".user_uuid." + _user_uuid + ".group_uuid." + _group_uuid
-            _conversation_uuid = _redis.get(_key)
-            if _conversation_uuid != None:
-                self._return(_conversation_uuid)
-                return True
-            return False
-        
+                
         if _member_list != None and isinstance(_member_list, list) == True and len(_member_list) == 1:
             _assigned_uuid = _member_list[0]
             if _assigned_uuid == None:
                 return False
-            _key = ConversationInfo.__tablename__ + ".app_uuid." + _app_uuid + \
-                   ".user_uuid." + _user_uuid + ".assigned_uuid." + _assigned_uuid
+            _key = ConversationInfo.__tablename__ + \
+                   ".user_uuid." + _user_uuid + \
+                   ".assigned_uuid." + _assigned_uuid
             _conversation_uuid = _redis.get(_key)
             if _conversation_uuid != None:
                 _key = ConversationUserData.__tablename__ + ".conversation_uuid." + _conversation_uuid
@@ -254,8 +232,9 @@ class PPCreateConversationHandler(BaseHandler):
                 if _count == 2:
                     self._return(_conversation_uuid)
                     _r = self.getReturnData()
-                    _key = ConversationUserData.__tablename__ + ".app_uuid." + _app_uuid + \
-                           ".user_uuid." + _user_uuid + ".conversation_uuid." + _conversation_uuid
+                    _key = ConversationUserData.__tablename__ + \
+                           ".user_uuid." + _user_uuid + \
+                           ".conversation_uuid." + _conversation_uuid
                     _data_uuid = _redis.get(_key)
                     if _data_uuid != None:
                         _key = ConversationUserData.__tablename__ + ".uuid." + _data_uuid
@@ -269,7 +248,8 @@ class PPCreateConversationHandler(BaseHandler):
 
         if _member_list != None and isinstance(_member_list, list) == True and len(_member_list) > 1:
             _members = set(_member_list + [_user_uuid])
-            _key = ConversationUserData.__tablename__ + ".app_uuid." + _app_uuid + ".user_uuid." + _user_uuid
+            _key = ConversationUserData.__tablename__ + \
+                   ".user_uuid." + _user_uuid
             _coversations = _redis.smembers(_key)
             if len(_conversations) == 0:
                 return False
@@ -281,7 +261,7 @@ class PPCreateConversationHandler(BaseHandler):
             return False
 
         if _member_list == None and _conversation_type == CONVERSATION_TYPE.P2S:
-            _key = ConversationUserData.__tablename__ + ".app_uuid." + _app_uuid + ".user_uuid." + _user_uuid
+            _key = ConversationUserData.__tablename__ + ".user_uuid." + _user_uuid
             _conversations = _redis.smembers(_key)
             if len(_conversations) == 0:
                 return False
@@ -300,7 +280,6 @@ class PPCreateConversationHandler(BaseHandler):
         return False
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         self.addPermission(api_level=API_LEVEL.THIRD_PARTY_KEFU)
@@ -310,14 +289,12 @@ class PPCreateConversationHandler(BaseHandler):
         super(PPCreateConversationHandler, self)._Task()
         _request = json.loads(self.request.body)
 
-        _app_uuid = _request.get("app_uuid")
         _user_uuid = _request.get("user_uuid")
         _conversation_type = _request.get("conversation_type")
         
         _member_list = _request.get("member_list")
-        _group_uuid = _request.get("group_uuid")
         
-        if _app_uuid == None or _user_uuid == None or _conversation_type == None:
+        if _user_uuid == None or _conversation_type == None:
             self.setErrorCode(API_ERR.NO_PARA)
             return
 

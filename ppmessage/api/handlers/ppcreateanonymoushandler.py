@@ -9,7 +9,6 @@ from .basehandler import BaseHandler
 
 from ppmessage.api.error import API_ERR
 from ppmessage.db.models import DeviceUser
-from ppmessage.db.models import AppUserData
 
 from ppmessage.core.constant import API_LEVEL
 from ppmessage.core.constant import USER_NAME
@@ -88,11 +87,9 @@ class PPCreateAnonymousHandler(BaseHandler):
             return
         
         _user_name = ".".join(_location_user)
-        _row = DeviceUser(uuid=user_uuid, user_name=_user_name, user_fullname=_user_name)
-        _row.update_redis_keys(self.application.redis)
-        _row.async_update(self.application.redis)
-
-        _row = AppUserData(uuid=data_uuid, user_fullname=_user_name)
+        _row = DeviceUser(uuid=user_uuid,
+                          user_name=_user_name,
+                          user_fullname=_user_name)
         _row.update_redis_keys(self.application.redis)
         _row.async_update(self.application.redis)
 
@@ -115,7 +112,8 @@ class PPCreateAnonymousHandler(BaseHandler):
                 return
         
         _du_uuid = str(uuid.uuid1())
-        _user_email = _du_uuid[:6] + "@" + self.app_uuid[:6]
+        _app_uuid = _get_config().get("team").get("app_uuid")
+        _user_email = _du_uuid + "@" + _app_uuid
         _user_name = self._unknown_user_name()
         _user_icon = random_identicon(_du_uuid)
         
@@ -131,20 +129,6 @@ class PPCreateAnonymousHandler(BaseHandler):
         }
         
         _row = DeviceUser(**_values)
-        _row.async_add(self.application.redis)
-        _row.create_redis_keys(self.application.redis)
-
-        _data_uuid = str(uuid.uuid1())
-        _values = {
-            "uuid": _data_uuid,
-            "user_uuid": _du_uuid,
-            "user_fullname": _user_name,
-            "app_uuid": self.app_uuid,
-            "is_portal_user": True,
-            "is_service_user": False,
-            "is_owner_user": False
-        }
-        _row = AppUserData(**_values)
         _row.async_add(self.application.redis)
         _row.create_redis_keys(self.application.redis)
         
