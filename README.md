@@ -58,18 +58,18 @@ Check [this](ppmessage/doc/en-us/install-ppmessage-on-windows.md)
 > Run and check log
 
 ```bash
-./ppmessage.py
+./main.py
 ```
 
 > Access
 
 
 ```bash
-Open your browser and visit `http://127.0.0.1:8945`, check the log of `ppmessage.py` to use your URL to replace `http://127.0.0.1:8945`.
+Open your browser and visit `http://127.0.0.1:8945`, check the log of `main.py` to use your URL to replace `http://127.0.0.1:8945`.
 
 ```
 
-> Reconfig PPMessage, just remove the file `ppmessage/bootstrap/config.json` and run ppmessage.py again.
+> Reconfig PPMessage, just remove the file `ppmessage/bootstrap/config.json` and run `main.py` again.
 
 
 > Not working yet? Please fire an issue on Github, thanks. Enjoy!

@@ -54,9 +54,9 @@ bash ppmessage/scripts/set-up-mac-on-linux.sh
 
 
 ```bash
-./ppmessage.py
+./main.py
 ```
-> 删除文件 ppmessage/bootstrap/config.json，再运行 ppmessage.py 就可以重新配置。
+> 删除文件 ppmessage/bootstrap/config.json，再运行 main.py 就可以重新配置。
 
 > 就是这些，不工作？请将日志贴到 Github issue 中，谢谢！
 
