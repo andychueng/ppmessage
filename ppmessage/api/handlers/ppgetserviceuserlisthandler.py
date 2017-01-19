@@ -9,7 +9,6 @@ from .basehandler import BaseHandler
 from ppmessage.db.models import DeviceUser
 
 from ppmessage.core.redis import redis_hash_to_dict
-from ppmessage.api.handlers.ppgetorggroupuserlisthandler import single_user
 
 from ppmessage.api.error import API_ERR
 from ppmessage.core.constant import API_LEVEL
@@ -23,7 +22,16 @@ class PPGetServiceUserListHandler(BaseHandler):
     """
     def _get(self):            
         _r = self.getReturnData()
-        _r["list"] = _users
+
+        _key = DeviceUser.__tablename__ + ".is_service_user.True"
+
+        _users = self.application.redis.smembers(_key)
+
+        _r["list"] = []
+        for _user_uuid in _users:
+            _key = DeviceUser.__tablename__ + ".uuid." + _user_uuid
+            _r["list"].append(self.application.redis.hgetall(_key))
+
         return
 
     def initialize(self):

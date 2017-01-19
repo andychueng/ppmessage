@@ -155,22 +155,22 @@ class AbstractPolicy(Policy):
             return
         
         _user["_online_devices"] = {}
-        _device_name = "ppkefu_browser_device_uuid"]
+        _device_name = "ppkefu_browser_device_uuid"
         if _is_service_user == False:
             _device_name = "ppcom_browser_device_uuid"
-
-         _device_uuid = self._users_hash[_user_uuid][_i]
-         if not _device_uuid:
+            
+        _device_uuid = self._users_hash[_user_uuid][_device_name]
+        if not _device_uuid:
             return
          
-         _device = redis_hash_to_dict(self._redis, DeviceInfo, _device_uuid)
-         if not _device:
+        _device = redis_hash_to_dict(self._redis, DeviceInfo, _device_uuid)
+        if not _device:
             return
 
-         self._devices_hash[_device_uuid] = _device
-         self._devices.add(_device_uuid)
+        self._devices_hash[_device_uuid] = _device
+        self._devices.add(_device_uuid)
             
-         if _device.get("device_is_online") == True:
+        if _device.get("device_is_online") == True:
             _user["_online_devices"][_device_uuid] = _device
 
         if len(_user["_online_devices"]) > 0:

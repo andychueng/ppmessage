@@ -98,9 +98,10 @@ class DeviceUser(CommonMixin, BaseModel):
 
         _key = self.__tablename__ + ".user_email." + self.user_email
         _redis.set(_key, self.uuid)
-        
-        _key = DeviceUser.__tablename__ + ".ppcom_trace_uuid." + self.ppcom_trace_uuid
-        _redis.set(_key, self.uuid)
+
+        if self.ppcom_trace_uuid:
+            _key = DeviceUser.__tablename__ + ".ppcom_trace_uuid." + self.ppcom_trace_uuid
+            _redis.set(_key, self.uuid)
         
         return
 
@@ -823,6 +824,7 @@ class ApiTokenData(CommonMixin, BaseModel):
 
         _key = self.__tablename__ + ".api_token." + self.api_token
         _redis.set(_key, self.uuid)
+        _redis.expire(_key, 30*60*60*24)
                 
         # 30 seconds expired, if no token request in time, the code expired.
         _key = self.__tablename__ + ".api_code." + self.api_code

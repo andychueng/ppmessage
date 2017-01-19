@@ -332,7 +332,6 @@ class FirstHandler(tornado.web.RequestHandler):
         
         _row = DeviceUser(
             uuid=self._user_uuid,
-            app_uuid=self._app_uuid,
             user_email=_user_email,
             user_icon=_user_icon,
             user_status=USER_STATUS.OWNER_2,
@@ -354,13 +353,11 @@ class FirstHandler(tornado.web.RequestHandler):
         
         _app_name = _request.get("team_name")
         _app_uuid = self._app_uuid
-        _user_uuid = self._user_uuid
         _app_key = str(uuid.uuid1())
         _app_secret = str(uuid.uuid1())
 
         _row = AppInfo(uuid=_app_uuid, 
                        app_name=_app_name,
-                       user_uuid=_user_uuid,
                        app_key=_app_key,
                        app_secret=_app_secret)
         _row.create_redis_keys(self.application.redis)
@@ -371,7 +368,6 @@ class FirstHandler(tornado.web.RequestHandler):
         from ppmessage.db.models import ApiInfo
         import hashlib
         import base64
-        _app_uuid = self._app_uuid
         _user_uuid = self._user_uuid
 
         def _encode(_key):

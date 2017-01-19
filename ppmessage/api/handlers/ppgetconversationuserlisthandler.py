@@ -12,10 +12,8 @@ from ppmessage.db.models import ConversationInfo
 from ppmessage.db.models import DeviceUser
 
 from ppmessage.api.error import API_ERR
-from ppmessage.core.redis import redis_hash_to_dict
 from ppmessage.core.constant import API_LEVEL
 from ppmessage.core.constant import CONVERSATION_TYPE
-from ppmessage.api.handlers.ppgetorggroupuserlisthandler import single_user
 
 import json
 import logging
@@ -31,12 +29,8 @@ class PPGetConversationUserListHandler(BaseHandler):
 
         _users = []
         for _user_uuid in _uuids:
-            _user = redis_hash_to_dict(_redis, DeviceUser, _user_uuid)
-            if _user == None:
-                continue
-            _single = single_user(_redis, _user)
-            _users.append(_single)
-            
+            _key = DeviceUser.__tablename__ + ".uuid." + _user_uuid
+            _users.append(_redis.hgetall(_key))            
         _r = self.getReturnData()
         _r["list"] = _users
         return

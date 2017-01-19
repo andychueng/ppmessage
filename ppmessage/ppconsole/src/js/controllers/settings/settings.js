@@ -5,9 +5,6 @@ angular.module("this_app").controller("SettingsCtrl", $yvSettingsCtrl);
 function $yvSettingsCtrl($scope, $state) {
     
     var _state_to_id = function(_state) {
-        if (_state == "app.settings.groupmembers") {
-            return "app.settings.group";
-        }
         return _state;
     };
     

@@ -22,14 +22,14 @@ from .ppcreateconversationhandler import PPCreateConversationHandler
 from .ppupdateconversationhandler import PPUpdateConversationHandler
 from .ppgetconversationinfohandler import PPGetConversationInfoHandler
 
-from .ppgetappconversationlisthandler import PPGetAppConversationListHandler
+from .ppgetconversationlisthandler import PPGetConversationListHandler
 from .ppgetuserconversationlisthandler import PPGetUserConversationListHandler
 
 from .ppopenconversationhandler import PPOpenConversationHandler
 from .ppcloseconversationhandler import PPCloseConversationHandler
 
 from .ppgetappinfohandler import PPGetAppInfoHandler
-from .ppgetappserviceuserlisthandler import PPGetAppServiceUserListHandler
+from .ppgetserviceuserlisthandler import PPGetServiceUserListHandler
 
 from .ppsendmessagehandler import PPSendMessageHandler
 from .ppgetuseruuidhandler import PPGetUserUUIDHandler
@@ -38,21 +38,13 @@ from .ppgetuserinfohandler import PPGetUserInfoHandler
 from .ppupdateconversationmemberhandler import PPUpdateConversationMemberHandler
 
 from .ppupdateappinfohandler import PPUpdateAppInfoHandler
-from .ppgetappownedbyuserhandler import PPGetAppOwnedByUserHandler
 from .ppisemailvalidhandler import PPIsEmailValidHandler
-
-from .ppcreateapphandler import PPCreateAppHandler
-from .ppleaveapphandler import PPLeaveAppHandler
-from .ppremoveapphandler import PPRemoveAppHandler
 
 from .ppgetconversationuserlisthandler import PPGetConversationUserListHandler
 
 from .pppageuserconversationhandler import PPPageUserConversationHandler
 from .pppageunackedmessagehandler import PPPageUnackedMessageHandler
 from .pppagehistorymessagehandler import PPPageHistoryMessageHandler
-
-from .pppageonlineportaluserhandler import PPPageOnlinePortalUserHandler
-from .pppageusernavigationhandler import PPPageUserNavigationHandler
 
 from .ppkefuloginhandler import PPKefuLoginHandler
 from .ppkefulogouthandler import PPKefuLogoutHandler
@@ -71,7 +63,6 @@ from .ppconsolegetmessagenumberbyrange import PPConsoleGetMessageNumberByRange
 
 from .ppgetapiinfohandler import PPGetApiInfoHandler
 
-from .ppgetallapplisthandler import PPGetAllAppListHandler
 from .ppvalidateonlinedevicehandler import PPValidateOnlineDeviceHandler
 
 from .ppkefusetbusy import PPKefuSetBusy
@@ -79,24 +70,8 @@ from .ppkefusetready import PPKefuSetReady
 from .ppkefusetrest import PPKefuSetRest
 from .ppkefusetserviceuserstatus import PPKefuSetServiceUserStatus
 
-from .ppaddpredefinedscript import PPAddPredefinedScript
-from .ppremovepredefinedscript import PPRemovePredefinedScript
-from .ppaddpredefinedscriptgroup import PPAddPredefinedScriptGroup
-from .ppremovepredefinedscriptgroup import PPRemovePredefinedScriptGroup
-from .ppmovepredefinedscriptintogroup import PPMovePredefinedScriptIntoGroup
-
-from .ppgetallpredefinedscript import PPGetAllPredefinedScript
-from .ppgetallpredefinedscriptgroup import PPGetAllPredefinedScriptGroup
-from .ppgetpredefinedscriptwithgroup import PPGetPredefinedScriptWithGroup
-
-from .ppcancelwaitingcreateconversation import PPCancelWaitingCreateConversation
-
 from .ppcomgetdefaultconversationhandler import PPComGetDefaultConversationHandler
 from .ppcomcreateconversationhandler import PPComCreateConversationHandler
-from .ppgetamdqueuelength import PPGetAmdQueueLength
-
-from .ppgetusermatchedmethod import PPGetUserMatchedMethod
-from .ppgettargetservicemethod import PPGetTargetServiceMethod
 
 from .ppgetipinfohandler import PPGetIPInfoHandler
 from .ppcomtrackeventhandler import PPComTrackEventHandler
@@ -146,14 +121,14 @@ def getWebServiceHandlers():
     handler_list.append((r"/PP_UPDATE_CONVERSATION", PPUpdateConversationHandler))
     handler_list.append((r"/PP_GET_CONVERSATION_INFO", PPGetConversationInfoHandler))
     
-    handler_list.append((r"/PP_GET_APP_CONVERSATION_LIST", PPGetAppConversationListHandler))
+    handler_list.append((r"/PP_GET_CONVERSATION_LIST", PPGetConversationListHandler))
     handler_list.append((r"/PP_GET_USER_CONVERSATION_LIST", PPGetUserConversationListHandler))
     
     handler_list.append((r"/PP_OPEN_CONVERSATION", PPOpenConversationHandler))
     handler_list.append((r"/PP_CLOSE_CONVERSATION", PPCloseConversationHandler))
 
     handler_list.append((r"/PP_GET_APP_INFO", PPGetAppInfoHandler))
-    handler_list.append((r"/PP_GET_APP_SERVICE_USER_LIST", PPGetAppServiceUserListHandler))
+    handler_list.append((r"/PP_GET_SERVICE_USER_LIST", PPGetServiceUserListHandler))
 
     handler_list.append((r"/PP_SEND_MESSAGE", PPSendMessageHandler))
     handler_list.append((r"/PP_GET_USER_UUID", PPGetUserUUIDHandler))
@@ -162,12 +137,7 @@ def getWebServiceHandlers():
     handler_list.append((r"/PP_UPDATE_CONVERSATION_MEMBER", PPUpdateConversationMemberHandler))
 
     handler_list.append((r"/PP_UPDATE_APP_INFO", PPUpdateAppInfoHandler))
-    handler_list.append((r"/PP_GET_APP_OWNED_BY_USER", PPGetAppOwnedByUserHandler))
     handler_list.append((r"/PP_IS_EMAIL_VALID", PPIsEmailValidHandler))
-
-    handler_list.append((r"/PP_CREATE_APP", PPCreateAppHandler))
-    handler_list.append((r"/PP_LEAVE_APP", PPLeaveAppHandler))
-    handler_list.append((r"/PP_REMOVE_APP", PPRemoveAppHandler))
 
     handler_list.append((r"/PP_GET_CONVERSATION_USER_LIST", PPGetConversationUserListHandler))
     
@@ -175,32 +145,11 @@ def getWebServiceHandlers():
     handler_list.append((r"/PP_PAGE_UNACKED_MESSAGE", PPPageUnackedMessageHandler))
     handler_list.append((r"/PP_PAGE_HISTORY_MESSAGE", PPPageHistoryMessageHandler))
 
-    handler_list.append((r"/PP_PAGE_ONLINE_PORTAL_USER", PPPageOnlinePortalUserHandler))
-    handler_list.append((r"/PP_PAGE_USER_NAVIGATION", PPPageUserNavigationHandler))
-
     handler_list.append((r"/PP_GET_USER_DETAIL", PPGetUserDetailHandler))
 
     handler_list.append((r"/PP_GET_API_INFO", PPGetApiInfoHandler))
 
-    handler_list.append((r"/PP_GET_ALL_APP_LIST", PPGetAllAppListHandler))
     handler_list.append((r"/PP_VALIDATE_ONLINE_DEVICE", PPValidateOnlineDeviceHandler))
-
-    handler_list.append((r"/PP_ADD_PREDEFINED_SCRIPT", PPAddPredefinedScript))
-    handler_list.append((r"/PP_REMOVE_PREDEFINED_SCRIPT", PPRemovePredefinedScript))
-    handler_list.append((r"/PP_ADD_PREDEFINED_SCRIPT_GROUP", PPAddPredefinedScriptGroup))
-    handler_list.append((r"/PP_REMOVE_PREDEFINED_SCRIPT_GROUP", PPRemovePredefinedScriptGroup))
-    handler_list.append((r"/PP_MOVE_PREDEFINED_SCRIPT_INTO_GROUP", PPMovePredefinedScriptIntoGroup))
-    
-    handler_list.append((r"/PP_GET_ALL_PREDEFINED_SCRIPT", PPGetAllPredefinedScript))
-    handler_list.append((r"/PP_GET_ALL_PREDEFINED_SCRIPT_GROUP", PPGetAllPredefinedScriptGroup))
-    handler_list.append((r"/PP_GET_PREDEFINED_SCRIPT_WITH_GROUP", PPGetPredefinedScriptWithGroup))
-
-    handler_list.append((r"/PP_CANCEL_WAITING_CREATE_CONVERSATION", PPCancelWaitingCreateConversation))
-    handler_list.append((r"/PP_GET_AMD_QUEUE_LENGTH", PPGetAmdQueueLength))
-
-    handler_list.append((r"/PP_GET_TARGET_SERVICE_METHOD", PPGetTargetServiceMethod))
-    handler_list.append((r"/PP_GET_USER_MATCHED_METHOD", PPGetUserMatchedMethod))
-
 
     handler_list.append((r"/PP_GET_IP_INFO", PPGetIPInfoHandler))
     handler_list.append((r"/PPCOM_TRACK_EVENT", PPComTrackEventHandler))

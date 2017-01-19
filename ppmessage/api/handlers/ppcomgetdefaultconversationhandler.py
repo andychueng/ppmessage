@@ -28,7 +28,6 @@ from ppmessage.core.utils.config import _get_config
 from ppmessage.core.utils.config import get_config_language
 
 from ppmessage.core.utils.datetimeencoder import DateTimeEncoder
-from ppmessage.api.handlers.ppgetorggroupuserlisthandler import single_user
 
 from ppmessage.api.error import API_ERR
 
@@ -94,7 +93,8 @@ class PPComGetDefaultConversationHandler(BaseHandler):
         _sorted = sorted(_users, key=itemgetter("updatetime"), reverse=True)
         _return = []
         for _user in _sorted:
-            _return.append(single_user(_redis, _user))        
+            _key = DeviceUser.__tablename__ + ".uuid." + _user
+            _return.append(_redis.hgetall(_key))        
         return _return
     
     def _get_app_welcome(self, _r):

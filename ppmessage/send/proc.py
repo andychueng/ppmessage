@@ -23,7 +23,6 @@ from ppmessage.core.constant import DIS_WHAT
 from ppmessage.core.constant import YVOBJECT
 
 from ppmessage.db.models import MessagePushTask
-from ppmessage.db.models import VideoMaterialInfo
 from ppmessage.db.models import ConversationInfo
 from ppmessage.db.models import ConversationUserData
 from ppmessage.db.models import FileInfo

@@ -161,15 +161,17 @@ class BaseHandler(RequestHandler):
     def _check_token(self):
         _redis = self.application.redis
         _key = ApiTokenData.__tablename__ + ".api_token." + self.api_token
-        _api_level = _redis.get(_key)
+        _api_data_uuid = _redis.get(_key)
 
-        if _api_level == None or len(_api_level) == 0:
+        if not _api_data_uuid:
             logging.error("no api_level found with token: %s" % self.api_token)
             return False
 
-        _api_level = json.loads(_api_level)
-        self.api_uuid = _api_level[0]
-        self.api_level = _api_level[1]
+        _key = ApiTokenData.__tablename__ + ".uuid." + _api_data_uuid
+        _api_data = _redis.hgetall(_key)
+        
+        self.api_level = _api_data.get("api_level")
+        self.api_uuid = _api_data.get("api_uuid")
 
         _permission = self._permission
         _api_level = _permission.get("api_level")
