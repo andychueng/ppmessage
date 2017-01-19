@@ -23,10 +23,9 @@
      *     fail: function(false, errorCode);
      */
     PublicAPI.prototype.boot = function(ppSettings, callback) {
-        if (!ppSettings) {
-            return;
-        }
-        if (this._booted) {
+        if (!Service.$ppmatc.isStarted()) Service.$ppmatc.start(); // run globally as quickly as possible
+
+        if (!ppSettings || this._booted) {
             return;
         }
 
@@ -51,7 +50,7 @@
 
         var launcherCtrl = Ctrl.$launcher.get();
         if (launcherCtrl) {
-            launcherCtrl.onClickEvent();
+            launcherCtrl.showMessageBox();
             if (this._onShowEvent && typeof this._onShowEvent === 'function') {
                 this._onShowEvent();
             }
@@ -71,6 +70,10 @@
                 this._onHideEvent();
             }
         }
+    };
+
+    PublicAPI.prototype.isOpen = function() {
+        return this._booted && Ctrl.$conversationPanel.isOpen();
     };
 
     PublicAPI.prototype.onShow = function(event) {

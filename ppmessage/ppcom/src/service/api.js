@@ -242,6 +242,16 @@
             this._post( '/PP_GET_AMD_QUEUE_LENGTH', $.extend( {}, data ), success, fail );
         };
 
+        // data: { app_uuid: xxx }
+        this.getIPInfo = function( data, success, fail ) {
+            this._post( '/PP_GET_IP_INFO', $.extend( {}, data ), success, fail );
+        };
+
+        // data: { app_uuid: xxx }
+        this.trackEvent = function( data, success, fail ) {
+            this._post( '/PPCOM_TRACK_EVENT', $.extend( {}, data ), success, fail );
+        };
+
         this.getAppUuid = function() {
             return _appUuid;
         };

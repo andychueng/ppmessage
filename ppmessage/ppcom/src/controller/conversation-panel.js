@@ -7,7 +7,7 @@
 //
 Ctrl.$conversationPanel = ( function() {
 
-    var MODE = { LIST: 'LIST', CONTENT: 'CONTENT', WAITING: 'WAITING' },
+    var MODE = { LIST: 'LIST', CONTENT: 'CONTENT', WAITING: 'WAITING', QUICK_MESSAGE: 'QUICK_MESSAGE' },
         cMode = MODE.CONTENT,
         POLLING_QUEUE_LENGTH_EVENT_ID = 'POLLING_QUEUE_LENGTH_EVENT_ID';
 
@@ -17,11 +17,20 @@ Ctrl.$conversationPanel = ( function() {
     return {
         MODE: MODE,
         mode: mode,
+        setMode: setMode,
 
-        stopPollingWaitingQueueLength: stopPollingWaitingQueueLength
+        stopPollingWaitingQueueLength: stopPollingWaitingQueueLength,
+        isOpen: isOpen
     }
 
     ////// Implementation //
+
+    function setMode( m ) {
+        if ( m === MODE.QUICK_MESSAGE ) {
+            Ctrl.$conversationQuickMessage.setLastMode( cMode );
+        }
+        cMode = m;
+    }
 
     function mode( m ) { //Query current mode
         
@@ -29,7 +38,7 @@ Ctrl.$conversationPanel = ( function() {
             return cMode;    
         }
 
-        cMode = m;
+        setMode( m );
 
         switch ( cMode ) {
         case MODE.LIST:
@@ -42,6 +51,7 @@ Ctrl.$conversationPanel = ( function() {
             // for simply, we always show it here, the count of conversation's members seldom not > 1
             View.$sheetHeader.showDropDownButton();
             View.$sheetHeader.showGroupButton(); // show group button
+            View.$sheetHeader.showTeamProfile();
             stopPollingWaitingQueueLength();
             break;
 
@@ -53,7 +63,17 @@ Ctrl.$conversationPanel = ( function() {
             Ctrl.$sheetheader.setHeaderTitle( Service.Constants.i18n( 'WAITING_AVALIABLE_CONVERSATION' ) );
             startPollingWaitingQueueLength();
             break;
+
+        case MODE.QUICK_MESSAGE:
+            View.$sheetHeader.hideTeamProfileFull();
+            View.$groupMemberHovercard.remove();
+            Ctrl.$conversationQuickMessage.enable();
+            break;
         }
+    }
+
+    function isOpen() {
+        return View.$launcher.state() == View.$launcher.STATE.CLOSE;
     }
 
     // =======helpers==========
@@ -83,7 +103,7 @@ Ctrl.$conversationPanel = ( function() {
             //
             $timeout( function() {
 
-                !Ctrl.$launcher.get().isLauncherShow() && mode( MODE.WAITING );
+                Ctrl.$conversationPanel.isOpen() && mode( MODE.WAITING );
                 
             }, TIMEOUT_DELAY );            
         } );
@@ -92,6 +112,7 @@ Ctrl.$conversationPanel = ( function() {
             if ( mode() !== MODE.WAITING ) return;
             
             Ctrl.$sheetheader.setHeaderTitle();
+            View.$sheetHeader.reBuildTeamProfile( Service.$conversationManager.activeConversation().token );
             
             View.$groupContent.hide();
             Ctrl.$conversationContent.show(

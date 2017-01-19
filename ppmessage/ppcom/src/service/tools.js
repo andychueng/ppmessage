@@ -208,6 +208,11 @@
             return re.test(email);
         };
 
+        this.validatePhoneNumber = function(phoneNumber) {
+            var re = /^(00)|(\+)\d+/g;
+            return re.test( phoneNumber );
+        };
+
         /**
          * '50px'-->'50'
          */
@@ -258,6 +263,18 @@
             return str.replace(/%s/g, function() {
                 return args[i++];
             });
+        };
+
+        this.timeago = function( timestamp ) {
+            var lang = Service.$ppSettings.getLanguage(),
+                fixLang = lang ? lang.toLowerCase() : lang;
+
+            // We need convert zh-cn to zh_cn
+            if ( fixLang && fixLang === 'zh-cn' ) {
+                fixLang = 'zh_CN';
+            }
+            
+            return new timeago().format( timestamp, fixLang );
         };
         
     }

@@ -7,76 +7,62 @@ View.$sheetHeader = (function() {
         
         var ctrl = Ctrl.$sheetheader,
             PPDiv = View.PPDiv,
+            Div = PPDiv,
             PPElement = View.PPElement,
 
-            iconConversations = Configuration.assets_path + 'img/icon-conversations.png',
+            iconBack = Configuration.assets_path + 'img/icon-back.png',
+            iconClose = Configuration.assets_path + 'img/close.png',
 
-            buildTitle = function() {
-                return new PPDiv('pp-sheet-header-title-container')
-                    .add(new View.Div({
-                        className: 'title-container'
-                    })
-                         .add(new PPElement('b', {
-                             id: titleId,
-                             'class': titleId + ' pp-selectable'
-                         })));
-            },
-
-            buildMinimizeButton = function() {
-                return new PPElement('a', {
-                    id: minimizeButtonId,
-                    'class': minimizeButtonId,
-                    title: Service.Constants.i18n('MINIZE_BUTTON_HINT')
-                })
-                    .add(new PPDiv({
-                        id: 'pp-sheet-header-button-icon',
-                        style: 'background-image: url(' + Configuration.assets_path + 'img/icon-minimize.png)'
-                    }));
+            buildHeaderContent = function() {
+                return new PPDiv( { className: 'pp-sheet-header-title-container', 
+                                    style: 'background-color:' + View.Style.Color.main_color })
+                    .add( buildHeaderBody() );
             },
 
             buildConversationsButton = function() {
-                return new PPElement('a', {
-                    'class': 'pp-sheet-conversations-button'
+                return new PPDiv({
+                    'class': 'pp-sheet-conversations-button',
+                    style: 'background-image:url(' + iconBack + ')'
                 }).add(new PPDiv({
-                    'class': 'pp-sheet-header-button-icon',
-                    style: 'background-image: url(' + iconConversations + ')'
+                    'class': 'pp-header-buttons-back-contents',
                 })).add(new PPDiv({
                     'class': 'pp-unread-count pp-font pp-box-sizing'
                 }));
+            },
+
+            buildHeaderBody = function() {
+                return new PPDiv('pp-sheet-header-body')
+                    .add(new PPDiv('pp-sheet-header-title').text( Service.Constants.i18n( 'CONVERSATIONS' ) ))
+                    .add(new PPDiv('pp-sheet-header-app-name').text( Service.$app.app().app_name ));
+            },
+
+            buildCloseButton = function() {
+                return new PPDiv({
+                    'class':'pp-header-buttons-close',
+                    style: 'background-image:url(' + iconClose + ')'
+                }).add(new PPDiv({
+                    'class': 'pp-header-buttons-close-contents'
+                }))
             },
 
             buildSheetHeaderEvent = function() {
                 $('#' + id).bind('click', ctrl.onSheetHeaderClicked);
             },
 
-            buildMinimizeButtonEvent = function() {
-
-                var selector = '.pp-sheet-header-button .pp-sheet-header-button-icon';
-                
-                $('#' + minimizeButtonId)
-                    .bind('mouseover', function() {
-                        $(selector).css('opacity', 1.0);
-                    })
-                    .bind('mouseleave', function() {
-                        $(selector).css('opacity', .4);
-                    })
-                    .bind('click', ctrl.minimize);
-            },
-
             buildConversationsButtonEvent = function() {
-
-                var selector = groupButtonIconSelector;
-                
+                var selector = '#pp-container .pp-header-buttons-back-contents';
                 $(selector)
-                    .bind('mouseover', function() {
-                        $(selector).css('opacity', 1.0);
-                    })
-                    .bind('mouseleave', function() {
-                        $(selector).css('opacity', .4);
-                    })
                     .bind('click', function() {
                         Ctrl.$conversationList.show();
+                        showHeaderBody();
                     });
+            },
+
+            buildCloseButtonEvent = function() {
+                var selector = '#pp-container .pp-header-buttons-close';
+                $(selector).bind( 'click', function() {
+                    Ctrl.$sheetheader.minimize();
+                } );
             },
 
             buildUnreadButtonEvent = function() {
@@ -99,28 +85,38 @@ View.$sheetHeader = (function() {
         }, ctrl);
 
         // Build HTML
-        this.add(buildTitle())
+        this.add(buildHeaderContent())
             .add(buildConversationsButton())
-            .add(buildMinimizeButton());
+            .add(buildCloseButton());
 
         // Bind event
         $timeout(function() {
             ctrl.onSheetHeaderInit();
             buildSheetHeaderEvent();
-            buildMinimizeButtonEvent();
             buildConversationsButtonEvent();
+            buildCloseButtonEvent();
             buildUnreadButtonEvent();
         });
     }
     extend(PPSheetHeader, View.PPDiv);
 
     var id = 'pp-sheet-header',
-        titleId = 'pp-sheet-header-title',
-        minimizeButtonId = 'pp-sheet-header-button',
+        classPrefix = 'pp-sheet-header-',
+        teamProfileClassPrefix = classPrefix + 'team-profile',
+        teamProfileFullClassPrefix = teamProfileClassPrefix + '-full',
+        titleSelector = '.pp-sheet-header-app-name',
         unreadCountSelector = '.pp-unread-count',
         groupButtonSelector = '.pp-sheet-conversations-button',
         groupButtonIconSelector = groupButtonSelector + ' .pp-sheet-header-button-icon',
         titleSelector = '.pp-sheet-header .title-container',
+
+        teamProfileFullShowing = false,
+        TEAM_PROFILE_FULL_HEIGHT = 100,
+        TEAM_PROFILE_FULL_ANIM_DURATION = 200, // duration in millseconds
+
+        isMouseoverImg = false,
+        REMOVE_GROUP_MEMBER_HOVERCARD_EVENT_ID = 'rm-group-member-hovercard',
+        mEventToken = REMOVE_GROUP_MEMBER_HOVERCARD_EVENT_ID,
 
         build = function() {
             return new PPSheetHeader();
@@ -145,7 +141,8 @@ View.$sheetHeader = (function() {
         },
 
         setTitle = function(title) {
-            $( '#' + titleId ).text( title );
+            $( titleSelector ).text( title );
+            $( '.' + classPrefix + 'team-profile-app-name' ).text( title );
         };
 
     ///////// API //////////////
@@ -163,7 +160,15 @@ View.$sheetHeader = (function() {
         changeDropDownButtonToHideState: changeGroupMembersDropDownButtonToHideState,
         changeDropDownButtonToShowState: changeGroupMembersDropDownButtonToShowState,
 
-        setTitle: setTitle
+        setTitle: setTitle,
+
+        showHeaderBody: showHeaderBody,
+        showTeamProfile: showTeamProfile,
+        isShowingTeamProfileFull: isShowingTeamProfileFull,
+        showTeamProfileFull: showTeamProfileFull,
+        hideTeamProfileFull: hideTeamProfileFull,
+
+        reBuildTeamProfile: reBuildTeamProfile
     }
 
     ////////// Implementation /////
@@ -223,6 +228,204 @@ View.$sheetHeader = (function() {
 
     function height() {
         return $( '#' + id ).height();
+    }
+
+    function showHeaderBody() {
+        hideTeamProfileFull( function() {
+            hideTeamProfile();
+            $( '.' + classPrefix + 'body' ).show();
+        } );
+    }
+
+    function hideHeaderBody() {
+        $( '.' + classPrefix + 'body' ).hide();
+    }
+
+    function showTeamProfile() {
+        hideHeaderBody();
+        $( '.' + classPrefix + 'team-profile' ).show();
+    }
+
+    function hideTeamProfile() {
+        $( '.' + classPrefix + 'team-profile' ).hide();
+    }
+
+    function isShowingTeamProfileFull() {
+        return teamProfileFullShowing;
+    }
+
+    function showTeamProfileFull( config ) {
+        if ( teamProfileFullShowing ) return;
+        teamProfileFullShowing = true;
+
+        hideTeamProfile();
+        
+        var $full = $( '.' + teamProfileFullClassPrefix ),
+            $conversationList = $( '#pp-conversation-content' );
+
+        $full.css( 'margin-top', -TEAM_PROFILE_FULL_HEIGHT ).show();
+        $full.animate( { 'margin-top': "+=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
+        $conversationList.animate( { scrollTop: 0 }, 0 );
+        $conversationList.animate( { 'top': "+=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
+        $( '#' + id ).animate({ height: "+=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
+    }
+
+    function hideTeamProfileFull( callback ) {
+        var $full = $( '.' + teamProfileFullClassPrefix );
+        if ( !teamProfileFullShowing ) {
+            $full.hide();
+            callback && callback();
+            return;
+        }
+        teamProfileFullShowing = false;
+
+        $full.animate( { 'margin-top': "-=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
+        $( '#pp-conversation-content' ).animate( { 'top': "-=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
+        $( '#' + id ).animate({ height: "-=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION, _completed );
+
+        function _completed() {
+            $( '.' + teamProfileFullClassPrefix ).hide();
+            showTeamProfile();
+            callback && callback();
+        }
+    }
+
+    function _bindEvent( users ) {
+        if ( Service.$device.isMobileBrowser() ) {
+            _bindMobileEvent( users );
+        } else {
+            _bindPCEvent( users );
+        }
+    }
+
+    function _bindMobileEvent( users ) {
+        $( '.' + teamProfileFullClassPrefix + '-avatar img' )
+            .on( 'click', function ( e ) {
+                
+                var userId = $( this ).attr( 'user_uuid' );
+
+                View.$loading.show();
+                Ctrl.$groupMembers.hide();
+                Ctrl.$groupMembers.onMemberClicked( userId, function() {
+                    View.$loading.hide();
+                } );
+                
+            } );
+    }
+
+    function _bindPCEvent( users ) {
+        $( '.' + teamProfileFullClassPrefix + '-avatar img' )
+            .bind( 'mouseover', function( e ) {
+                e.stopImmediatePropagation();
+
+                isMouseoverImg = true;
+                Service.$task.cancel( mEventToken );
+
+                var user = _findUser( users, $( this ).attr( 'user_uuid' ) );
+                
+                View.$groupMemberHovercard.remove();
+                View.$groupMemberHovercard.show( user, { e: e, el: $( this ) } );
+            } )
+            .bind( 'mouseleave', function( e ) {
+                isMouseoverImg = false;
+            } );
+
+        $( '#' + teamProfileFullClassPrefix )
+            .bind( 'click', function ( e ) {
+                !isMouseoverImg && View.$groupMemberHovercard.remove();
+            } )
+            .bind( 'mouseover', function ( e ) {
+                if ( View.$groupMemberHovercard.isShow() && !View.$groupMemberHovercard.isMouseover() ) {
+                    
+                    Service.$task.plan( mEventToken , function() {
+                        !isMouseoverImg &&
+                            !View.$groupMemberHovercard.isMouseover() &&
+                            View.$groupMemberHovercard.remove();
+                    } );
+                    
+                }
+                
+            } );
+    }
+
+    function _findUser( users, userId ) {
+
+        var user;
+        $.each( users, function( index, item ) {
+            if ( userId === item.user_uuid ) {
+                user = item;
+            }
+        } );
+
+        return user;
+        
+    }
+
+    function reBuildTeamProfile( activeConversationToken ) {
+        $( '.' + teamProfileFullClassPrefix ).remove();
+        $( '.' + teamProfileClassPrefix ).remove();
+
+        var $sheetHeader = $( '.pp-sheet-header-title-container' ),
+            users = Service.$conversation.getUser( activeConversationToken ),
+            conversation = Service.$conversationManager.find( activeConversationToken ),
+            welcomeMessage = Service.$app.app().welcome_message;
+
+        $sheetHeader
+            .prepend( buildTeamProfileFull( users, conversation, welcomeMessage ).getElement()[0].outerHTML )
+            .prepend( buildTeamProfile( users, conversation, welcomeMessage ).getElement()[0].outerHTML );
+
+        $( '.' + teamProfileClassPrefix + '-container' ).bind( 'click', showTeamProfileFull );
+        _bindEvent( users );
+    }
+
+    function buildTeamProfile( users, conversation, welcomeMessage ) {
+        return new View.Div( teamProfileClassPrefix )
+            .add( new View.Div( { className: teamProfileClassPrefix + '-container' }  )
+                  .add( buildTeamAvatars( users ) )
+                  .add( new View.Div( teamProfileClassPrefix + '-body' )
+                        .add( new View.P( teamProfileClassPrefix + '-app-name'  ).text( conversation.conversation_name ) )
+                        .add( new View.P( teamProfileClassPrefix + '-description' ).text( welcomeMessage ) )));
+    }
+
+    function buildTeamProfileFull( users, conversation ) {
+        return new View.Div( teamProfileFullClassPrefix )
+            .add( new View.Div( teamProfileFullClassPrefix + '-team-name' ).text( conversation.conversation_name ) )
+            .add( new View.Div( teamProfileFullClassPrefix + '-description' ).text( Service.$app.app().welcome_message ) )
+            .add( buildTeamProfileFullAvatars( users ) );
+    }
+
+    function buildTeamAvatars( users ) {
+        users = users || [];
+        
+        var parent = new View.Div( teamProfileClassPrefix + '-avatar-container' ),
+        MAX = 3, 
+        i = 0;
+
+        while ( i < MAX && i < users.length ) {
+            var user = users[ i ];
+            parent.add( new View.Div( teamProfileClassPrefix + '-avatar'  )
+                        .add( new View.Img( { src: user.user_avatar  } ) ));
+            i++;
+        }
+        
+        return parent;
+    }
+
+    function buildTeamProfileFullAvatars( users ) {
+        users = users || [];
+        var parent = new View.Div( teamProfileFullClassPrefix + '-avatar-container' ),
+        MAX = 3,
+        i = 0;
+
+        while ( i < MAX && i < users.length ) {
+            var user = users[ i ];
+            parent.add( new View.Div( teamProfileFullClassPrefix + '-avatar' )
+                        .add( new View.Img( { src: user.user_avatar, user_uuid: user.user_uuid } ) )
+                        .add( new View.Div( teamProfileFullClassPrefix + '-name' ).text( user.user_fullname ) ) );
+            i++;
+        }
+
+        return parent;
     }
     
 })();

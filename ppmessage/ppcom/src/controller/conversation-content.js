@@ -27,7 +27,7 @@ Ctrl.$conversationContent = (function() {
                     groupId = body.conversation.uuid;
 
                 appendMessage( body );
-                View.$conversationContent.scrollToBottom();    
+                View.$conversationContent.scrollToBottom();
                 
             });
 
@@ -126,12 +126,12 @@ Ctrl.$conversationContent = (function() {
             if ( conversationId ) {
                 
                 // load history
-                getConversationHistory( conversationId, function( list ) {
+                getConversationHistory( conversationId, function( list, loadable ) {
 
                     if (beforeUpdateViewCallback) beforeUpdateViewCallback();
 
                     // tell modal is can load more historys
-                    getModal() && getModal().setLoadable(list.length > 0);
+                    getModal() && getModal().setLoadable(loadable);
                     
                     // update view
                     prependMessages(list, function() {
@@ -175,7 +175,11 @@ Ctrl.$conversationContent = (function() {
         /**
          * Append Message at tail
          */
-        appendMessage = function( message ) {
+        appendMessage = function( message, onlyUpdateView ) {
+            if ( onlyUpdateView ) {
+                _updateView();
+                return;
+            }
 
             var modal = getModal( message.conversation.uuid );
             
@@ -184,14 +188,22 @@ Ctrl.$conversationContent = (function() {
                 if ( timestampMsg ) {
                     $(selector).append(new View.PPConversationPartTimestamp( timestampMsg ).getElement()[0].outerHTML);
                 }
-                $(selector).append(new View.PPConversationPart( message ).getElement()[0].outerHTML);                
+                _updateView();
             }
 
+            function _updateView() {
+                $(selector).append(new View.PPConversationPart( message ).getElement()[0].outerHTML);
+            }
         },
 
         // push a new messageid to messageIdArrays for message duplicate check
         updateMessageIdsArray = function( messageId ) {
             getModal() && getModal().updateMessageIdsArray(messageId);
+        },
+
+        // clear current messages
+        clear = function() {
+            $( selector ).empty();
         },
 
         // show conversation-content panel with callback
@@ -225,6 +237,20 @@ Ctrl.$conversationContent = (function() {
                         // show
                         View.$conversationContentContainer.show( fadeIn );
 
+                        // Append sms-email message if need
+                        // We will show notification message when this user doesn't have user_email and user_mobile both
+                        var user = Service.$user.getUser().getInfo();
+                        if ( conversation.vip && 
+                             !user.user_email &&
+                             !user.user_mobile &&
+                             !getModal().isAppendedSmsEmail() ) {
+                            appendMessage( new Service.PPMessage.Builder( Service.PPMessage.TYPE.SMS_EMAIL )
+                                           .conversationId( conversation.token )
+                                           .build()
+                                           .getBody() );
+                            getModal().notifyAppendSmsEmail( true );
+                        }
+
                         // callback
                         if (callback) callback();                
                     }, delay);
@@ -243,7 +269,7 @@ Ctrl.$conversationContent = (function() {
                 var old = activeConversation;
 
                 if ( old !== conversation ) {
-                    onHide( old ); // `onHide` old conversation
+                    onHide( old, conversation ); // `onHide` old conversation
                     onStart( conversation ); // `onStart` new conversation
                 } else {
                     onResume( conversation ); // same conversation call `onResume` event
@@ -270,6 +296,7 @@ Ctrl.$conversationContent = (function() {
         appendMessage: appendMessage,
         loadHistorys: loadHistorys,
         updateMessageIdsArray: updateMessageIdsArray,
+        clear: clear,
 
         isLoadable: isLoadable
     }
@@ -328,7 +355,11 @@ Ctrl.$conversationContent = (function() {
         
     }
 
-    function onHide ( conversation ) {
+    function onHide ( conversation, newConversation ) {
+
+        if ( newConversation ) {
+            View.$sheetHeader.reBuildTeamProfile( newConversation.token );
+        }
 
         // unWatch conversation typing
         conversation && conversation.uuid &&

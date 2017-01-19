@@ -8,7 +8,6 @@ View.$conversationContent = (function() {
         View.PPDiv.call(this, {
             id: id,
             'class': id + ' pp-unselectable pp-box-sizing-borderbox',
-            style: 'background-color:' + View.Style.Color.base,
             event: {
                 click: function() {
                     ctrl.onConversationContentClicked();
@@ -23,6 +22,32 @@ View.$conversationContent = (function() {
                 this.add(new View.PPConversationPart(items[i]));
             }
         }
+
+        $timeout( function() {
+            // Bind mouse wheel event
+            var isFF = Service.$device.isFirefox(),
+                event = isFF ? 'DOMMouseScroll' : 'mousewheel',
+                $el = $( selector );
+            
+            $el.bind( event ,function( e ) {
+                if ( Ctrl.$conversationQuickMessage.isEnabled() ) return;
+
+                var st = $(this).scrollTop(),
+                    delta = isFF ? -e.originalEvent.detail : e.originalEvent.wheelDelta /120;
+                if ( delta > 0) {
+                    if (st <= 0 ) { // Down
+                        if (!View.$sheetHeader.isShowingTeamProfileFull()) {
+                            View.$sheetHeader.showTeamProfileFull();
+                        }
+                    }
+                } else { // Up
+                    if (View.$sheetHeader.isShowingTeamProfileFull()) {
+                        View.$sheetHeader.hideTeamProfileFull();
+                    }
+                }             
+            } );
+            
+        } );
     }
     extend(PPConversationContent, View.PPDiv);
 

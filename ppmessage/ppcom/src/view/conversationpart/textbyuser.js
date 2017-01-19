@@ -54,15 +54,14 @@ View.$userTextMessage = ( function() {
         var html = View.$textUrlChecker.match(item.message.text.body).trustAsHtml(),
             extra = View.conversationPartTools.buildExtra( item );
         
-        this.add(new Div('pp-conversation-part-text-by-user-outer')
+        this.add(new Div( 'pp-conversation-part-text-by-user-outer' )
                  .add(new Div( 'pp-wrapper' )
-                      .add(new Div('pp-conversation-part-text-by-user-body-outer')
+                      .add(new Div({ className: 'pp-conversation-part-text-by-user-body-outer', style: 'background-color:' + View.Style.Color.main_color })
                            .add(new Div({
                                id: 'pp-conversation-part-text-by-user-body',
                                'class': 'pp-conversation-part-text-by-user-body pp-font pp-text-link-user pp-selectable'
                            })
-                                .html(html)))
-                      .add(new Div('pp-conversation-part-text-by-user-triangle')))
+                                .html(html))))
                  .add(new Div('pp-conversation-part-text-by-user-timestamp-outer')
                       .add(new View.Span({
                           'class': 'extra pp-selectable',

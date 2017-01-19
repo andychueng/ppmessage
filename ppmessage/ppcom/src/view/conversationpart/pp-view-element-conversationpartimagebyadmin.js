@@ -1,5 +1,7 @@
 ((function(View) {
 
+    var avatarClass = 'pp-conversation-part-msg-by-admin-avatar';
+
     View.$adminImageMessage = (function() {
 
         /**
@@ -36,27 +38,16 @@
 
                 // Change user avatar
                 $(selector)
-                    .find('.pp-conversation-part-image-by-admin-avatar')
+                    .find('.' + avatarClass)
                     .attr('src', userInfo.user_avatar);
-
-                // Change user name
-                $(selector)
-                    .find('.pp-conversation-part-serve-name')
-                    .text(userInfo.user_fullname);
                 
             });
             
             this.add(new View.PPDiv('pp-conversation-part-image-by-admin-o')
                      .add(new View.PPDiv('pp-conversation-part-image-by-admin-o1')
-                          .add(new View.PPElement('img', {
-                              src: item.user.avatar,
-                              'class': 'pp-conversation-part-image-by-admin-avatar'
-                          }))
-                          .add(new View.PPDiv('pp-conversation-part-image-by-admin-o2')
+                          .add(View.conversationPartTools.buildAvatars( item.user.avatar, Service.$conversationManager.activeConversation().token ))
+                          .add(new View.PPDiv('pp-conversation-part-msg-by-admin-body-container')
                                .add(new View.PPDiv('pp-conversation-part-image-by-admin-o3')
-                                    .add(new View.PPDiv({
-                                        'class': 'pp-conversation-part-serve-name pp-font'
-                                    }).text(item.user.name))
                                     .add(new View.PPDiv('pp-conversation-part-image-by-admin-o4')
                                          .add(new View.PPElement('img', {
                                              src: item.message.image.url,

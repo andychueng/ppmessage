@@ -2,8 +2,7 @@
 Ctrl.$launcher = (function() {
 
     var _launcherIcon = "",
-        _clickToOpenConversation = "",
-        _launcherImgWidth = 50; //50 * 50
+        _clickToOpenConversation = "";
 
     function PPLauncherCtrl() {
 
@@ -18,35 +17,65 @@ Ctrl.$launcher = (function() {
             };
 
         this.onClickEvent = function() { // Launcher onClick event
-            // If hoverCard delegate launcher click event, we will not show MessageBox
-            if (!Ctrl.$hoverCard.get().interceptLauncherClickEvent()) {
-                var $hoverCardController = Ctrl.$hoverCard.get();
-                $hoverCardController.asyncPrepareHoverCardInfo( function( prepareSucc ) {
-                    self.showMessageBox();
-                } );
+            if (!PP.isOpen()) {
+                this.setUnreadBadgeNum(0);
+                this.setLauncherIcon("");
+                // clearn message on showing
+                messageOnShowing = undefined;
             }
+            PP.toggle();
         },
 
         this.shouldShowLauncherWhenInit = function() { // 是否默认显示小泡
-            return View.$settings.isShowLauncher();
+            return !View.$launcher.shouldHideLauncher();
         },
 
         // Open messageBox and hide Launcher
         this.showMessageBox = function() {
+            var $hoverCardController = Ctrl.$hoverCard.get();
+            $hoverCardController.asyncPrepareHoverCardInfo( function( prepareSucc ) {
 
-            var messageOnShowingOld = messageOnShowing;
-            
-            // clear data and hide launcher
-            self.hideLauncher();
-            View.$launcher.showMessageBox();
+                var mode = Ctrl.$conversationPanel.mode(),
+                    lastMode = Ctrl.$conversationQuickMessage.getLastMode();
 
-            if ( Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.CONTENT ) {
-                Ctrl.$conversationContent
-                    .show( Service.$conversationManager.activeConversation(), { fadeIn: false, delay: 0 }, function() {
-                        View.$composerContainer.focus(); // focus
-                    } );
-            }
-            
+                if ( mode === Ctrl.$conversationPanel.MODE.QUICK_MESSAGE ) { // We are in QUICK_MESSAGE mode, disable it first
+                    Ctrl.$conversationQuickMessage.disable();
+                }
+                
+                var messageOnShowingOld = messageOnShowing;
+                View.$launcher.showMessageBox();
+
+                if ( mode === Ctrl.$conversationPanel.MODE.QUICK_MESSAGE ) {
+                    
+                    if ( Ctrl.$conversationQuickMessage.getActiveConversationId() !== undefined ) {
+
+                        // Simulate we are enter content mode from list mode
+                        var activeConversation = Service.$conversationManager.activeConversation,
+                            conversationId = activeConversation ? activeConversation.token : undefined;
+                        conversationId && Ctrl.$conversationList.showItem( conversationId );
+                        return;
+
+                    } else {
+                        mode = lastMode;
+                        Ctrl.$conversationPanel.mode( mode );
+                    }
+
+                }
+
+                if ( mode === Ctrl.$conversationPanel.MODE.CONTENT ) {
+                    _enterContentMode();
+                } else if ( Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.LIST ) {
+                    Ctrl.$conversationList.show();
+                }
+
+                function _enterContentMode() {
+                    Ctrl.$conversationContent
+                        .show( Service.$conversationManager.activeConversation(), { fadeIn: false, delay: 0 }, function() {
+                            View.$composerContainer.focus(); // focus
+                        } );
+                }
+                
+            } );
         },
 
         this.onMouseOverEvent = function() {

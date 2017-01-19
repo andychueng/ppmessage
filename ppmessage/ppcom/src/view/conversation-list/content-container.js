@@ -20,6 +20,7 @@ View.$groupContent = (function() {
 
             // update each group item's description when new message arrived
             $groupContentItemView.description( groupId, ppMessage.getMessageSummary() );
+            $groupContentItemView.timestamp( groupId, Service.$tools.timeago( ppMessage.getBody().messageTimestamp * 1000 ) );
             
         });
     }
@@ -30,18 +31,20 @@ View.$groupContent = (function() {
 
         show = function() {
             $(elSelector).show();
+            // $(elSelector).removeClass( elementClass + '-leave' ).show();
             return this;
         },
 
         hide = function() {
             $(elSelector).hide();
+            // $( elSelector ).addClass( elementClass + '-leave' );
             return this;
         },
 
         update = function(groupInfo) {
             $( elSelector ).empty();
             var html = '';
-            $.each(groupInfo, function(index, item) {                
+            $.each(groupInfo, function(index, item) {
                 html += View.$groupContentItem.build(item).getHTML();
             });
             $(elSelector).append(html);

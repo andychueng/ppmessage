@@ -109,6 +109,8 @@ Ctrl.$hoverCard = (function() {
                         controller = Ctrl.$hoverCardCategorySingle,
                         hovercardWelcome = buildWelcomeInfo( response.app_name, response.app_welcome, response.user_list );
 
+                    Service.$conversation.setUser( response.token, hovercardWelcome.activeAdmins );
+                    View.$sheetHeader.reBuildTeamProfile( response.token );
                     view.updateHoverCard( hovercardWelcome );
                     controller.delegateHoverCardInitEvent( hovercardWelcome );
 

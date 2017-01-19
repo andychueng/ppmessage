@@ -2,6 +2,46 @@
 .pp-conversation-container {
     display: none;
 }
+
+.pp-borderless-dismiss-bar {
+    display: none;
+    margin-bottom: 10px;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+}
+
+.pp-borderless-dismiss-view-more {
+    display: inline-block;
+    background-color: #5d6c80;
+    opacity: .8;
+    color: #fff;
+    font-size: 13px;
+    font-size: 13px !important;
+    line-height: 32px !important;
+    padding: 0 8px;
+    border-radius: 16px;
+    cursor: pointer;
+    background-position: 50%;
+    position: relative;
+    float: right;
+    margin-right: 70px;
+}
+
+.pp-borderless-dismiss-button {
+    background-color: #5d6c80;
+    background-position: 50%;
+    background-size: 8px 8px;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    cursor: pointer;
+    display: block;
+    float: right;
+    position: relative;
+    width: 32px;
+    height: 32px;
+}
+
 /* --CONVERSATION-CONTAINER-END-- */
 
 .pp-text-link-user {
@@ -64,12 +104,13 @@
     z-index: 2147483002;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);
     background: white;
+    border-radius: 10px 10px 0px 0px;
     overflow: hidden;
     position: absolute;
     top: 0;
     right: 0;
     width: 100%;
-    height: 48px;
+    height: 75px;
 }
 .pp-sheet-header-title-container{
     position: absolute;
@@ -77,13 +118,10 @@
     top: 0;
     width: 100%;
     height: 100%;
-    text-align: center;
-    -moz-text-align-last: center;
-    text-align-last: center;
 }
 .pp-container .pp-sheet-header-title {
     font-size: 16px;
-    line-height: 48px;
+    line-height: 75px;
     font-weight: 500;
     color: #465C66;
     letter-spacing: 0.2px;
@@ -97,15 +135,15 @@
 .pp-sheet-header-button{
     position: relative;
     margin: 0 20px;
-    height: 48px;
+    height: 75px;
     float: right;
     margin-left: 15px;
 }
 .pp-sheet-header-button-minimize-container {
     position: relative;
     margin: 0 0 0 0;
-    height: 48px;
-    width: 48px;
+    height: 75px;
+    width: 75px;
     float: right;
     cursor: pointer;
 }
@@ -118,7 +156,7 @@
     width: 16px;
     background-repeat: no-repeat;
     background-size: 15px 15px;
-    height:48px;
+    height:75px;
     position:relative;
     margin:auto;
 }
@@ -142,18 +180,134 @@
 /* GROUP-BEGIN */
 .pp-container .pp-group-content-container {
     box-sizing: border-box;
+    background-color: white;
+    border-radius: 0px 0px 10px 10px;
+    bottom: 0px;
     display: none;
     position: relative;
-    height: 100%;
     margin: 0 auto;
-    padding-bottom: 48px;
     overflow-y: auto;
-    top: 48px; }
+    margin-bottom: 10px;
+    width: 100%;
+    top: 75px; }
 
 .pp-group-item {
-    padding-top: 17px;
-    padding-left: 17px;
+    border-top: 1px solid #f3f4f5;
     cursor: pointer;
+    padding: 32px 30px;
+
+    -webkit-animation-name: pp-messenger-view-slide-right-in;
+    animation-name: pp-messenger-view-slide-right-in;
+    -webkit-animation-duration: .32s;
+    animation-duration: .32s;
+    -webkit-animation-timing-function: cubic-bezier(.23,1,.32,1);
+    animation-timing-function: cubic-bezier(.23,1,.32,1);
+    -webkit-animation-delay: .16s;
+    animation-delay: .16s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both
+}
+
+.pp-group-item-leave {
+    -webkit-animation-name: pp-messenger-view-slide-left-out;
+    animation-name: pp-messenger-view-slide-left-out;
+    -webkit-animation-duration: .32s;
+    animation-duration: .32s;
+    -webkit-animation-timing-function: cubic-bezier(.23,1,.32,1);
+    animation-timing-function: cubic-bezier(.23,1,.32,1);
+    -webkit-animation-delay: 0;
+    animation-delay: 0;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both
+}
+
+.pp-group-item:hover {
+    background-color:#f7f8fa;
+    border-top:1px solid #ebedf1;
+}
+
+.pp-group-item-avatar-container {
+}
+
+.pp-group-item:last-child {
+    border-bottom:1px solid #f3f4f5;
+}
+
+.pp-group-item-body {
+    position: relative;
+    margin-left: 50px;
+}
+
+.pp-group-item-meta {
+    margin-bottom: 2px;
+    min-height: 15px;
+}
+
+.pp-group-item-meta::after {
+    clear: both;
+}
+
+.pp-group-item-body-author {
+    float: left;
+    color: rgba(73,76,93,.7);
+}
+
+.pp-group-item-body-unread-dot {
+    display:inline-block;
+    background-color:#1F8CEB;
+    margin-right:9px;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    content:"";
+    float: right;
+    margin-top: 3px;
+}
+
+.pp-group-item-body-timestamp {
+    float:right;
+    text-align:right;
+    color:rgba(73,76,93,.7);
+}
+
+.pp-group-item-body-author, .pp-group-item-body-timestamp {
+    font-size:13px !important;
+    max-width:49%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.pp-group-item-content {
+    position: relative;
+}
+
+.pp-group-item-content-container {
+    margin-right:25px;
+    color:#3a3c4c;
+    font-size:13px;
+    min-height: 15px;
+    line-height:19px;
+}
+
+.pp-group-item-content-text {
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size: 13px !important;
+    font-color: rgb(58, 60, 76);
+}
+
+.pp-group-item-body-user-icon {
+    background-size:16px 14px;
+    background-repeat:no-repeat;
+    display:inline-block;
+    background-position:50%;
+    width:16px;
+    position:absolute;
+    top:0;
+    bottom:0;
+    right:0;
 }
 
 .pp-group-item * {
@@ -162,102 +316,82 @@
 
 .pp-group-item img {
     border-radius: 50%;
-    float: left;
-    margin-top: 5px;
+    border: 2px solid #fff;
     display: inline-block;
-    width: 42px;
-    height: 42px;
-}
-
-.pp-group-item .body-container {
-    margin-left: 55px;
-    padding-right: 17px;
-    border-bottom: 1px solid #e7e7e7;
-    height: 65px;
-}
-
-.pp-group-item .pp-body {
-    
-}
-
-.pp-group-item .pp-header {
-    margin-bottom: 5px;
-}
-
-.pp-group-item .pp-timestamp {
-    float: right;
-    font-size: 12px;
-    line-height: 20px;
-    color: #aaa;
-    width: 50px;
-    text-align: right;
-}
-
-.pp-group-item .title-container {
-    margin: 0 50px 0 0;
-}
-
-.pp-group-item .pp-title {
-    color: rgba(96,104,110,.8);
-    font-size: 15px;
-    line-height: 22px;
-    font-weight: 500;
-    display: block;
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.pp-group-item .pp-summary {
-    color: rgba(96,104,110,.8);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 19px;
-    height: 40px;
-    overflow: hidden;
-    position: relative;
-    padding-right: 17px;
-    word-break: break-word;
-}
-
-.pp-group-item .pp-content {
-    line-height: 19px;
-}
-
-.pp-group-item .pp-unread {
-    color: #3d4347;
-    font-weight: 500;
-}
-
-.pp-group-item .readstate {
-    background-color: red;
-    border-radius: 50%;
-    bottom: 27px;
-    color: white;
-    display: none;
-    font-size: 12px;
-    height: 16px;
-    width: 16px;
     position: absolute;
-    right: 0;
-    text-align: center;
-    top: 6px;
+    width: 20px;
+    height: 20px;
 }
 
-.pp-group-item-hover {
-    background-color: #f5f5f6;
+.pp-group-item .pp-group-item-avatar-container {
+    float: left;
+    position: relative;
+    width: 35px;
+    height: 35px;
+}
+
+.pp-group-item .pp-group-item-first-of-two-avatar, .pp-conversation-part-msg-first-of-two-avatar {
+    top: 6px;
+    left: 0px;
+    z-index: 2;
+}
+
+.pp-group-item .pp-group-item-second-of-two-avatar, .pp-conversation-part-msg-second-of-two-avatar {
+    top: 6px;
+    right: 0px;
+    z-index: 2;
+}
+
+.pp-group-item .pp-group-item-first-of-three-avatar, .pp-conversation-part-msg-first-of-three-avatar {
+    top: -1;
+    left: 6px;
+    z-index: 2;
+}
+
+.pp-group-item .pp-group-item-second-of-three-avatar, .pp-conversation-part-msg-second-of-three-avatar {
+    top: 15px;
+    right: 14px;
+    z-index: 3;
+}
+
+.pp-group-item .pp-group-item-third-of-three-avatar, .pp-conversation-part-msg-third-of-three-avatar {
+    top: 15px;
+    left: 14px;
+    z-index: 1;
+}
+
+.pp-group-item .pp-group-item-first-of-one-avatar {
+    width: 36px;
+    height: 36px;
 }
 
 /* GROUP-END */
 
+.pp-sheet-header .pp-sheet-header-body {
+    display: none;
+    padding: 20px 0 0 80px;
+}
+
+.pp-sheet-header .pp-sheet-header-title {
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.1em;
+}
+
+.pp-sheet-header .pp-sheet-header-app-name {
+    color: hsla(0,0%,100%,.8);
+    font-size: 13px;
+    line-height: 1.1em;
+}
+
 .pp-sheet-header .pp-sheet-conversations-button {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  width: 75px;
+  height: 75px;
   float: left;
-  cursor: pointer;
   display: none;
-  position: relative;
-  margin: 0 20px;
-  height: 100%; }
+  position: relative; }
 .pp-sheet-header .pp-sheet-header-button-icon {
   background-size: 15px 12px;
   background-repeat: no-repeat;
@@ -265,21 +399,44 @@
   margin: 0 auto;
   width: 18px;
   height: 100%;
-  opacity: .4;
   float: left; }
+
+.pp-sheet-header .pp-header-buttons-close {
+    background-position: 50%;
+    background-size:14px 14px;
+    background-repeat:no-repeat;
+    display: none;
+    position:absolute;
+    top:0;
+    right:0;
+}
+
+.pp-sheet-header .pp-header-buttons-back-contents, .pp-sheet-header .pp-header-buttons-close-contents {
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    padding: 8px;
+    margin: 13px;
+    box-sizing: border-box !important;
+    border-radius: 8px
+}
+
+.pp-sheet-header .pp-header-buttons-back-contents:hover, .pp-sheet-header .pp-header-buttons-close-contents:hover, .pp-sheet-header .pp-sheet-header-team-profile-container:hover {
+    background-color:rgba(0,0,0,.1);
+}
+
 .pp-sheet-header .pp-unread-count {
   border-radius: 50%;
-  border: 2px solid #fff;
   font-size: 11px;
   line-height: 16px;
-  background-color: #0074b0;
+  background-color: red;
   text-align: center;
   color: #fff;
   position: absolute;
   width: 16px;
   height: 16px;
   top: 11px;
-  left: 11px;
+  left: 44px;
   cursor: pointer;
   display: none; }
 
@@ -297,7 +454,7 @@
     box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 }
 .pp-emoji-selector-triangle {
-    right: 25px;
+    right: 40px;
     border: solid transparent;
     position: absolute;
     pointer-events: none;
@@ -307,7 +464,7 @@
     z-index: 2147483646;
 }
 .pp-emoji-selector-triangle-mask {
-    right: 25px;
+    right: 40px;
     border: solid transparent;
     position: absolute;
     pointer-events: none;
@@ -375,14 +532,15 @@
 .pp-messenger-panel {
     position:fixed;
     width:368px;
-    height: 100%;
+    height: calc(100% - 95px - 20px);
+    max-height: 531px;
     position: fixed;
-    right:0;
-    top:0;
-    bottom:0;
-    border-left: 1px solid #e7e7e7;
+    right:20px;
+    bottom:95px;
+    border-radius:10px;
     z-index:2147483646;
     box-shadow: 0 0 4px 1px rgba(0,0,0,.08);
+    min-height: 250px;
 }
 .pp-messenger-box-container {
 }
@@ -413,16 +571,16 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     cursor: pointer;
     background-position: center;
     border-color: #004c88;
     box-shadow: 0px 6px 13px 0px rgba(0, 0, 0, 0.23);
 }
 .pp-launcher-button-container {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
 }
 .pp-launcher-button-container-inactive {
     transition: opacity,.1s;
@@ -448,7 +606,7 @@
 
 .pp-launcher-container {
     position: fixed;
-    height: 48px;
+    height: 60px;
     z-index: 2147483646;
 }
 
@@ -457,9 +615,10 @@
 .pp-loading {
     box-sizing: border-box;
     display: none;
-  height: 100%;
-  margin: 0 auto;
-  top: 48px; }
+    height: 100%;
+    margin: 0 auto;
+    top: 75px;
+}
 
 .pp-loading-spinner {
     width:28px;
@@ -565,17 +724,39 @@
 
 .pp-composer {
     position: relative;
-    max-width: 336px;
     margin: 0 auto;
+}
+
+#pp-composer-container {
+    border-radius: 0px 0px 10px 10px;
+}
+
+.pp-composer-container-file-sendbutton-selector-container {
+    cursor: pointer;
+    float: right;
+    position: relative;
+}
+
+.pp-composer-container-send-button-container {
+    display: none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px;
+    height: 25px;
+    width: 25px;
+    opacity: .4;
+}
+
+.pp-composer-container-send-button-container:hover {
+    opacity: 1.0;
 }
 
 .pp-composer-container-action-btn {
     background-position: center;
+    cursor: pointer;
     height: 15px;
     width: 15px;
-    position: relative;
     float: right;
-    cursor: pointer;
     top: 5px;
     margin: 0 2px 0 0;
     padding: 5px;
@@ -590,7 +771,7 @@
 }
 .pp-composer-container-tools-container {
     position: absolute;
-    top: 3px;
+    bottom: 15px;
     right: 6px;
 }
 .pp-composer-container-warning {
@@ -606,6 +787,7 @@
     padding: 0px !important;
     float: right;
     width: 100%;
+    position: relative;
 }
 
 .pp-container .pp-composer-container-warning-span {
@@ -615,28 +797,34 @@
 
 .pp-container .pp-composer-container-textarea {
     line-height: 20px;
-    border-radius: 4px;
-    border: 1px solid #cfd8dc;
+    border-radius: 0px 0px 10px 10px;
     height: 100%;
     width: 100%;
     outline: none !important;
-    color: #455A64;
     resize: none;
     font-size: 14px;
-    padding: 10px 70px 5px 14px;
+    padding: 18px;
+    padding-right: 100px;
+    padding-left: 30px;
     word-break: break-all;
     overflow: hidden;
     max-height: 210px;
     min-height: 40px;
+    border: none;
+    transition: background-color .2s ease,box-shadow .2s ease;
+    color: #565867;
+    background-color: #f0f3f5;
+}
+
+.pp-container .pp-composer-container-textarea:focus {
+    outline:none;
+    background-color:#fff;
+    box-shadow:0 0 100px 0 rgba(150,165,190,.24);
 }
 
 /** apply to IE browser only to fix problem: textarea cursor not vertical allign**/
 .pp-composer-container-textarea-min-height {
     /* min-height: 34px !important; */
-}
-
-.pp-composer-container-powered-by-container {
-    padding: 2px;
 }
 
 .pp-container .pp-conversation-part-pulltorefreshbutton {
@@ -649,37 +837,62 @@
     display: none !important;
 }
 
-.pp-container .pp-powered-by {
-    width: 100%;
-    color: #b0bec5;
-    text-align: center;
-    clear: both;
-    font-weight: 500;
-    line-height: 22px;
-    padding: 7px;
-    font-size: 13px;
-}
-
-.pp-powered-by a {
-    text-align:center;
-    cursor:pointer;
-    color:inherit;
-    text-decoration:none;
-}
-
-.pp-powered-by u {
-    text-decoration: underline !important;
-}
-
-.pp-container .pp-powered-by-span {
-    color: #b6c2c9;
-    float: none;
-    font-size: 13px;
-    margin-left: 0px;
-}
-
 .pp-conversation-part {
     margin-bottom: 16px;
+    opacity:1;
+    -webkit-transform:translateX(0);
+    transform:translateX(0);
+    -webkit-animation-name:pp-messenger-view-slide-left-in;
+    animation-name:pp-messenger-view-slide-left-in;
+    -webkit-animation-duration:.32s;
+    animation-duration:.32s;
+    -webkit-animation-timing-function:cubic-bezier(.23,1,.32,1);
+    animation-timing-function:cubic-bezier(.23,1,.32,1);
+    -webkit-animation-delay:.23s;
+    animation-delay:.23s;
+    -webkit-animation-fill-mode:backwards;
+    animation-fill-mode:backwards
+}
+
+@keyframes pp-messenger-view-slide-left-in {
+    0%{
+        opacity:0;
+        -webkit-transform:translateX(8px);
+        transform:translateX(8px)
+    }
+    to{
+        opacity:1;
+        -webkit-transform:translateX(0);
+        transform:translateX(0)
+    }
+}
+
+@-webkit-keyframes pp-messenger-view-slide-right-in {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateX(-8px);
+        transform: translateX(-8px)
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+    }
+}
+
+@keyframes pp-messenger-view-slide-right-in {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateX(-8px);
+        transform: translateX(-8px)
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+    }
 }
 
 .pp-conversation-part-welcome-outer-1 {
@@ -715,14 +928,15 @@
 }
 
 .pp-conversation-content {
+    background-color: #FAFAFA;
     bottom: 1px;
     overflow-y: auto;
     position: absolute;
-    top: 48px;
-    bottom: 79px;
+    top: 75px;
+    bottom: 56px;
     right: 0;
     width: 100%;
-    padding: 8px;
+    padding: 30px 35px 40px;
     box-sizing: border-box;
 
     transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1);
@@ -741,25 +955,13 @@
     position:relative;
     width:100%;
 }
-.pp-conversation-part-text-by-admin-avatar {
-    margin-right:5px;
-    border-radius:50%;
-    width:28px;
-    height:28px;
-    float:left;
-    position:relative;
-    overflow:hidden;
-}
-.pp-conversation-part-text-by-admin-outer-3 {
-    position:relative;
-}
 .pp-conversation-part-text-by-admin-body-container {
     border-color: #dadee2;
     border-radius:4px;
     border-width:1px;
     border-style:solid;
     position:relative;
-    max-width:80%;
+    max-width:90%;
     display: inline-block;
     background-color:white;
     color:#455A64;
@@ -768,14 +970,20 @@
     -ms-user-select: text;
     top: 3px;
 }
-.pp-container .pp-conversation-part-serve-name {
-    font-size:12px; color:#455A64; text-align:left;
-}
+
 .pp-container .pp-conversation-part-text-by-admin-body {
     font-size:14px; font-weight:400; line-height:20px; padding:12px 17px; text-align:left; word-break:break-all; white-space: pre-wrap;
+    color: #606273;
+    background-color: #eff3f6;
 }
-.pp-conversation-part-text-by-admin-triangle {
-    width:0; height: 0; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 4px solid #dadee2; position:relative; float:left; margin-top:10px; margin-right:-1px; top: 3px;
+.pp-conversation-part-msg-by-admin-body-triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 7.5px;
+    border-style: solid;
+    border-width: 0 0 13px 5px;
+    border-color: transparent transparent #fff;
 }
 .pp-container .pp-conversation-part-text-by-admin-timestamp-container {
     font-size:12px; line-height:20px; color:#c9cbcf; position:relative; top:0; display:inline-block;
@@ -785,23 +993,10 @@
  * PPConversationPartEmojiByAdmin
  */
 .pp-conversation-part-emoji-by-admin-outer {
-    text-align:right;
     margin-bottom:16px;
     width: 100%;
     position: relative;
     overflow: hidden;
-}
-.pp-conversation-part-emoji-by-admin-avatar {
-    margin-right:7px;
-    border-radius:50%;
-    width:28px;
-    height:28px;
-    float:left;
-    position:relative;
-}
-.pp-conversation-part-emoji-by-admin-body-container {
-    float: left;
-    position: relative;
 }
 .pp-container .pp-conversation-part-emoji-by-admin-body {
     font-size:96px;
@@ -847,16 +1042,10 @@
  * PPConversationPartImageByAdmin
  */
 .pp-conversation-part-image-by-admin-o {
-    text-align:right; margin-bottom:16px; clear: both;
+    margin-bottom:16px; clear: both;
 }
 .pp-conversation-part-image-by-admin-o1 {
     position:relative; width:100%;
-}
-.pp-conversation-part-image-by-admin-avatar {
-    margin-right:7px; border-radius:50%; width:28px; height:28px; float:left; position:relative; overflow:hidden;
-}
-.pp-conversation-part-image-by-admin-o2 {
-    overflow:hidden; position:relative;
 }
 .pp-conversation-part-image-by-admin-o3 {
     overflow:hidden;
@@ -875,22 +1064,16 @@
  * pp-conversation-part-file-by-admin
  */
 .pp-conversation-part-file-by-admin-outer {
-    text-align:right; margin-bottom:16px; clear: both;
+    margin-bottom:16px; clear: both;
 }
 .pp-conversation-part-file-by-admin-outer-2 {
     position:relative; width:100%;
 }
-.pp-conversation-part-file-by-admin-avatar {
-    margin-right:7px; border-radius:50%; width:28px; height:28px; float:left; position:relative; overflow:hidden;
-}
-.pp-conversation-part-file-by-admin-outer-3 {
-    overflow:hidden; position:relative;
-}
 .pp-conversation-part-file-by-admin-outer-4 {
-    max-width:80%; float:left; position:relative; margin-top:3px;
+    float:left; position:relative; margin-top:3px;
 }
 .pp-conversation-part-file-by-admin-outer-5 {
-    display:block; background-color:#0071b2; border-radius:4px; border-width:1px; border-style:solid; padding:5px; overflow:hidden;
+    display:block; background-color: #dadfe3; border-radius:6px; padding:5px; overflow:hidden; border: 1px solid #dadfe3;
 }
 .pp-conversation-part-file-by-admin-upload-icon {
     position:relative;
@@ -909,13 +1092,13 @@
     overflow: hidden;
 }
 .pp-container .pp-conversation-part-file-by-admin-file-link {
-    font-size:14px;
+    color: #8f919d;
+    font-size: 13px;
     font-weight:400;
     line-height:20px;
     position:relative;
     float:left;
-    color:white;
-    text-decoration:underline;
+    text-decoration:none;
     cursor:pointer;
     overflow: hidden;
     word-break: break-all;
@@ -933,15 +1116,13 @@
     width: 100%;
     position: relative;
     overflow: hidden;
-    /* padding-bottom: 16px; */
 }
 .pp-conversation-part-file-by-user-o2 {
     float: right;
     padding: 5px;
-    background-color:#0071b2;
-    border-radius:4px;
-    border-width:1px;
-    border-style:solid;
+    background-color:#dadfe3;
+    border-radius:6px;
+    border: 1px solid #dadfe3;
     margin-bottom: 5px;
     max-width: 80%;
 }
@@ -957,19 +1138,17 @@
 }
 
 .pp-conversation-part-file-by-user-link-container {
-    /* float:left; */
-    /* max-width: 80%; */
     max-height: 20px;
     overflow: hidden;
     margin: 5px 5px 0 32px;
 }
 
 .pp-container .pp-conversation-part-file-by-user a {
-    color:white;
-    font-size:14px;
+    color: #8f919d;
+    font-size: 13px;
     font-weight:400;
     line-height:20px;
-    text-decoration:underline;
+    text-decoration:none;
     word-break: break-all;
     margin: 5px 5px 0 10px;
 }
@@ -987,10 +1166,10 @@
     margin: 0 auto 10px;
 }
 .pp-container .pp-conversation-part-timestamp-time {
-    background-color: #cecece;
-    padding: 4px;
     border-radius: 4px;
-    font-size: 14px;
+    color: #a8b6c2;
+    font-size: 13px;
+    padding: 4px;
 }
 
 /*
@@ -1116,7 +1295,6 @@
     position: absolute;
     bottom: 0px;
     right: 0px;
-    padding: 5px;
 }
 
 .pp-composer-send-button {

@@ -78,7 +78,8 @@
         AUDIO: 'AUDIO',
         
         WELCOME: 'WELCOME',
-        TIMESTAMP: 'TIMESTAMP'
+        TIMESTAMP: 'TIMESTAMP',
+        SMS_EMAIL: 'SMS_EMAIL'
     };
 
     // TO_TYPE
@@ -158,7 +159,8 @@
                 audio: {},
                 timestamp: {
                     time: Date.now()
-                }
+                },
+                smsEmail: {}
             },
             user: {
                 id: null,
@@ -166,7 +168,8 @@
                 name: '',
                 avatar: Service.Constants.ICON_DEFAULT_USER
             },
-            conversation: undefined
+            conversation: undefined,
+            quick: false
         };
 
         //----------------------
@@ -215,6 +218,11 @@
 
         this.conversation = function( conversation ) {
             ppMessage.conversation = conversation;
+            return this;
+        };
+
+        this.quick = function( _quick ) {
+            ppMessage.quick = _quick;
             return this;
         };
 
@@ -341,6 +349,19 @@
 
         this.timestampBody = function(timestampBody) {
             ppMessage.message.timestamp = timestampBody;
+            return this;
+        };
+
+        //----------------------
+        //SMS_EMAIL
+        //----------------------
+        
+        // {
+        //     selected_type: undefined / EMAIL / SMS,
+        //     contact: undefined / 123 456 78900 / 123@gmail.com,
+        // }   
+        this.smsEmailBody = function( config ) {
+            ppMessage.message.smsEmail = config;
             return this;
         };
 

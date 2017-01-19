@@ -2,6 +2,17 @@
  * 根据 ppSettings.view 来配置和管理 View
  *
  * Example:
+ *
+ * { 
+ *     app_uuid: xxx,
+ *     view: {
+ *         launch_style: {
+ *             mode: 'custom',
+ *             position: 'left'/'right',
+ *             bottom: 95
+ *         }
+ *     }
+ * }
  * 
  * var viewSettings = new View.PPSettings().init(ppSettings);
  * viewSettings.getLauncherBottomMargin();
@@ -12,17 +23,38 @@
 ((function(View) {
 
     function PPSettings() {
-        this._ppSettings = null;
+        this._ppSettings = {
+            view: {
+                launch_style: {
+                    mode: 'normal',
+                    position: undefined,
+                    bottom: 95
+                }
+            }
+        };
+        this._launchMode = PPSettings.LAUNCH_MODE.NORMAL; // default launcher mode
     }
 
     PPSettings.DEFAULT_BOTTOM_MARGIN = "20px";
     PPSettings.DEFAULT_RIGHT_MARGIN = "20px";
+    PPSettings.LAUNCH_MODE = {
+        NORMAL: 'normal',
+        CUSTOM: 'custom'
+    };
+    PPSettings.LAUNCH_POSITION = {
+        LEFT: 'left',
+        RIGHT: 'right'
+    };
+    
+    var proto = PPSettings.prototype;
 
     /**
      * Do not forget to init ppSettings
      */
     PPSettings.prototype.init = function(ppSettings) {
-        this._ppSettings = ppSettings;
+        if ( ppSettings ) {
+            $.extend( this._ppSettings, ppSettings );            
+        }
         return this;
     };
 
@@ -53,11 +85,24 @@
     PPSettings.prototype._getValueFromPPSettingsView = function(key, defaultValue) {
         var value = defaultValue;
         if (this._ppSettings && this._ppSettings.view && key in this._ppSettings.view) {
-            value = this._ppSettings.view[key];
+            value = this._ppSettings.view[ key.toLowerCase() ];
         }
         return value;
     };
 
+    proto.getLaunchStyle = function() {
+        return this._getValueFromPPSettingsView( 'launch_style', {
+            mode: 'normal',
+            position: undefined,
+            bottom: 95
+        } );
+    };
+
+    proto.getSettings = function() {
+        return this._ppSettings;
+    };
+
     View.PPSettings = PPSettings;
+    View.Settings = View.PPSettings;
     
 })(View));

@@ -1,0 +1,35 @@
+.pp-conversation-part-msg-by-admin-avatar {
+    margin-right:5px;
+    border-radius:50%;
+    bottom: 10px;
+    width:28px;
+    height:28px;
+    float:left;
+    position:absolute;
+    overflow:hidden;
+}
+
+.pp-conversation-part-msg-by-admin-body-container {
+    overflow: hidden;
+    position: relative;
+    margin-left: 45px;
+}
+
+.pp-conversation-part-msg-by-admin-avatar-container {
+    margin-right: 5px;
+    bottom: 10px;
+    width: 35px;
+    height: 35px;
+    float: left;
+    position: absolute;
+    overflow: hidden;
+}
+
+.pp-conversation-part-msg-by-admin-avatar-container img {
+    border-radius: 50%;
+    border: 2px solid #fff;
+    display: inline-block;
+    position: absolute;
+    width: 18px;
+    height: 18px;   
+}

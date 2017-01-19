@@ -12,20 +12,9 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-    <link rel="shortcut icon" href="http://192.168.0.206:8080/ppcom/assets/img/favicon.ico" />
-    <link rel="bookmark" href="http://192.168.0.206:8080/ppcom/assets/img/favicon.ico" />
 
-    <!-- http://192.168.0.212:8081/client/#anonymous -->
-    <!-- <script src='http://192.168.0.212:8081/target/target-script-min.js#anonymous'></script> -->
-
-    <!-- <link rel="stylesheet" href="http://192.168.0.204:8001/assets/js/qunit-1.20.0.css"> -->
-    <!-- <script src='http://192.168.0.204:8001/assets/js/qunit-1.20.0.js' ></script> -->
-    <script src='http://192.168.0.204:8080/ppcom/assets/pp-library.min.js'></script>
-    <script src="http://192.168.0.204:8001/assets/ppdebug.js"></script>
-    <!-- <script src="http://192.168.0.212:8001/assets/test-function.js"></script> -->
-    <!-- <script src="http://192.168.0.212:8001/assets/historytimestamp.js"></script> -->
-    <!-- <script src='http://192.168.0.204:8001/assets/js/view/test-element.js'></script> -->
-    <!-- <script src='http://192.168.0.204:8001/assets/js/service/test-constants.js'></script> -->
+    <script src='http://192.168.0.218:8945/ppcom/assets/pp-library.min.js'></script>
+    <script src="http://192.168.0.218:8001/assets/ppdebug.js"></script>
 
     <style type="text/css" >
       * { font-size: 18px; } 
@@ -44,15 +33,12 @@
 
     <script>
 
+	  window._ppmatc = [];
       window.ppSettings = {
   <!-- user_email: "somebody.web@yvertical.com", -->
 
   <!-- user_name: "haha", -->
   <!-- user_icon: "http://image14-c.poco.cn/mypoco/myphoto/20130403/23/66466712201304032308109278389151053_000_640.jpg?1024x1024_120", //"http://img.name2012.com/uploads/allimg/2015-06/30-023131_451.jpg", -->
-      
-      <!-- app_secret: "85c8f661-91b2-11e5-91b4-58b035f16bf4", -->
-      <!-- app_key: "7a7e3542-91b2-11e5-8db8-58b035f16bf4", -->
-      app_uuid: 'c56adc0a-1b54-11e6-bc9f-acbc327f19e9',
       
           <!-- language: 'en', //"zh-CN", -->
       view: {
@@ -70,6 +56,7 @@ if (window.PP) {
         window.View = fn.View;
         window.Service = fn.Service;
         window.Controller = fn.Controller;
+        window.Ctrl = window.Controller;
         window.Modal = fn.Modal;
       window.$ = fn.$;
 
@@ -129,9 +116,6 @@ if (window.PP) {
   
     </script>
 
-    <!-- <script src="http://www.sobot.com/chat/pc/pc.min.js?sysNum=c79a1d38c86e49c1a50764430385dc82" id="zhichiload" ></script> -->
-    <!-- <script src="http://www.sobot.com/chat/h5/h5.min.js?sysNum=c79a1d38c86e49c1a50764430385dc82" id="zhichiload" ></script> -->
-    
   </body>
   
 </html>

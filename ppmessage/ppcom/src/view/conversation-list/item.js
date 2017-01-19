@@ -1,8 +1,12 @@
 View.$groupContentItem = (function() {
 
+    var userIcon = Configuration.assets_path + 'img/icon-user-conversation.png',
+        userIconStyle = 'background-image:url(' + userIcon + ')',
+        itemClassPrefix = 'pp-group-item';
+
     function Item(data) {
         View.PPDiv.call(this, {
-            'class': 'pp-group-item',
+            'class': itemClassPrefix,
             group_uuid: data.uuid
         });
 
@@ -11,62 +15,61 @@ View.$groupContentItem = (function() {
             groupID = data.uuid,
             icon = data.icon,
             summary = data.summary,
+            CLS_PREFIX = 'pp-group-item',
 
-            buildAvatar = function() {
-                return new View.Img( {
-                    src: icon
-                } );
+            buildAvatar = function( users ) {
+                users = users || [];
+
+                if ( users.length <= 1 ) {
+                    return new View.Img( { src: icon, className: 'pp-group-item-first-of-one-avatar' } );
+                } else if ( users.length === 2 ) { 
+                    var $container = new View.Div( 'pp-group-item-avatar-container' ),
+                        len = users.length,
+                        SEQUENCE = [ 'first', 'second' ];
+
+                    for ( var i=0; i<len; i++ ) {
+                        $container.add( new View.Img( { src: users[ i ].user_avatar, 
+                                                        className: 'pp-group-item-' + SEQUENCE[i] + '-of-two-avatar' } ) );
+                    }
+                    
+                    return $container;    
+                } else if ( users.length >= 3 ) {
+                    var $container = new View.Div( 'pp-group-item-avatar-container' ),
+                        MAX_LEN = 3,
+                        SEQUENCE = [ 'first', 'second', 'third' ];
+
+                    for ( var i=0; i<MAX_LEN; i++ ) {
+                        $container.add( new View.Img( { src: users[ i ].user_avatar, 
+                                                        className: 'pp-group-item-' + SEQUENCE[i] + '-of-three-avatar' } ) );
+                    }
+                    
+                    return $container;    
+                }
             },
             
             buildBody = function() {
-                return new View.PPDiv({
-                    'class': 'body-container'
-                })
-                    .add(new View.PPDiv({
-                        'class': 'pp-body'
-                    })
-                         .add(new View.PPDiv({
-                             'class': 'pp-header'
-                         })
-                              .add(new View.PPDiv({
-                                  'class': 'pp-timestamp'
-                              })
-                                   .add(new View.Span({
-                                       'class': 'pp-unread'
-                                   }).text(timeStamp)))
-                              .add(new View.PPDiv({
-                                  'class': 'title-container'
-                              })
-                                   .add(new View.PPDiv({
-                                       'class': 'pp-title'
-                                   }).text(groupName))))
-                         .add(new View.PPDiv({
-                             'class': clsSummary
-                         })
-                              .add(new View.PPDiv({
-                                  'class': 'readstate'
-                              }))
-                              .add(new View.Div( { className: 'pp-content' } )
-                                   .text(summary))));
+                return new View.PPDiv({ className: 'pp-group-item-body' })
+                    .add(new View.PPDiv({ className: 'pp-group-item-meta' })
+                         .add(new View.PPDiv({ className: 'pp-group-item-body-author' }).text( groupName ))
+                         .add(new View.PPDiv({ className: 'pp-group-item-body-timestamp' }).text( timeStamp ))
+                         .add(new View.PPDiv({ className: 'pp-group-item-body-unread-dot' })))
+                    .add(new View.PPDiv({ className: 'pp-group-item-content' })
+                         .add(new View.PPDiv({ className: 'pp-group-item-content-container' })
+                              .add(new View.PPDiv({ className: 'pp-group-item-content-text' }).text( summary )))
+                         .add(new View.Div({ className: 'pp-group-item-body-user-icon', style: userIconStyle })));
             },
 
             buildEvent = function() {
-                var $e = findItem(groupID),
-                    hoverClass = 'pp-group-item-hover';
+                var $e = findItem(groupID);
                 
-                $e.bind('mouseover', function() {
-                    $e.addClass(hoverClass);
-                }).bind('mouseleave', function() {
-                    $e.removeClass(hoverClass);
-                }).click('click', function() {
+                $e.click('click', function() {
                     Ctrl.$conversationList.showItem( groupID );
                 });
                 
             };
 
         // Build HTML
-        this.add(buildAvatar())
-            .add(buildBody());
+        this.add(buildAvatar( Service.$conversation.getUser( data.uuid ) ) ).add(buildBody());
 
         // Build Event
         $timeout(buildEvent);
@@ -74,8 +77,9 @@ View.$groupContentItem = (function() {
     }
     extend(Item, View.PPDiv);
     
-    var clsSummary = 'pp-summary',
-        clsSummarySelector = '.' + clsSummary + ' .pp-content',
+    var clsSummary = 'pp-group-item-content-text',
+        clsSummarySelector = '.' + clsSummary,
+        classPrefix = 'pp-group-item-body',
 
         findItem = function(groupUUID) {
             return $('.pp-group-content-container')
@@ -83,13 +87,25 @@ View.$groupContentItem = (function() {
         },
 
         // @param groupUUID
-        // @param unread > 0 --> show red circle
+        // @param unread > 0 --> show blue circle
         showUnread = function(groupUUID, unread) {
-            unread > 0 && findItem(groupUUID).find('.readstate').text( unread > 99 ? 99 : unread ).show();
+            if ( unread > 0 ) {
+                var $item = findItem(groupUUID);
+                $item.find('.' + classPrefix + '-unread-dot').show();
+                $item.find('.' + classPrefix + '-timestamp').css( {
+                    color: View.Style.Color.main_color,
+                    'font-weight': 'bold'
+                } );
+            }
         },
 
         hideUnread = function(groupUUID) {
-            findItem(groupUUID).find('.readstate').hide();
+            var $item = findItem(groupUUID);
+            $item.find( '.' + classPrefix + '-unread-dot').hide();
+            $item.find('.' + classPrefix + '-timestamp').css( {
+                color: '',
+                'font-weight': ''
+            } );
         },
 
         findGroupItemImg = function ( groupUUID ) {
@@ -125,11 +141,22 @@ View.$groupContentItem = (function() {
         groupIcon: groupIcon,
 
         // act as setter
-        description: description
+        description: description,
+        timestamp: timestamp,
+
+        animateHide: animateHide
     }
 
     function description( token, desc ) {
         findItem( token ).find( clsSummarySelector ).text( desc );
+    }
+
+    function timestamp( token, timeago ) {
+        findItem( token ).find( '.' + classPrefix + '-timestamp' ).text( timeago );
+    }
+
+    function animateHide() {
+        $( '.' + itemClassPrefix ).addClass( itemClassPrefix + '-leave' );
     }
     
 })();

@@ -21,7 +21,8 @@ head.appendChild(ppcom);
     var $,
         Service,
         Ctrl,
-        Modal;
+        Modal,
+        APP_UUID = '642b6758-dd27-11e6-afb1-74de2b58a3a8';
 
     ////////// PPDebug ////////////
     window.PPDebug = ( function() {
@@ -65,6 +66,8 @@ head.appendChild(ppcom);
             $elDebugContainer.append( _buildInputViewHtml( 'send-msg', '当前会话发送消息' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'monitor', '监视所有事件' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'user-info-change', '加载所有用户信息至下拉菜单' ) );
+            $elDebugContainer.append( _buildCheckoutViewHtml( 'enable-quick-mode', 'Enable Quick Message Mode' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'not-current-conversation-text-msg-arrived', 'Not当前会话文字消息到来' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'audio-msg-arrived', '当前会话语音消息到来' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'text-msg-arrived', '当前会话文字消息到来' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'file-msg-arrived', '当前会话文件消息到来' ) );
@@ -77,6 +80,14 @@ head.appendChild(ppcom);
             $elDebugContainer.append( _buildInputViewHtml( 'simulate-one-conversation-avaliable', '模拟一个Conversation Avaliable' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'check-current-messagepanel-mode', '查看当前MessagePanel所在的Mode' ) );
             $elDebugContainer.append( _buildInputViewHtml( 'snapshot', '快照' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-to-ppmatc', 'Push PPSettings' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-ent-user-to-ppmatc', 'Push Ent User Event to PPMatc' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-track-event-to-ppmatc', 'Push Track Event to PPMatc' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-launch-style-left-to-ppmatc', 'Push Launch Style Left to PPMatc' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-launch-style-right-to-ppmatc', 'Push Launch Style Right to PPMatc' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'push-pp-settings-launch-style-normal-to-ppmatc', 'Push Launch Style Normal to PPMatc' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'append-email-input-msg', 'Append email Input msg' ) );
+            $elDebugContainer.append( _buildInputViewHtml( 'append-email-input-msg-with-selected', 'Append email Input msg with email' ) );
             
             $elDebugContainer.append( '<br/><select class="drop-down"><option>None</option></select><br/>' );
             $elDebugContainer.append( _buildInputViewHtml( 'clear', '清空' ) );
@@ -94,6 +105,7 @@ head.appendChild(ppcom);
             _bindViewClickEvent( 'monitor', test.monitor );
             _bindViewClickEvent( 'user-info-change', test.userListInDropDown );
             _bindViewClickEvent( 'clear', test.clear );
+            _bindViewClickEvent( 'not-current-conversation-text-msg-arrived', test.onNotCurrentConversationTextMessage );
             _bindViewClickEvent( 'audio-msg-arrived', test.onAudioMessage );
             _bindViewClickEvent( 'text-msg-arrived', test.onTextMessage );
             _bindViewClickEvent( 'file-msg-arrived', test.onFileMessage );
@@ -106,7 +118,17 @@ head.appendChild(ppcom);
             _bindViewClickEvent( 'simulate-one-conversation-avaliable', test.simulateOneConversationAvaliable );
             _bindViewClickEvent( 'check-current-messagepanel-mode', test.checkCurrentMessagePanelMode );
             _bindViewClickEvent( 'snapshot', test.snapshot );
+            _bindViewClickEvent( 'push-pp-settings-to-ppmatc', test.pushPPSettingsToPPMatc );
+            _bindViewClickEvent( 'push-ent-user-to-ppmatc', test.pushEntUserToPPMatc );
+            _bindViewClickEvent( 'push-track-event-to-ppmatc', test.pushTrackEventToPPMatc );
+            _bindViewClickEvent( 'push-pp-settings-launch-style-left-to-ppmatc', test.pushLaunchStyleLeftToPPMatc );
+            _bindViewClickEvent( 'push-pp-settings-launch-style-right-to-ppmatc', test.pushLaunchStyleRightToPPMatc );
+            _bindViewClickEvent( 'push-pp-settings-launch-style-normal-to-ppmatc', test.pushLaunchStyleNormalToPPMatc );
+            _bindViewClickEvent( 'append-email-input-msg', test.appendEmailInputMsg );
+            _bindViewClickEvent( 'append-email-input-msg-with-selected', test.appendEmailInputMsgWithSelected );
             
+            // Initial code
+            test.pushPPSettingsToPPMatc();
         }
 
         function _cssDebugContainer() {
@@ -135,6 +157,10 @@ head.appendChild(ppcom);
             return '<input type="button" value="' + val + '" class="' + cls + '" /><br/>'
         }
 
+        function _buildCheckoutViewHtml( cls, label ) {
+            return '<label><input checked class="' + cls + '" type="checkbox">' + label + '</label><br/>';
+        }
+
         function _bindViewClickEvent( cls, func ) {
             $( debugContainerId + ' .' + cls ).on( 'click', func );
         }
@@ -150,6 +176,7 @@ head.appendChild(ppcom);
         return {
             onMessage: onMessage,
             onChattingMessage: onChattingMessage,
+            onNotCurrentConversationTextMessage: onNotCurrentConversationTextMessage,
             onAudioMessage: onAudioMessage,
             onTextMessage: onTextMessage,
             onFileMessage: onFileMessage,
@@ -171,6 +198,17 @@ head.appendChild(ppcom);
             simulateOneConversationAvaliable: simulateOneConversationAvaliable,
             checkCurrentMessagePanelMode: checkCurrentMessagePanelMode,
             snapshot: snapshot,
+
+            pushPPSettingsToPPMatc: pushPPSettingsToPPMatc,
+            pushEntUserToPPMatc: pushEntUserToPPMatc,
+            pushTrackEventToPPMatc: pushTrackEventToPPMatc,
+
+            pushLaunchStyleLeftToPPMatc: pushLaunchStyleLeftToPPMatc,
+            pushLaunchStyleRightToPPMatc: pushLaunchStyleRightToPPMatc,
+            pushLaunchStyleNormalToPPMatc: pushLaunchStyleNormalToPPMatc,
+
+            appendEmailInputMsg: appendEmailInputMsg,
+            appendEmailInputMsgWithSelected: appendEmailInputMsgWithSelected,
 
             clear: clear
         }
@@ -381,6 +419,114 @@ head.appendChild(ppcom);
             info += 'current mode: ' + Ctrl.$conversationPanel.mode() + '\n';
             append( info );
         }
+
+        function pushPPSettingsToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                pp_settings: {
+                    app_uuid: APP_UUID,
+                    language: 'zh-CN',
+                    view: {
+                        launch_style: {
+                            mode: 'normal'
+                        }
+                    }
+                }
+            });
+        }
+
+        function pushEntUserToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                ent_user: {
+                    ent_user_name: 'Guijinding',
+                    ent_user_id: '1234',
+                    ent_user_createtime: 1483505560586
+                }
+            });
+        }
+
+        function pushTrackEventToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                track_event: {
+                    track_event_name: 'create_project',
+                    track_event_data: {
+                        project_name: 'HelloProject'
+                    }
+                }
+            });
+        }
+
+        function pushLaunchStyleLeftToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                pp_settings: {
+                    app_uuid: APP_UUID,
+                    view: {
+                        launch_style: {
+                            mode: 'custom',
+                            position: 'left',
+                            bottom: 135
+                        }
+                    }
+                }
+            });
+        }
+
+        function pushLaunchStyleRightToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                pp_settings: {
+                    app_uuid: APP_UUID,
+                    view: {
+                        launch_style: {
+                            mode: 'custom',
+                            position: 'right',
+                            bottom: 210
+                        }
+                    }
+                }
+            });
+        }
+
+        function pushLaunchStyleNormalToPPMatc() {
+            window._ppmatc = window._ppmatc || [];
+            window._ppmatc.push({
+                pp_settings: {
+                    app_uuid: APP_UUID,
+                    view: {
+                        launch_style: {
+                            mode: 'normal'
+                        }
+                    }
+                }
+            });
+        }
+
+        function appendEmailInputMsg() {
+            var ci = Service.$conversationManager.activeConversation().uuid,
+            message = new Service.PPMessage.Builder( Service.PPMessage.TYPE.SMS_EMAIL )
+                .conversationId( ci )
+                .userIcon( random( imgs() ) )
+                .build();
+            
+            Service.$pubsub.publish('msgArrived/chat', message);
+        }
+
+        function appendEmailInputMsgWithSelected() {
+            var ci = Service.$conversationManager.activeConversation().uuid,
+            message = new Service.PPMessage.Builder( Service.PPMessage.TYPE.SMS_EMAIL )
+                .conversationId( ci )
+                .userIcon( random( imgs() ) )
+                .smsEmailBody( {
+                    selected_type: 'EMAIL',
+                    contact: 'a@gmail.com'
+                } )
+                .build();
+            
+            Service.$pubsub.publish('msgArrived/chat', message);
+        }
         
         function onChattingMessage() {
             onMessage( { chatting: true } );
@@ -397,6 +543,10 @@ head.appendChild(ppcom);
         
         function onMessage( config ) {
             _onMessage( getRandomMessage(), config );
+        }
+
+        function onNotCurrentConversationTextMessage() {
+            _onMessage( getTextMessage(), { chatting: true, ci: Service.$tools.getUUID() } );
         }
 
         function onAudioMessage() {
@@ -427,12 +577,13 @@ head.appendChild(ppcom);
                         pid: Service.$tools.getUUID(),
                         id: Service.$tools.getUUID(),
                         ts: Date.now() / 1000,
-                        ci: getConversationId(),
+                        ci: config.ci ? config.ci: getConversationId(),
                         fi: getFi(),
                         tt: 'S2P',
                         ft: 'DU',
                         ms: message.ms,
-                        bo: message.bo
+                        bo: message.bo,
+                        is_quick_message: $( '.enable-quick-mode' ).is( ':checked' )
                     }
                 }
             } );
@@ -596,43 +747,11 @@ head.appendChild(ppcom);
 
         function imgs() {
             return [
-                'http://e.hiphotos.baidu.com/image/h%3D300/sign=f33b35d67a1ed21b66c928e59d6fddae/b21bb051f819861842d54ba04ded2e738bd4e600.jpg',
-                'http://img2.imgtn.bdimg.com/it/u=3947386643,2401800583&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=3084720760,288869075&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=52754568,3369504778&fm=23&gp=0.jpg',
-                'http://img0.imgtn.bdimg.com/it/u=2845747024,3167693364&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=2584355946,4148531126&fm=23&gp=0.jpg',
-                'http://img2.imgtn.bdimg.com/it/u=2160420705,2533030665&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=421165063,3498236940&fm=23&gp=0.jpg',
-                'http://img5.imgtn.bdimg.com/it/u=209761400,1951974759&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=2293915270,526489152&fm=11&gp=0.jpg',
-                'http://img0.imgtn.bdimg.com/it/u=2531583001,1422407153&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=2093058865,1325752770&fm=23&gp=0.jpg',
-                'http://img5.imgtn.bdimg.com/it/u=632680172,595028883&fm=23&gp=0.jpg',
-                'http://img2.imgtn.bdimg.com/it/u=1724304029,2011548657&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=642819720,2965626235&fm=11&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=266880594,205135855&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=693354233,2652180815&fm=11&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=2684396043,3390854681&fm=23&gp=0.jpg',
-                'http://img0.imgtn.bdimg.com/it/u=3676558158,1680314104&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=2969725826,2642695997&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=690802292,3622175025&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=49812969,110034636&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=1718720747,2799425769&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=3402125124,3537687320&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=259588212,3088751835&fm=23&gp=0.jpg',
-                'http://img0.imgtn.bdimg.com/it/u=1251795695,445939417&fm=23&gp=0.jpg',
-                'http://img2.imgtn.bdimg.com/it/u=1745088913,794630035&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=1250904486,3831896269&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=4131486482,3650592575&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=1668320013,469116154&fm=23&gp=0.jpg',
-                'http://img0.imgtn.bdimg.com/it/u=1444843527,1432845993&fm=23&gp=0.jpg',
-                'http://img2.imgtn.bdimg.com/it/u=985788794,2632812390&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=3042226720,3865293507&fm=23&gp=0.jpg',
-                'http://img4.imgtn.bdimg.com/it/u=2926920398,3757699980&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=2828341053,849876388&fm=23&gp=0.jpg',
-                'http://img3.imgtn.bdimg.com/it/u=2693076931,3434605236&fm=23&gp=0.jpg',
-                'http://img1.imgtn.bdimg.com/it/u=3977873970,616557059&fm=23&gp=0.jpg'
+                'http://imglf0.nosdn.127.net/img/SENKQXkvaU1MYkgyMG5UWEVuRmExWWUrQ2ViaFBuUU9OTXFmR2Zsdk1EZDJmK1pBSkUzaktRPT0.jpg?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg',
+                'http://imglf0.nosdn.127.net/img/VjgyYVlpdUNvODNHblNyL2RRVFJlZzdGcDBrbXE3cmpPVFpLb3pvQlFnMFdNWnJwaG1NdTl3PT0.2?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg',
+                'http://imglf1.nosdn.127.net/img/ZGc5YVQwZGxjLzlOaDlVNlNMSFVSc1JXQjJMN3JBLzVZVHh0K1NRVy9OaS8xcnBYc29CbGNnPT0.jpg?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg',
+                'http://imglf.nosdn.127.net/img/aFdKY3Iydi82VUFLZXVmaDNvTkRFMjgxZStZZlMrUEcyeUQ5THlIWUI3YkxIMFpqNXpzcnRRPT0.jpg?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg%7Cwatermark&type=2&text=wqkgam95bW9jaGEgLyBqb3ltb2NoYS5sb2Z0ZXIuY29t&font=bXN5aA==&gravity=southwest&dissolve=30&fontsize=240&dx=8&dy=10&stripmeta=0',
+                'http://imglf0.nosdn.127.net/img/VjgyYVlpdUNvODJ4RTlPb0pBVzgvWjQvS0FDRGVjbmRmUm1tQTFIbFg0TE4rWW4wVitYSGV3PT0.2?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg'
             ];
         }
         

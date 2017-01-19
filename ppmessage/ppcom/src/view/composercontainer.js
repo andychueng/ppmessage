@@ -19,10 +19,7 @@ View.$composerContainer = (function() {
             .add(self.getComposerEmojiContainerHtml(ctrl))
             .add(new View.PPDiv({id: 'pp-composer'})
                  .add(self.getComposerSendButtonContainer(ctrl))
-                 .add(self.getComposerFormContainerHtml(ctrl)))
-            .add(View.$poweredBy.build());
-        
-        $timeout( View.$poweredBy.bindEvent );
+                 .add(self.getComposerFormContainerHtml(ctrl)));
         
         this.calcInputTextAreaRows();
     }
@@ -144,7 +141,41 @@ View.$composerContainer = (function() {
      * composer tools container html code
      */
     PPComposerContainer.prototype.getComposerToolsContainerHtml = function(ctrl) {
-        var container = new View.PPDiv('pp-composer-container-tools-container');
+        var container = new View.PPDiv('pp-composer-container-tools-container'),
+            fileAndSendButtonContainer = new View.Div( 'pp-composer-container-file-sendbutton-selector-container' ),
+            fileSelectorIconCssUrl = 'background-image: url(' + Configuration.assets_path + 'img/icon-upload.png)',
+            sendButtonBgImg = Configuration.assets_path + 'img/icon-send-button.png',
+            sendButtonMobileBgImg = Configuration.assets_path + 'img/icon-mobile-send-button.png',
+            bg = Service.$device.isMobileBrowser() ? sendButtonMobileBgImg : sendButtonBgImg;
+            sendButtonBgStyle = 'background-image: url(' + bg + ')';
+
+        fileAndSendButtonContainer.add(new View.PPElement('strong', {
+            id: 'pp-composer-container-file-selector',
+            'class': 'pp-composer-container-action-btn pp-box-sizing',
+            style: fileSelectorIconCssUrl,
+            event: {
+                click: function() {
+                    ctrl.onFileSelectorBtnClicked();
+                },
+                mouseover: function() {
+                    ctrl.onFileSelectorBtnMouseOver();
+                },
+                mouseleave: function() {
+                    ctrl.onFileSelectorBtnMouseLeave();
+                }
+            }
+        }, ctrl));
+
+        fileAndSendButtonContainer.add( new View.Div( { className: 'pp-composer-container-send-button-container', 
+                                                        style: sendButtonBgStyle,
+                                                        selector: '.pp-composer-container-send-button-container',
+                                                        event: {
+                                                            click: function() {
+                                                                Ctrl.$composerContainer.get().sendText();
+                                                            }
+                                                        } } ) );
+
+        container.add( fileAndSendButtonContainer );
 
         var emojiIconCssUrl = 'background-image: url(' + Configuration.assets_path + 'img/icon-emoji.png)';
         container.add(new View.PPElement('strong', {
@@ -163,24 +194,6 @@ View.$composerContainer = (function() {
                 }
             }
         }));
-
-        var fileSelectorIconCssUrl = 'background-image: url(' + Configuration.assets_path + 'img/icon-upload.png)';
-        container.add(new View.PPElement('strong', {
-            id: 'pp-composer-container-file-selector',
-            'class': 'pp-composer-container-action-btn pp-box-sizing',
-            style: fileSelectorIconCssUrl,
-            event: {
-                click: function() {
-                    ctrl.onFileSelectorBtnClicked();
-                },
-                mouseover: function() {
-                    ctrl.onFileSelectorBtnMouseOver();
-                },
-                mouseleave: function() {
-                    ctrl.onFileSelectorBtnMouseLeave();
-                }
-            }
-        }, ctrl));
         
         container.add(new View.PPElement('input', {
             id: 'pp-composer-container-input',

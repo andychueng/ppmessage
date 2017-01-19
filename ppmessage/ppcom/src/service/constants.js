@@ -3,6 +3,11 @@
     function PPConstants() {
     }
 
+    // sound of msg submit -> delivered -> notification(received)
+    PPConstants.MSG_SUBMIT_SOUND_URL = Configuration.assets_path + 'submit.mp3';
+    PPConstants.MSG_DELIVERED_SOUND_URL = Configuration.assets_path + 'delivered.mp3';
+    PPConstants.MSG_NOTIFICATION_SOUND_URL = Configuration.assets_path + 'notification.mp3';    
+
     PPConstants.ICON_DEFAULT_LAUNCHER = Configuration.assets_path + "img/logo_1.png";
     PPConstants.DEFAULT_HEADER_TITLE = "PPMessage";
 
@@ -11,7 +16,8 @@
     PPConstants.USER_DEFAULT_NAME = 'Anonymous';
 
     PPConstants.STYLE = {
-        EMOJI_PANEL_DEFAULT_BOTTOM_MARGIN: 67
+        EMOJI_PANEL_DEFAULT_BOTTOM_MARGIN: 67,
+        PANEL_WIDTH: 368
     };
 
     PPConstants.EVENT = {
@@ -111,6 +117,15 @@
             TYPING: '\u5bf9\u65b9\u6b63\u5728\u8f93\u5165...',
 
             AUDIO_PLAY_ERROR: '\u64ad\u653e\u5931\u8d25',
+            CONVERSATIONS: '\u4f1a\u8bdd',
+            WRITE_TO_REPLY: '\u56de\u590d',
+            VIEW_MORE: '\u67e5\u9605\u66f4\u591a',
+            SMS: '\u77ed\u4fe1',
+            EMAIL: '\u90ae\u4ef6',
+            NUMBER_MISSING_A_FEW_DIGITS: '\u8be5\u53f7\u7801\u4f3c\u4e4e\u4e0d\u6b63\u786e',
+            EMAIL_ADDRESS_DOESNT_LOOK_QUITE_RIGHT: "\u8be5\u7535\u5b50\u90ae\u4ef6\u5730\u5740\u4f3c\u4e4e\u4e0d\u6b63\u786e",
+            GET_NOTIFIED: '\u63a5\u53d7\u901a\u77e5',
+            YOULL_BE_NOTIFIED: "\u60a8\u5c06\u4f1a\u901a\u8fc7\u4ee5\u4e0b\u65b9\u5f0f\u83b7\u53d6\u901a\u77e5",
             
             timeFormat: function(timestampInMilliSeconds) {
                 return Service.$tools.formatTime(timestampInMilliSeconds, {
@@ -166,6 +181,16 @@
             TYPING: 'Typing...',
 
             AUDIO_PLAY_ERROR: 'Play Error',
+
+            CONVERSATIONS: 'Conversations',
+            WRITE_TO_REPLY: 'Write to reply',
+            VIEW_MORE: 'View More',
+            SMS: 'SMS',
+            EMAIL: 'Email',
+            NUMBER_MISSING_A_FEW_DIGITS: 'This number is missing a few digits',
+            EMAIL_ADDRESS_DOESNT_LOOK_QUITE_RIGHT: "This email doesn't look quite right",
+            GET_NOTIFIED: 'Get notified',
+            YOULL_BE_NOTIFIED: "You'll be notified here and by",
             
             timeFormat: function(timestampInMilliSeconds) {
                 return Service.$tools.formatTime(timestampInMilliSeconds, {

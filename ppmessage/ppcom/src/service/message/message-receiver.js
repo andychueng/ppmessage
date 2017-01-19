@@ -16,19 +16,28 @@
  */
 Service.$messageReceiverModule = (function() {
 
-    var browserTabNotify,
+    var PLAY_SOUND = true, // play notification sound
+
+    	browserTabNotify,
         
         isGroupOnChatting = function ( groupUUID ) {
-            
             return groupUUID &&
                 View.$conversationContentContainer.visible() &&
-                !Ctrl.$launcher.get().isLauncherShow() && // launcher is not visible
-                Service.$conversationManager.activeConversation() && Service.$conversationManager.activeConversation().uuid === groupUUID;
-            
+                PP.isOpen() &&
+                Service.$conversationManager.activeConversation() && 
+                Service.$conversationManager.activeConversation().uuid === groupUUID;
         },
         
         getModal = function ( groupUUID ) {
             return Modal.$conversationContentGroup.get( groupUUID );
+        },
+
+        handleByQuickMessageMode = function( ppMessage ) {
+            if ( Ctrl.$conversationQuickMessage.isEnabled() ) {
+                Ctrl.$conversationQuickMessage.handleMessage( ppMessage );
+                return true;
+            }
+            return false;
         },
 
         onNewMessageArrived = function(topics, ppMessage) {
@@ -41,8 +50,22 @@ Service.$messageReceiverModule = (function() {
                 browserTabNotify.notify( ppMessage );
             }
 
+	        if ( PLAY_SOUND ) { // Play notification sound when new message arrived
+		        Audio !== undefined && new Audio( Service.Constants.MSG_NOTIFICATION_SOUND_URL ).play();
+	        }
+
+            // Quick message
+            Service.$debug.d( '[New-Message] is quick message: ', Service.$messageToolsModule.isQuickMessage( body ) );
+            if ( Service.$messageToolsModule.isQuickMessage( body ) && 
+                 handleByQuickMessageMode( ppMessage ) ) {
+                Service.$debug.d( '[New-Message] handle by quick message mode' );
+                getModal( groupId ).addMessage ( body ); // Store message to local
+                return;
+            }
+
             if ( isGroupOnChatting ( groupId ) ) { // we are chating with `converstionId`
 
+                Service.$debug.d( '[New-Message] handle by active conversation' );
                 $pubsub.publish('msgArrived/chat', ppMessage);
                 
             } else {
@@ -53,14 +76,15 @@ Service.$messageReceiverModule = (function() {
                 modal.incrUnreadCount();
                 Ctrl.$sheetheader.incrUnread();
 
-                if ( Ctrl.$launcher.get().isLauncherShow() ) { // launcher is showing
-                    
-                    $pubsub.publish('msgArrived/launcher', ppMessage);
-                    
-                } else if (View.$groupContent.visible()) { // conversation list is showing
-                    
+                // conversation list is showing
+                if ( PP.isOpen() && 
+                     Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.LIST ) {
+                    Service.$debug.d( '[New-Message] handle by list' );
                     $pubsub.publish('msgArrived/group', ppMessage);
-                    
+                } else {
+                    // launcher is showing
+                    Service.$debug.d( '[New-Message] handle by launcher' );
+                    $pubsub.publish('msgArrived/launcher', ppMessage);
                 }
                 
             }

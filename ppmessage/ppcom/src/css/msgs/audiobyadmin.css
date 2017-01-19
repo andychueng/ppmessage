@@ -1,21 +1,6 @@
 .pp-container .msg-audio-admin {
-}
-
-.pp-container .msg-audio-admin .pp-avatar {
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    float: left;
     position: relative;
-    overflow: hidden;
-    clear: both;
-}
-
-.pp-container .msg-audio-admin .pp-content {
-    float: left;
-    width: 80%;
-    margin-left: 5px;
-    margin-bottom: 16px;
+    width: 100%;
 }
 
 .pp-container .msg-audio-admin .pp-name {

@@ -13,7 +13,7 @@ Ctrl.$conversationList = ( function() {
 
         View.$loading.show();
         Service.$conversationManager.asyncGetList( function( conversationList ) {
-            
+
             // update view
             View.$groupContent
                 .update( prepareData( conversationList ) )
@@ -23,8 +23,9 @@ Ctrl.$conversationList = ( function() {
             View.$loading.hide();
 
             markUnreadState ( conversationList );
-            conversationDescriptionLoader( conversationList ).load( function( token, description ) {
+            conversationDescriptionLoader( conversationList ).load( function( token, description, timestamp ) {
                 View.$groupContentItem.description( token, description );
+                View.$groupContentItem.timestamp( token, Service.$tools.timeago( timestamp ) );
             } );
             
         } );
@@ -75,7 +76,7 @@ Ctrl.$conversationList = ( function() {
     }
 
     /////// showItem /////////
-    function showItem( token ) {
+    function showItem( token, callback ) {
 
         var $conversationManager = Service.$conversationManager,
             conversation = $conversationManager.find( token ),
@@ -87,6 +88,7 @@ Ctrl.$conversationList = ( function() {
         }
 
         function before() {
+            View.$groupContentItem.animateHide();
             View.$loading.show(); // show loading view
             View.$groupContent.hide(); // Hide group-content-view
         }
@@ -101,7 +103,7 @@ Ctrl.$conversationList = ( function() {
                 var $manager = Service.$conversationManager;            
                 $manager.activeConversation( token );
                 Ctrl.$conversationContent
-                    .show( $manager.activeConversation(), {}, onSuccessCallback );                
+                    .show( $manager.activeConversation(), {}, onSuccessCallback );
             } else {
                 onErrorCallback();
             }
@@ -111,6 +113,8 @@ Ctrl.$conversationList = ( function() {
         function onErrorCallback() {
             View.$loading.hide(); // hide loading view
             View.$groupContent.show(); // Hide group-content-view
+
+            callback && callback( false );
         }
 
         function onSuccessCallback() {
@@ -118,6 +122,8 @@ Ctrl.$conversationList = ( function() {
             
             View.$loading.hide(); // hide loading view
             View.$composerContainer.focus(); // focus
+
+            callback && callback( true );
         }
         
     }
@@ -141,7 +147,9 @@ Ctrl.$conversationList = ( function() {
                 var modal = Modal.$conversationContentGroup.get ( item.token );
                 if ( modal && !modal.isEmpty() ) {
                     var lastMsg = modal.getMessages()[ modal.getMessages().length - 1 ];
-                    if ( callback ) callback( item.token, Service.PPMessage.getMessageSummary( lastMsg ) );
+                    if ( callback ) callback( item.token, 
+                                              Service.PPMessage.getMessageSummary( lastMsg ),
+                                              lastMsg.messageTimestamp * 1000 );
                     return;
                 }
                     
@@ -152,11 +160,16 @@ Ctrl.$conversationList = ( function() {
                         .asyncGetPPMessage( function( ppMessage, success ) {
                             
                             if ( success ) {
-                                if ( callback ) callback( item.token, success ? ppMessage.getMessageSummary() : "" );
+                                if ( callback ) callback( item.token, 
+                                                          success ? ppMessage.getMessageSummary() : "",
+                                                          ppMessage.getBody().messageTimestamp * 1000 );
                             }
                                 
                         } );
+                    return;
                 }
+
+                if ( callback ) callback( item.token, "", new Date().getTime() );
                 
             } );
         }

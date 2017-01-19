@@ -17,6 +17,8 @@ Ctrl.$composerContainer = (function() {
             conversationContentSelector = 'pp-conversation-content', //NOTE: No '#'
             composerContainerFileSelector = '#pp-composer-container-file-selector',
             composerContainerWarning = '#pp-composer-container-warning',
+            composerContainerSendButtonSelector = '.pp-composer-container-send-button-container',
+            composerContainerFileSendButtonSelector = '.pp-composer-container-file-sendbutton-selector-container',
 
             // After send text finish , place cursor at the beginning of textarea
             resetCursor = function() {
@@ -35,7 +37,7 @@ Ctrl.$composerContainer = (function() {
             };
 
         this.getTextareaPaddingStyle = function() {
-            return this.isShowEmojiIcon() ? 'padding: 10px 70px 5px 14px' : 'padding: 10px 45px 5px 14px';
+            return this.isShowEmojiIcon() ? 'padding: 18px 70px 18px 30px' : 'padding: 18px 45px 18px 30px';
         };
 
         this.hide = function() {
@@ -91,34 +93,51 @@ Ctrl.$composerContainer = (function() {
         };
 
         this.onTextareaChange = function() {
-            if (!this.isSendButtonShow()) {
-                return;
-            }
+
             var text = $(composerContainerTextareaSelector).val();
-            var enableSendButton = text && text.length > 0;
-            this.disableSendButton(!enableSendButton);
+            var enableSendButton = !!( text && text.length > 0 );
+            if ( enableSendButton ) {
+                $( composerContainerSendButtonSelector ).show();
+                $( composerContainerFileSelector ).hide();
+                if ( inMobile ) {
+                    $( composerContainerSendButtonSelector ).css( 'opacity', '1.0' );
+                    $( composerContainerFileSendButtonSelector ).css( { 'border-radius': '50%', 
+                                                                        'background-color': View.Style.Color.main_color } );
+                }
+            } else {
+                $( composerContainerSendButtonSelector ).hide();
+                $( composerContainerFileSelector ).show();
+                if ( inMobile ) {
+                    $( composerContainerFileSendButtonSelector ).css( { 'border-radius': '%', 
+                                                                        'background-color': '' } );
+                }
+            }
+
         };
 
         this.onChatTextareaKeyDown = function(event) {        
             if (event.which == 13) {
                 event.preventDefault(); // Don't make a new line
                 this.sendText();
+                this.onTextareaChange();
             }
         };
 
-        this.sendText = function() {            
+        this.sendText = function() {
             var text = $(composerContainerTextareaSelector).val();
             if (text) {
                 Ctrl.$emojiSelector.get().showSelector(false);
                 $(composerContainerTextareaSelector).val('');
                 $(composerContainerTextareaSelector).focus();
-                View.$composerContainer.fixInputRows();
+                // View.$composerContainer.fixInputRows();
                 $(composerContainerTextareaSelector)[0].rows = 1;
 
                 // Send text message
                 new Service.PPMessage.Builder( Service.PPMessage.TYPE.TEXT )
                     .textMessageBody(text)
                     .build().send();
+
+                View.$conversationContentContainer.adjustDismissBarPosition();
 
                 // Place cursor to the begining
                 // resetCursor();
@@ -172,6 +191,9 @@ Ctrl.$composerContainer = (function() {
                         .build().send();
 
                 }
+
+                // Adjust dismissbar position
+                View.$conversationContentContainer.adjustDismissBarPosition();
             };
             fileReader.onerror = function(e) {
                 Service.$debug.d('FileReader upload file error. filePath: %s, error: %s.', filePath, e);

@@ -15,6 +15,7 @@
             inMobile = Service.$device.isMobileBrowser(), // is in mobile
 
             isAddedWelcomeInfo = false,
+            isAppendSmsEmailInfo = false,
             loadable = true, // can load history (has more historys)
             unreadCount = 0, // unread count associated with this group `id`
 
@@ -38,23 +39,6 @@
                     .build()
                     .getBody();
                 
-                return welcomeMsg;
-            },
-
-            getMobileWelcomeMsg = function() { // add mobile welcome msg
-                var Builder = Service.PPMessage.Builder,
-                    // welcome text in mobile
-                    welcomeText = Service.Constants.i18n('WELCOME_MSG'),
-                    // welcome msg in mobile
-                    welcomeMsg = new Builder( Service.PPMessage.TYPE.TEXT )
-                    .messageState( Service.PPMessage.STATE.FINISH )
-                    .conversationId(Service.$tools.getUUID())
-                    .textMessageBody(welcomeText)
-                    .admin(true)
-                    .userName(Service.Constants.i18n('DEFAULT_SERVE_NAME'))
-                    .build()
-                    .getBody();
-
                 return welcomeMsg;
             },
 
@@ -113,7 +97,7 @@
 
                 // conversation id is empty
                 if (!conversationId) {
-                    if (callback) callback([]);
+                    if (callback) callback([], false);
                     return;
                 }
                 
@@ -163,12 +147,20 @@
                         var messageHistorysWithTimestamp = addTimestampsToHistoryMessageArrays(ppMessageArray);
                         // Store message historys to `chatMessages`
                         unshiftMessageArrays(messageHistorysWithTimestamp);
-                        if (callback) callback(messageHistorysWithTimestamp);
+                        if (callback) {
+                            var loadable = messageHistorysWithTimestamp.length > 0;
+                            // Only contain a timestamp message, so we consider there are no more history here
+                            if (messageHistorysWithTimestamp.length === 1 && 
+                               messageHistorysWithTimestamp[0].messageType === Service.PPMessage.TYPE.TIMESTAMP ) {
+                                loadable = false;
+                            }
+                            callback(messageHistorysWithTimestamp, loadable);
+                        }
                         
                     });
                     
                 }, function(error) { // On get message history error callback
-                    if (callback) callback([]);
+                    if (callback) callback([], false);
                 });
                 
             },
@@ -425,6 +417,14 @@
 
         this.token = function() {
             return id;
+        };
+
+        this.isAppendedSmsEmail = function() {
+            return isAppendSmsEmailInfo;
+        };
+
+        this.notifyAppendSmsEmail = function( append ) {
+            isAppendSmsEmailInfo = append;
         };
 
         this.tryLoadLostMessages = function() {

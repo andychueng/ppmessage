@@ -114,6 +114,7 @@
                     });
 
                     setTimeout(function() {
+                        View.$conversation.prepare();
                         if (succCallback) succCallback();
                     });
                     
@@ -140,23 +141,29 @@
 
             _startUpNoneAnonymousUser = function(userSettings, succCallback, errorCallback) {
 
-                // Validate Email
-                if (!Service.$tools.validateEmail(userSettings.user_email)) {
-                    if (errorCallback) errorCallback(Service.ErrorHint.ERROR_ILLEGAL_USER_EMAIL_STYLE);
-                    return;
-                }
-
                 // 1. get user uuid
                 // 2. get user detail info
                 // 3. update user info
                 // 4. create device
                 // 5. update device
                 // 6. create dom
+
+                var settings = Service.$ppSettings.getSettings();
                 $api.getUserUuid({
                     app_uuid: Service.$ppSettings.getAppUuid(),
                     user_icon: userSettings.user_avatar,
                     user_email: userSettings.user_email,
-                    user_fullname: userSettings.user_fullname
+                    user_fullname: userSettings.user_fullname,
+                    
+                    ent_company_id: settings.ent_user[ 'ent_company_id' ], 
+                    ent_company_name: settings.ent_user[ 'ent_company_name' ], 
+                    ent_company_fullname: settings.ent_user[ 'ent_company_fullname' ], 
+                    
+                    ent_user_icon: settings.ent_user[ 'ent_user_icon' ] || userSettings.user_avatar,
+                    ent_user_name: settings.ent_user[ 'ent_user_name' ] || userSettings.user_fullname,
+                    ent_user_id: settings.ent_user[ 'ent_user_id' ],
+                    ent_user_createtime: settings.ent_user[ 'ent_user_createtime' ]
+                    
                 }, function(response) {
                     $api.getUserDetailInfo({
                         uuid: response.user_uuid,

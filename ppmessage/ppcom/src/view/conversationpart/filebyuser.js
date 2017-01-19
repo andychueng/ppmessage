@@ -104,7 +104,7 @@ View.$userFileMessage = ( function() {
                  })
                       .add(new View.PPDiv({
                           id: 'pp-conversation-part-file-by-user-upload-icon',
-                          style: 'background-image:url(' + Configuration.assets_path + 'img/icon-upload-white.png)'
+                          style: 'background-image:url(' + Configuration.assets_path + 'img/icon-attachment.png)'
                       }))
                       .add(new View.PPDiv({
                           'class': 'pp-conversation-part-file-by-user-link-container',

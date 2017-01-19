@@ -32,6 +32,7 @@ Service.$conversationAgency = ( function() {
         create: asyncCreateConversation,
         cancel: cancelWaitingCreateConversation,
 
+        tellDefaultConversationAvaliable: tellDefaultConversationAvaliable,
         isDefaultConversationAvaliable: isDefaultConversationAvaliable,
     }
 
@@ -133,6 +134,10 @@ Service.$conversationAgency = ( function() {
 
     function isDefaultConversationAvaliable() {
         return defaultConversation !== undefined;
+    }
+
+    function tellDefaultConversationAvaliable( conv ) {
+        defaultConversation = conv;
     }
 
     // === helpers ===

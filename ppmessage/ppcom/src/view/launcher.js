@@ -14,7 +14,7 @@ View.$launcher = (function() {
         }, ctrl);
         
         var self = this;
-        var launcherButtonImageCssStyle = 'background-image: url(' + Configuration.assets_path + 'img/icon-newacquire.png);' + 'background-color:' + View.Style.Color.launcher_background_color;
+        var launcherButtonImageCssStyle = 'background-image: url(' + NORMAL_BG + ');' + 'background-color:' + View.Style.Color.launcher_background_color;
 
         var bottomMargin = ctrl.getLauncherBottomMargin(),
             rightMargin = ctrl.getLauncherRightMargin(),
@@ -37,12 +37,6 @@ View.$launcher = (function() {
                           event: {
                               click: function() {
                                   self.controller.onClickEvent();
-                              },
-                              mouseover: function() {
-                                  self.controller.onMouseOverEvent();
-                              },
-                              mouseleave: function() {
-                                  self.controller.onMouseLeaveEvent();
                               }
                           }
                       })))
@@ -51,7 +45,6 @@ View.$launcher = (function() {
                      'class':'pp-launcher-badge pp-font',
                      style: 'display:none'
                  }, ctrl))
-                 .add(View.$launcherPreview.init().build())
                  .add(View.$hoverCard.build()))
             .show(showLauncher);
     }
@@ -65,33 +58,63 @@ View.$launcher = (function() {
         clsButtonContainerActive = 'pp-launcher-button-container-active',
         clsButtonContainerInActive = 'pp-launcher-button-container-inactive',
 
+        STATE = { NORMAL: 'normal', CLOSE: 'close' },
+        NORMAL_BG = Configuration.assets_path + 'img/icon-newacquire.png',
+        CLOSE_BG = Configuration.assets_path + 'img/close.png',
+        state = STATE.NORMAL,
+
+        getState = function() {
+            return state;
+        },
+
         build = function() {
             return new PPLauncher();
         },
 
-        hideLauncher = function() {
-            $( selectorButton ).removeClass( clsButtonMaximize ).addClass( clsButtonMinimize );
-            $( selectorButtonContainer ).removeClass( clsButtonContainerActive ).addClass( clsButtonContainerInActive );
+        shouldHideLauncher = function() {
+            return View.$settings.getLaunchStyle().mode.toLowerCase() === View.Settings.LAUNCH_MODE.CUSTOM;
         },
 
-        showLauncher = function() {
-            $( selectorButton ).removeClass( clsButtonMinimize ).addClass( clsButtonMaximize );
+        hideLauncher = function() {
+            switch( View.$settings.getLaunchStyle().mode.toLowerCase() ) {
+            case View.Settings.LAUNCH_MODE.CUSTOM:
+                $( '.pp-launcher' ).hide();
+                break;
+            case View.Settings.LAUNCH_MODE.NORMAL:
+                $( selectorButton ).removeClass( clsButtonMaximize ).addClass( clsButtonMinimize );
+                $( selectorButtonContainer ).removeClass( clsButtonContainerActive ).addClass( clsButtonContainerInActive );
+                break;
+            }
+        },
+        
+        // state: View.$launcher.STATE
+        showLauncher = function( _state ) {
+            var $launcher = $( selectorButton );
+            $launcher.removeClass( clsButtonMinimize ).addClass( clsButtonMaximize );
             $( selectorButtonContainer ).removeClass( clsButtonContainerInActive ).addClass( clsButtonContainerActive );
+
+            state = _state;
+            var bgURL = (state == STATE.NORMAL) ? NORMAL_BG : CLOSE_BG;
+            $launcher.css( 'background-image', 'url(' + bgURL + ')' );
         },
         
         showMessageBox = function() {
-            View.$launcherPreview.text( '' ).hide();
+            showLauncher( STATE.CLOSE );
             $('#pp-messenger').show();
             View.$conversation.show();
             Ctrl.$hoverCard.get().hideHoverCardNow();
         };
     
     return {
+        STATE: STATE,
         build: build,
 
+        shouldHideLauncher: shouldHideLauncher,
         hideLauncher: hideLauncher,
         showLauncher: showLauncher,
-        showMessageBox: showMessageBox
+        showMessageBox: showMessageBox,
+
+        state: getState
     }
     
 })();

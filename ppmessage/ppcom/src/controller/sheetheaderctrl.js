@@ -26,7 +26,7 @@ Ctrl.$sheetheader = (function() {
             $device.enableScroll();
         }
 
-        View.$launcher.showLauncher();
+        View.$launcher.showLauncher( View.$launcher.STATE.NORMAL );
         View.$conversation.hide();
 
         // Cancel all sechedule tasks
@@ -34,6 +34,11 @@ Ctrl.$sheetheader = (function() {
         Service.$sheetHeader.close(false);
 
         cancelAnyWaitingToCreateConversations();
+
+        // We should enter quick message mode when minimize
+        if ( View.$settings.getLaunchStyle().mode.toLowerCase() === View.Settings.LAUNCH_MODE.NORMAL ) {
+            Ctrl.$conversationPanel.mode( Ctrl.$conversationPanel.MODE.QUICK_MESSAGE );   
+        }
 
     }
 
@@ -85,12 +90,11 @@ Ctrl.$sheetheader = (function() {
 
     function cancelAnyWaitingToCreateConversations() {
         var $conversationAgency = Service.$conversationAgency,
-            inRequestingGroupConversation = $conversationAgency.isRequestingGroupConversation(),
+            inRequestingGroupConversation = false,
             DELAY_TIME = 300; // Waiting the css animation completed
 
         Ctrl.$conversationPanel.stopPollingWaitingQueueLength();
         $timeout( function() {
-            setHeaderTitle();
             // resume to `MODE.LIST` mode if we are waiting group conversations
             inRequestingGroupConversation && Ctrl.$conversationList.show();
             // resume to `MODE.CONTENT` mode if we are waiting default conversations
