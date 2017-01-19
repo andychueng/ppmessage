@@ -22,18 +22,10 @@ from ppmessage.core.utils.messageutils import get_app_conversations
 import json
 import logging
 
-class PPGetAppConversationListHandler(BaseHandler):
-    """
-    requst:
-    app_uuid
-    
-    response:
-    json with error_code
-    all conversation list related to the app_uuid
-    """
-    def _get(self, _app_uuid):
+class PPGetConversationListHandler(BaseHandler):
+    def _get(self):
         _redis = self.application.redis
-        _conversations = self._get_app_conversations(_redis, _app_uuid)
+        _conversations = self._get_app_conversations(_redis)
         _l = []
         for _conversation_uuid in _conversations:
             if _conversation_uuid == None:
@@ -92,7 +84,7 @@ class PPGetAppConversationListHandler(BaseHandler):
         return
     
     def _Task(self):
-        super(PPGetAppConversationListHandler, self)._Task()
+        super(self.__class__, self)._Task()
         _app_uuid = json.loads(self.request.body).get("app_uuid")
         if _app_uuid == None:
             logging.error("no app_uuid provided")

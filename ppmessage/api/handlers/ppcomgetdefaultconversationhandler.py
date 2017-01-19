@@ -12,7 +12,6 @@
 from .basehandler import BaseHandler
 
 from ppmessage.db.models import AppInfo
-from ppmessage.db.models import AppUserData
 from ppmessage.db.models import DeviceUser
 from ppmessage.db.models import ConversationInfo
 from ppmessage.db.models import ConversationUserData
@@ -42,31 +41,20 @@ import hashlib
 import datetime
 
 class PPComGetDefaultConversationHandler(BaseHandler):
-    """
-    request:
-    app_uuid, 
-    user_uuid,
-
-    response:
-    json with error_code
-    a service user list
-    a welcome string, app welcome string or user signature
-    app name/group name/user fullname
-    """
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         return
 
-    def _return(self, _app_uuid, _user_uuid, _conversation_uuid):
+    def _return(self, _user_uuid, _conversation_uuid):
         _redis = self.application.redis
         _conversation = redis_hash_to_dict(_redis, ConversationInfo, _conversation_uuid)
         if _conversation == None:
             logging.error("no such conversation info: %s" % _conversation_uuid)
             return None
-        _key = ConversationUserData.__tablename__ + ".app_uuid." + _app_uuid + \
-               ".user_uuid." + _user_uuid + ".conversation_uuid." + _conversation_uuid
+        _key = ConversationUserData.__tablename__ + \
+               ".user_uuid." + _user_uuid + \
+               ".conversation_uuid." + _conversation_uuid
         _data_uuid = _redis.get(_key)
         if _data_uuid != None:
             _key = ConversationUserData.__tablename__ + ".uuid." + _data_uuid
@@ -123,7 +111,6 @@ class PPComGetDefaultConversationHandler(BaseHandler):
        
     def _user_conversations(self, _app_uuid, _user_uuid):
         _key = ConversationUserData.__tablename__ + \
-               ".app_uuid." + _app_uuid + \
                ".user_uuid." + _user_uuid
         _conversations = self.application.redis.smembers(_key)
         return _conversations
@@ -148,13 +135,12 @@ class PPComGetDefaultConversationHandler(BaseHandler):
         return
 
     def _Task(self):
-        super(PPComGetDefaultConversationHandler, self)._Task()
+        super(self.__class__, self)._Task()
         _request = json.loads(self.request.body)
-        _app_uuid = _request.get("app_uuid")
         _user_uuid = _request.get("user_uuid")
         _device_uuid = _request.get("device_uuid")
         
-        if _app_uuid == None or _user_uuid == None or _device_uuid == None:
+        if not all([_user_uuid, _device_uuid]):
             self.setErrorCode(API_ERR.NO_PARA)
             return
 
@@ -168,15 +154,7 @@ class PPComGetDefaultConversationHandler(BaseHandler):
         # no conversation then queue to AMD create
         # client check uuid field to check
         if _conversations == None or len(_conversations) == 0:
-            _value = {"app_uuid": _app_uuid, "user_uuid":_user_uuid, "device_uuid":_device_uuid}
-            _value = json.dumps(_value)
-            _hash = hashlib.sha1(_value).hexdigest()
-            _key = REDIS_AMD_KEY + ".amd_hash." + _hash
-            self.application.redis.set(_key, _value)
-            self.application.redis.rpush(REDIS_AMD_KEY, _hash)
-            _key = REDIS_AMD_KEY + ".app_uuid." + _app_uuid
-            self.application.redis.sadd(_key, _hash)
-            logging.info("waiting for AMD to allocate service user to create conversation")
+            # TODO CREATE CONVERSATION FOR THIS USER
             return
 
         _conversation_uuid = self._latest_conversation(_conversations).get('uuid')

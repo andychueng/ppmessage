@@ -8,7 +8,7 @@
 from .basehandler import BaseHandler
 
 from ppmessage.db.models import DeviceUser
-from ppmessage.db.models import AppUserData
+
 from ppmessage.core.constant import API_LEVEL
 from ppmessage.core.constant import USER_STATUS
 
@@ -28,7 +28,6 @@ from tornado.ioloop import IOLoop
 class PPGetUserUUIDHandler(BaseHandler):
     def _new_user(self, _request):
         
-        _app_uuid = _request.get("app_uuid")
         _ent_company_uuid = _request.get("ent_company_id")
         _ent_company_name = _request.get("ent_company_name")
         _ent_company_fullname = _request.get("ent_company_fullname")
@@ -45,7 +44,6 @@ class PPGetUserUUIDHandler(BaseHandler):
 
         _user = create_device_user(self.application.redis, {
             "uuid": _du_uuid,
-            "app_uuid": _app_uuid,
             "user_name": _user_name,
             "user_fullname": _user_name,
             "user_icon": _user_icon,
@@ -71,9 +69,8 @@ class PPGetUserUUIDHandler(BaseHandler):
             return
         
         _is_service_user = self.application.redis.hget(_key, "is_service_user")
-        _user_app_uuid = self.application.redis.hget(_key, "app_uuid")
         
-        if "True" == _is_service_user and _request.get("app_uuid") == _user_app_uuid:
+        if "True" == _is_service_user:
             logging.error("user is service user who can not help himself ^_^.")
             self.setErrorCode(API_ERR.NOT_PORTAL)
             return
@@ -91,7 +88,6 @@ class PPGetUserUUIDHandler(BaseHandler):
         return
     
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)
         self.addPermission(api_level=API_LEVEL.THIRD_PARTY_CONSOLE)
@@ -104,7 +100,6 @@ class PPGetUserUUIDHandler(BaseHandler):
         # TODO: use this to merge messages 
         _ppcom_trace_uuid = _request.get("ppcom_trace_uuid")
         
-        _app_uuid = _request.get("app_uuid")
         _ent_user_id = _request.get("ent_user_id")
         _ent_user_name = _request.get("ent_user_name")
 

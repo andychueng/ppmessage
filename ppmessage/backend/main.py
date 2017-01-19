@@ -22,15 +22,11 @@ from ppmessage.core.utils.getipaddress import get_ip_address
 from ppmessage.core.downloadhandler import DownloadHandler
 
 from ppmessage.api.apiapp import ApiWebService
-from ppmessage.backend.amd import AmdWebService
 from ppmessage.backend.send import SendWebService
 from ppmessage.cache.cacheapp import CacheWebService
 from ppmessage.backend.ppcomapp import PPComWebService
-from ppmessage.backend.gcmpush import GcmPushWebService
 from ppmessage.backend.ppkefuapp import PPKefuWebService
 from ppmessage.backend.ppauthapp import PPAuthWebService
-from ppmessage.backend.mqttpush import MqttPushWebService
-from ppmessage.iospush2.iospushapp import IOSPushWebService
 from ppmessage.backend.ppconfigapp import PPConfigWebService
 from ppmessage.backend.dispatcher import DispatcherWebService
 from ppmessage.backend.identiconapp import IdenticonWebService
@@ -38,8 +34,6 @@ from ppmessage.backend.ppconsoleapp import PPConsoleWebService
 from ppmessage.pcsocket.pcsocketapp import PCSocketWebService
 from ppmessage.backend.tornadouploadapp import UploadWebService
 from ppmessage.backend.downloadapplication import DownloadWebService
-
-#from ppmessage.backend.message import mqtt_message_main
 
 import os
 import sys
@@ -130,8 +124,6 @@ def _main():
     
     tornado.httpserver.HTTPServer(_app).listen(tornado.options.options.main_port)
     _app.run_periodic()
-
-    #mqtt_message_main()
     
     _str = "Access http://%s:%d/ to %s PPMessage."
     if _get_config() == None or _get_config().get("config_status") != CONFIG_STATUS.RESTART:

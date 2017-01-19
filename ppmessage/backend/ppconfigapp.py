@@ -308,8 +308,7 @@ class FirstHandler(tornado.web.RequestHandler):
     def __init__(self, *args, **kwargs):
         self._user_uuid = str(uuid.uuid1())
         self._app_uuid = str(uuid.uuid1())
-        
-        super(FirstHandler, self).__init__(*args, **kwargs)
+        super(self.__class__, self).__init__(*args, **kwargs)
         
     def _check_request(self, _request):
         if _request.get("user_fullname") == None or \
@@ -331,14 +330,19 @@ class FirstHandler(tornado.web.RequestHandler):
 
         IOLoop.current().spawn_callback(download_random_identicon, _user_icon)
         
-        _row = DeviceUser(uuid=self._user_uuid,
-                          app_uuid=self._app_uuid,
-                          user_email=_user_email,
-                          user_icon=_user_icon,
-                          user_status=USER_STATUS.OWNER_2,
-                          user_fullname=_user_fullname,
-                          user_password=_user_password,
-                          user_language=_user_language)
+        _row = DeviceUser(
+            uuid=self._user_uuid,
+            app_uuid=self._app_uuid,
+            user_email=_user_email,
+            user_icon=_user_icon,
+            user_status=USER_STATUS.OWNER_2,
+            user_fullname=_user_fullname,
+            user_password=_user_password,
+            user_language=_user_language,
+            is_owner_user=True,
+            is_service_user=True,
+            is_anonymous_user=False
+        )
         
         _row.create_redis_keys(self.application.redis)
         _insert_into(_row)
@@ -363,25 +367,6 @@ class FirstHandler(tornado.web.RequestHandler):
         _insert_into(_row)
         return True
 
-    def _create_data(self, _request):
-        from ppmessage.db.models import AppUserData
-        _user_uuid = self._user_uuid
-        _app_uuid = self._app_uuid
-        _user_fullname = self._user_fullname
-        
-        _row = AppUserData(
-            uuid=str(uuid.uuid1()),
-            app_uuid = _app_uuid,
-            user_uuid=_user_uuid,
-            user_fullname = _user_fullname,
-            is_service_user = True,
-            is_owner_user = True,
-            is_portal_user = False                                    
-        )
-        _row.create_redis_keys(self.application.redis)
-        _insert_into(_row)
-        return True
-
     def _create_api(self, _request):
         from ppmessage.db.models import ApiInfo
         import hashlib
@@ -401,7 +386,6 @@ class FirstHandler(tornado.web.RequestHandler):
             _secret = _encode(str(uuid.uuid1()))
             _row = ApiInfo(uuid=_uuid,
                            user_uuid=_user_uuid,
-                           app_uuid=_app_uuid,
                            api_level=_type,
                            api_key=_key,
                            api_secret=_secret)
@@ -490,9 +474,6 @@ class FirstHandler(tornado.web.RequestHandler):
             return _return(self, -1)
 
         if not self._create_team(_request):
-            return _return(self, -1)
-
-        if not self._create_data(_request):
             return _return(self, -1)
 
         if not self._create_api(_request):

@@ -13,25 +13,14 @@ from .datetimeencoder import DateTimeEncoder
 from ppmessage.db.dbinstance import getDBSessionClass
 
 from ppmessage.db.models import AppInfo
-from ppmessage.db.models import AppUserData
 
 from ppmessage.db.models import DeviceUser
 from ppmessage.db.models import DeviceInfo
-
-from ppmessage.db.models import OrgGroup
-from ppmessage.db.models import OrgGroupUserData
-from ppmessage.db.models import OrgGroupSubGroupData
 
 from ppmessage.db.models import MessagePushTask
 from ppmessage.db.models import MessagePush
 
 from ppmessage.db.models import FileInfo
-from ppmessage.db.models import MaterialRefInfo
-
-from ppmessage.db.models import SingleCardMaterialInfo
-from ppmessage.db.models import MultipleCardMaterialInfo
-
-from ppmessage.db.models import UserContactData
 
 from ppmessage.db.models import ConversationInfo
 from ppmessage.db.models import ConversationUserData
@@ -40,10 +29,6 @@ from ppmessage.db.models import PCSocketInfo
 from ppmessage.db.models import PCSocketDeviceData
 
 from ppmessage.db.models import ApiInfo
-from ppmessage.db.models import ApiTokenData
-
-from ppmessage.db.models import PredefinedScript
-from ppmessage.db.models import PredefinedScriptGroup
 
 from sqlalchemy import DateTime
 
@@ -71,10 +56,8 @@ def load(_redis):
         ConversationUserData,
         
         FileInfo,
-        MaterialRefInfo,
         
         AppInfo,
-        AppUserData,
         
         MessagePushTask,
         MessagePush,
@@ -82,15 +65,8 @@ def load(_redis):
         PCSocketInfo,
         PCSocketDeviceData,
 
-        OrgGroup,
-        OrgGroupUserData,        
-
-        ApiInfo,
-        ApiTokenData,
-        
-        PredefinedScript,
-        PredefinedScriptGroup,
-        
+        ApiInfo
+              
     ]
     
     try:

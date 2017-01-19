@@ -10,7 +10,6 @@ from ppmessage.api.handlers.basehandler import BaseHandler
 from ppmessage.db.models import AppInfo
 from ppmessage.db.models import DeviceUser
 from ppmessage.db.models import DeviceInfo
-from ppmessage.db.models import AppUserData
 from ppmessage.db.models import PCSocketInfo
 from ppmessage.db.models import MessagePushTask
 from ppmessage.db.models import PCSocketDeviceData
@@ -124,10 +123,7 @@ class PPKefuLoginHandler(BaseHandler):
     
     def _update_user_with_device(self, _user_uuid, _device_uuid):
         _values = {"uuid": _user_uuid}
-        if self.device_is_browser == True:
-            _values["browser_device_uuid"] = _device_uuid
-        else:
-            _values["mobile_device_uuid"] = _device_uuid
+        _values["ppkefu_browser_device_uuid"] = _device_uuid
         _row = DeviceUser(**_values)
         _row.async_update(self.application.redis)
         _row.update_redis_keys(self.application.redis)
@@ -172,35 +168,21 @@ class PPKefuLoginHandler(BaseHandler):
         _row.async_update(self.application.redis)
         return
     
-    def _update_device_with_is_development(self, _device_uuid, _is_development):
-        _values = {
-            "uuid": _device_uuid,
-            "is_development": _is_development,
-        }
-        _row = DeviceInfo(**_values)
-        _row.update_redis_keys(self.application.redis)
-        _row.async_update(self.application.redis)
-        return
-
     def _reset_device_of_user(self, _user_uuid):
-        _v = {"uuid": _user_uuid}
-        if self.device_is_browser == True:
-            _v["browser_device_uuid"] = ""
-        else:
-            _v["mobile_device_uuid"] = ""
+        _v = {
+            "uuid": _user_uuid,
+            "ppkefu_browser_device_uuid": "NULL"
+        }
         _row = DeviceUser(**_v)
         _row.async_update(self.application.redis)
         _row.update_redis_keys(self.application.redis)
         return
 
     def _kick(self):
-        _old_device_uuid = self.user.get("mobile_device_uuid")
-        if self.device_is_browser == True:
-            _old_device_uuid = self.user.get("browser_device_uuid")
-
-        if _old_device_uuid == None or len(_old_device_uuid) == 0:
+        _old_device_uuid = self.user.get("ppkefu_browser_device_uuid")
+        if not _old_device_uuid:
             return
-
+        
         if _old_device_uuid == self.device.get("uuid"):
             logging.info("old device and new device is same: %s" % _old_device_uuid)
             return
@@ -229,11 +211,10 @@ class PPKefuLoginHandler(BaseHandler):
         return
 
     def _user_online_status(self):
-        _app_uuid = self.app_uuid
         _user_uuid = self.user["uuid"]
         _device_uuid = self.device["uuid"]
         _redis = self.application.redis
-        _key0 = REDIS_PPKEFU_ONLINE_KEY + ".app_uuid." + _app_uuid
+        _key0 = REDIS_PPKEFU_ONLINE_KEY
         _redis.sadd(_key0, _user_uuid + "." + _device_uuid)
 
         _today = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -270,22 +251,6 @@ class PPKefuLoginHandler(BaseHandler):
 
         return True
 
-    def _service_app(self):
-        _key = AppUserData.__tablename__ + ".user_uuid." + self.user["uuid"] + ".is_service_user.True"
-        _app_uuid = self.application.redis.get(_key)
-        if _app_uuid == None:
-            self.setErrorCode(API_ERR.NO_APP)
-            logging.error("no app to service. confusing....")
-            return None
-
-        self.app_uuid = _app_uuid
-        return self.app_uuid
-
-    def _from_browser(self):
-        if self._ostype not in [OS.AND, OS.IOS, OS.WIP]:
-            self.device_is_browser = True
-        return
-
     def _device(self):
         self._terminal_uuid = self.input_data["terminal"]
         
@@ -301,49 +266,24 @@ class PPKefuLoginHandler(BaseHandler):
         if self.user.get("uuid") != _old_device_user:
             self._reset_device_of_user(_old_device_user)
 
-        _is_development = bool(self.input_data.get("ios_app_development"))
-        if _is_development != None and _device.get("is_development") != _is_development:
-            self._update_device_with_is_development(_device.get("uuid"), _is_development)
-            
-        if self.input_data.get("device_ios_token") != None or self.input_data.get("device_android_gcmtoken") != None or self.input_data.get("device_android_jpush_registrationid") != None:
-            self._update_device_with_token(_device.get("uuid"))
-
         return _device
 
     def _return(self):
         _redis = self.application.redis
         _user = redis_hash_to_dict(_redis, DeviceUser, self.user.get("uuid"))
         del _user["user_password"]
-        _key = AppUserData.__tablename__ + ".app_uuid." + self.app_uuid + ".user_uuid." + _user.get("uuid")
-        _app_user_data = _redis.get(_key)
-        if _app_user_data == None:
-            self.setErrorCode(API_ERR.NO_APP_USER)
-            return
-        _app_user_data = json.loads(_app_user_data)
         _r = self.getReturnData()
         _r.update(_user)
-        _r.update(_app_user_data)
-        _r["updatetime"] = int(time.mktime(self.user.get("updatetime").timetuple()))
-        _r["mqtt_topic"] = self.device.get("uuid") + "/#"
         _app = redis_hash_to_dict(_redis, AppInfo, self.app_uuid)
         _r["app"] = _app
-        #logging.info("DEVICEUSERLOGIN RETURN %s." % (str(_return_data)))
         return
 
     def _send_online(self):
         _body = {
             "extra_data": None,
             "user_uuid": self.user.get("uuid"),
-            "browser": ONLINE_STATUS.ONLINE,
-            "mobile": ONLINE_STATUS.UNCHANGED,
+            "browser": ONLINE_STATUS.ONLINE
         }        
-        if self.device_is_browser == False:
-            _body = {
-                "extra_data": None,
-                "user_uuid": self.user.get("uuid"),
-                "browser": ONLINE_STATUS.UNCHANGED,
-                "mobile": ONLINE_STATUS.ONLINE,
-            }
         pcsocket_user_online(self.application.redis, self.user.get("uuid"), _body)
         return
 
@@ -353,7 +293,6 @@ class PPKefuLoginHandler(BaseHandler):
         self.user = None
         self.ent = None
         self.device = None
-        self.device_is_browser = False
 
         logging.info(self.request.body)
         if not self._check_input():
@@ -363,13 +302,6 @@ class PPKefuLoginHandler(BaseHandler):
         if not self._user_with_email():
             self.setErrorCode(API_ERR.NO_USER)
             return
-
-        if not self._service_app():
-            self.setErrorCode(API_ERR.NO_APP)
-            return
-
-        # from browser?
-        self._from_browser()
 
         # have device or create it?
         self.device = self._device()
@@ -394,6 +326,6 @@ class PPKefuLoginHandler(BaseHandler):
         return
 
     def _Task(self):
-        super(PPKefuLoginHandler, self)._Task()
+        super(self.__class__, self)._Task()
         self._login()
         return

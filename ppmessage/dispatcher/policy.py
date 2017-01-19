@@ -22,11 +22,8 @@ from ppmessage.core.constant import YVOBJECT
 from ppmessage.core.constant import DIS_SRV
 from ppmessage.core.constant import OS
 
-from ppmessage.db.models import OrgGroup
 from ppmessage.db.models import DeviceUser
 from ppmessage.db.models import DeviceInfo
-from ppmessage.db.models import OrgGroupUserData
-from ppmessage.db.models import AppUserData
 from ppmessage.db.models import MessagePush
 from ppmessage.db.models import MessagePushTask
 from ppmessage.db.models import PCSocketInfo
@@ -75,7 +72,7 @@ class AbstractPolicy(Policy):
         return
 
     @classmethod
-    def conversation_users(cls, _app_uuid, _conversation_uuid, _redis):
+    def conversation_users(cls, _conversation_uuid, _redis):
         _key = ConversationUserData.__tablename__ + ".conversation_uuid." + _conversation_uuid
         _users = _redis.smembers(_key)
         return list(_users)
@@ -83,7 +80,7 @@ class AbstractPolicy(Policy):
     @classmethod
     def conversation_datas(cls, _app_uuid, _conversation_uuid, _users, _redis):
         _pi = _redis.pipeline()
-        _pre = ConversationUserData.__tablename__ + ".app_uuid." + _app_uuid + ".user_uuid."
+        _pre = ConversationUserData.__tablename__ + ".user_uuid."
         _pos = ".conversation_uuid." + _conversation_uuid
         for _user_uuid in _users:
             _key = _pre + _user_uuid + _pos
@@ -92,48 +89,23 @@ class AbstractPolicy(Policy):
         return _datas
 
     @classmethod
-    def create_conversation_users(cls, _app_uuid, _group_uuid, _redis):
+    def create_conversation_users(cls, _redis):
         return []
     
     @classmethod
-    def app_users(cls, _app_uuid, _is_service_user, _redis):
-        if _app_uuid == None:
-            return []
-        _key = AppUserData.__tablename__ + \
-               ".app_uuid." + _app_uuid + \
-               ".is_service_user." + str(_is_service_user)
+    def app_users(cls, _is_service_user, _redis):
+        _key = DeviceUser.__tablename__ + ".is_service_user." + str(_is_service_user)
         _users = _redis.smembers(_key)
         return list(_users)
 
     @classmethod
-    def distributor_users(cls, _app_uuid, _redis):
-        # is_service_user == True
-        if _app_uuid == None:
-            return []
-        _key = AppUserData.__tablename__ + \
-               ".app_uuid." + _app_uuid + \
-               ".is_service_user.True"
-        _users = _redis.smembers(_key)
-        return list(_users)
-
-    @classmethod
-    def group_users(cls, _group_uuid, _redis):
-        _pattern = OrgGroupUserData.__tablename__ + ".group_uuid." + _group_uuid
-        _keys = _redis.smembers(_pattern)
-        return list(_keys)
-
-    @classmethod
-    def get_service_care_users(cls, _app_uuid, _user_uuid, _redis):
+    def get_service_care_users(cls, _user_uuid, _redis):
         return None
 
     @classmethod
-    def get_portal_care_users(cls, _app_uuid, _user_uuid, _redis):
+    def get_portal_care_users(cls, _user_uuid, _redis):
         return None
-    
-    def _android_token(self, _user_uuid, _device_uuid):
-        _token = _user_uuid + "/" + _device_uuid + "/" + self._task["message_type"] + "/" + self._task["uuid"]
-        return _token
-    
+        
     def _body(self):
         _message = {}
         _message["id"] = self._task.get("uuid")
@@ -184,23 +156,23 @@ class AbstractPolicy(Policy):
             return
         
         _user["_online_devices"] = {}
-        _device_name = ["mobile_device_uuid", "browser_device_uuid"]
+        _device_name = "ppkefu_browser_device_uuid"]
         if _is_service_user == False:
-            _device_name = ["ppcom_mobile_device_uuid", "ppcom_browser_device_uuid"]
+            _device_name = "ppcom_browser_device_uuid"
 
-        for _i in _device_name:
-            _device_uuid = self._users_hash[_user_uuid][_i]
-            if _device_uuid == None or len(_device_uuid) == 0:
-                continue
-            _device = redis_hash_to_dict(self._redis, DeviceInfo, _device_uuid)
-            if _device == None:
-                continue
+         _device_uuid = self._users_hash[_user_uuid][_i]
+         if not _device_uuid:
+            return
+         
+         _device = redis_hash_to_dict(self._redis, DeviceInfo, _device_uuid)
+         if not _device:
+            return
 
-            self._devices_hash[_device_uuid] = _device
-            self._devices.add(_device_uuid)
+         self._devices_hash[_device_uuid] = _device
+         self._devices.add(_device_uuid)
             
-            if _device.get("device_is_online") == True:
-                _user["_online_devices"][_device_uuid] = _device
+         if _device.get("device_is_online") == True:
+            _user["_online_devices"][_device_uuid] = _device
 
         if len(_user["_online_devices"]) > 0:
             self._online_users.add(_user_uuid)
@@ -236,7 +208,6 @@ class AbstractPolicy(Policy):
     def _push_to_db(self, _user_uuid, _status=MESSAGE_STATUS.PUSHED):
         _values = {
             "uuid": str(uuid.uuid1()),
-            "app_uuid": self._task["app_uuid"],
             "task_uuid": self._task["uuid"],
             "user_uuid": _user_uuid,
             "status": _status
@@ -246,97 +217,6 @@ class AbstractPolicy(Policy):
         _row.async_add(self._redis)
         _row.create_redis_keys(self._redis)
         return _row.uuid
-
-    def _push_to_ios(self, _user_uuid, _device_uuid):
-        logging.info("push ios %s:%s" % (_user_uuid, _device_uuid))
-
-        _app_uuid = self._task["app_uuid"]
-        _user = self._users_hash.get(_user_uuid)
-        _device = self._devices_hash.get(_device_uuid)
-        _conversation_data = self._conversation_user_datas_hash.get(_user_uuid)
-        
-        if _user == None:
-            logging.error("push ios failed for no user")
-            return
-        if _device == None:
-            logging.error("push ios failed for no device")
-            return
-
-        _token = _device.get("device_ios_token")
-        if _token == None or len(_token) == 0:
-            logging.error("push ios failed for no ios token")
-            return
-
-        if _device["device_ios_token"] == IOS_FAKE_TOKEN:
-            logging.error("push ios failed for fake token")
-            return
-        
-        if _conversation_data != None and _conversation_data["user_mute_notification"] == True:
-            # user only do not want recv push for this conversation
-            logging.error("push ios failed for silence required")
-            return
-
-        _count = 0
-        if _user.get("user_show_badge") == True:
-            _key = MessagePush.__tablename__ + ".app_uuid." + _app_uuid + ".user_uuid." + _user_uuid 
-            _count = self._redis.zcard(_key)
-
-        _is_dev = bool(_device.get("is_development"))
-
-        _config = {
-            "is_development": _is_dev,
-            "user_language": _user.get("user_language"),
-            "device_ios_token": _token,
-            "unacked_notification_count": _count,
-            "user_silence_notification": _user.get("user_silence_notification")
-        }
-        
-        _push = {
-            "config": _config,
-            "body": self._task.get("message_body"),
-            "app_uuid": _app_uuid
-        }
-        
-        logging.info("push ios: %s" % str(_push))
-        self._redis.rpush(REDIS_IOSPUSH_KEY, json.dumps(_push))
-        return
-
-    def _push_to_android(self, _user_uuid, _device_uuid):
-        _app_uuid = self._task["app_uuid"]
-        
-        _device = self._devices_hash.get(_device_uuid)
-        _user = self._users_hash.get(_user_uuid)
-        _conversation_data = self._conversation_user_datas_hash.get(_user_uuid)
-
-        _count = 0
-        if _user.get("user_show_badge") == True:
-            _key = MessagePush.__tablename__ + ".app_uuid." + _app_uuid + ".user_uuid." + _user_uuid
-            _count = self._redis.zcard(_key)
-
-        _config = {
-            "user_language": _user.get("user_language"),
-            "unacked_notification_count": _count,
-            "user_silence_notification": _user.get("user_silence_notification")
-        }
-
-        _push = {
-            "config": _config,
-            "body": self._task.get("message_body"),
-            "app_uuid": _app_uuid
-        }
-
-        logging.error("try push for android: %s" % str(_push))
-        
-        if self._task["_app"].get("enable_jpush"):
-            _config["device_android_jpush_registrationid"] = _device.get("device_android_jpush_registrationid")
-            self._redis.rpush(REDIS_JPUSH_KEY, json.dumps(_push))
-        elif self._task["_app"].get("enable_gcm_push"):
-            _config["device_android_gcmtoken"] = _device.get("device_android_gcmtoken")
-            self._redis.rpush(REDIS_GCMPUSH_KEY, json.dumps(_push))
-        else:
-            logging.error("no push enable for android: %s" % str(_push))
-
-        return
     
     def _push_to_socket(self, _user_uuid, _device_uuid):
         _pcsocket = self._pcsocket_data(_device_uuid)
@@ -365,10 +245,7 @@ class AbstractPolicy(Policy):
             for _i in _fields:
                 _from_user[_i] = self._task["_user"].get(_i)
             _from_user["updatetime"] = datetime_to_timestamp(_from_user["updatetime"])
-            
-        if _from_type == YVOBJECT.OG:
-            _from_user = self._task["_group"]
-            
+                        
         if _from_type == YVOBJECT.AP:
             _from_user = self._task["_app"]
 
@@ -382,18 +259,7 @@ class AbstractPolicy(Policy):
         _key = REDIS_PUSH_NOTIFICATION_KEY + ".host." + _pcsocket["host"] + ".port." + _pcsocket["port"]
         self._redis.rpush(_key, json.dumps(_push))
         return
-    
-    def _push_to_mobile(self, _user_uuid, _device_uuid):
-        _device = self._devices_hash[_device_uuid]
-        if _device["device_ostype"] == OS.IOS:
-            self._push_to_ios(_user_uuid, _device_uuid)
-            return
-
-        if _device["device_ostype"] == OS.AND:
-            self._push_to_android(_user_uuid, _device_uuid)
-            return        
-        return
-    
+        
     def _push(self):
         if len(self._online_users) == 0:
             self.no_online_user()
@@ -402,62 +268,11 @@ class AbstractPolicy(Policy):
         for _user_uuid in self._online_users:
             _user = self._users_hash[_user_uuid]
             _online_devices = _user.get("_online_devices")
-            _real_push = not _user.get("user_mute_notification")
-
-            _pid = self._push_to_db(_user_uuid)
-            
+            _pid = self._push_to_db(_user_uuid)            
             for _device_uuid in _online_devices:
                 self._devices_hash[_device_uuid]["push_uuid"] = _pid
                 self._push_to_socket(_user_uuid, _device_uuid)
-                if _real_push == True:
-                    self._push_to_mobile(_user_uuid, _device_uuid)
-        return
 
-    def _other_device(self):
-        """
-        the other device uuid belong to same user uuid
-        """
-        if self._task.get("from_device_uuid") == None:
-            return
-        if self._task.get("from_type") != YVOBJECT.DU:
-            return
-        if self._task.get("_user") == None:
-            return
-
-        if self._task["conversation_type"] == CONVERSATION_TYPE.P2S:
-            if self._task["_user"]["ppcom_mobile_device_uuid"] == None or \
-               self._task["_user"]["ppcom_browser_device_uuid"] == None:
-                return
-
-        if self._task["conversation_type"] == CONVERSATION_TYPE.S2S or \
-           self._task["conversation_type"] == CONVERSATION_TYPE.S2P:
-            if self._task["_user"]["mobile_device_uuid"] == None or \
-               self._task["_user"]["browser_device_uuid"] == None:
-                return
-
-        _device_uuid = None
-        if self._task["conversation_type"] == CONVERSATION_TYPE.P2S:
-            _device_uuid = self._task["_user"]["ppcom_mobile_device_uuid"]
-            if self._task["from_device_uuid"] == self._task["_user"]["ppcom_mobile_device_uuid"]:
-                _device_uuid = self._task["_user"]["ppcom_browser_device_uuid"]
-        else:
-            _device_uuid = self._task["_user"]["mobile_device_uuid"]
-            if self._task["from_device_uuid"] == self._task["_user"]["mobile_device_uuid"]:
-                _device_uuid = self._task["_user"]["browser_device_uuid"]
-
-        if _device_uuid not in self._devices_hash:
-            _device = redis_hash_to_dict(self._redis, DeviceInfo, _device_uuid)
-            if _device == None or _device["device_is_online"] != True:
-                return
-            self._devices_hash[_device_uuid] = _device
-
-        _user_uuid = self._task["from_uuid"]
-        if _user_uuid not in self._users_hash:
-            self._users_hash[_user_uuid] = self._task["_user"]
-
-        _pid = self._push_to_db(_user_uuid)
-        self._devices_hash[_device_uuid]["push_uuid"] = _pid
-        self._push_to_socket(_user_uuid, _device_uuid)
         return
 
     def _explicit(self):
@@ -476,56 +291,7 @@ class AbstractPolicy(Policy):
         # not save db for explicit message
         self._push_to_socket(_user_uuid, _device_uuid)
         return
-    
-    def _send_apologize(self, _text):
-        _task = {
-            "uuid": str(uuid.uuid1()),
-            "app_uuid": self._task["app_uuid"],
-            "conversation_uuid": self._task["conversation_uuid"],
-            "conversation_type": CONVERSATION_TYPE.S2P,
-            "message_type": MESSAGE_TYPE.NOTI,
-            "message_subtype": MESSAGE_SUBTYPE.TEXT,
-            "from_uuid": self._task["to_uuid"],
-            "from_type": self._task["to_type"],
-            "to_uuid": self._task["to_uuid"],
-            "to_type": self._task["to_type"],
-            "body": _text,
-            "task_status": TASK_STATUS.PENDING,
-        }
-        _row = MessagePushTask(**_task)
-        _row.async_add(self._redis)
-        _row.create_redis_keys(self._redis)
-        _m = {"task_uuid": _row.uuid}
-        self._redis.rpush(REDIS_DISPATCHER_NOTIFICATION_KEY, json.dumps(_m))
-        return
-
-    def _get_app_apologize(self):
-        _text = None
-        _lang = self._task["_user"]["user_language"]
-        if _lang == None or len(_lang) == 0:
-            _lang = "zh_cn"
-
-        _offline = "offline_" + _lang
-        _text = self._task["_app"][_offline]
-        if _text == None:
-            _text = PPCOM_OFFLINE[_lang]
-        return _text
-    
-    def no_online_user(self):
-        if self._task["conversation_type"] != CONVERSATION_TYPE.P2S:
-            return
-
-        if self._task["_app"].get("return_offline_message") != True:
-            logging.info("return_offline_message is not set")
-            return
         
-        _text = self._get_app_apologize()
-        if _text == None:
-            return
-        
-        self._send_apologize(_text)
-        return
-    
     def users(self):
         _app_uuid = self._task["app_uuid"]
         _conversation_uuid = self._task["conversation_uuid"]
@@ -534,22 +300,12 @@ class AbstractPolicy(Policy):
         _datas = AbstractPolicy.conversation_datas(_app_uuid, _conversation_uuid, _users, self._redis)
         _datas = dict(zip(_users, _datas))
 
-        # the is_service_user include the sender user_uuid
-        _table = AppUserData.__tablename__ + ".app_uuid." + _app_uuid + ".user_uuid."
-        _pi = self._redis.pipeline()
+        self._is_service_user = {}
         for _user_uuid in _users:
-            _key = _table + _user_uuid
-            _pi.get(_key)
-        _is = _pi.execute()
-
-        _is_list = []
-        for _i in _is:
-            if _i == None or len(_i) == 0:
-                _is_list.append(False)
-                continue
-            _d = json.loads(_i)
-            _is_list.append(_d.get("is_service_user"))    
-        self._is_service_user = dict(zip(_users, _is_list))
+           _key = DeviceUser.__tablename__ + ".uuid." + _user_uuid
+           self._is_serivce_user[_user_uuid] = True
+           if self.redis.hget("is_service_user") != "True":
+              self._is_service_user[_user_uuid] = False
         
         # remove the sender self
         if self._task["from_type"] == YVOBJECT.DU:
@@ -591,17 +347,17 @@ class BroadcastPolicy(AbstractPolicy):
         return
 
     @classmethod
-    def create_conversation_users(cls, _app_uuid, _group_uuid, _redis):
-        return AbstractPolicy.distributor_users(_app_uuid, _redis)
+    def create_conversation_users(cls, _redis):
+        return AbstractPolicy.distributor_users(_redis)
 
     @classmethod
-    def get_service_care_users(cls, _app_uuid, _user_uuid, _redis):
-        _a_users = AbstractPolicy.app_users(_app_uuid, True, _redis)
-        _b_users = AbstractPolicy.app_users(_app_uuid, False, _redis)
+    def get_service_care_users(cls, _user_uuid, _redis):
+        _a_users = AbstractPolicy.app_users(True, _redis)
+        _b_users = AbstractPolicy.app_users(False, _redis)
         return _a_users + _b_users
 
     @classmethod
     def get_portal_care_users(cls, _app_uuid, _user_uuid, _redis):
-        _a_users = AbstractPolicy.app_users(_app_uuid, True, _redis)
+        _a_users = AbstractPolicy.app_users(True, _redis)
         return _a_users
 

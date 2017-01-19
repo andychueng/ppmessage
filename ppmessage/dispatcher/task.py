@@ -9,7 +9,6 @@ from .policy import BroadcastPolicy
 
 from ppmessage.db.models import AppInfo
 from ppmessage.db.models import DeviceUser
-from ppmessage.db.models import OrgGroup
 from ppmessage.db.models import ConversationInfo
 from ppmessage.db.models import MessagePushTask
 
@@ -42,27 +41,16 @@ class TaskHandler():
             logging.error("Can't find task for task uuid: %s" % (_data["task_uuid"]))
             return None
         
-        _app = redis_hash_to_dict(_redis, AppInfo, _task.get("app_uuid"))
-        if _app == None:
-            logging.error("No app: %s" % _task.get("app_uuid"))
-            return None
-
         _user = None
         if _task.get("from_type") == YVOBJECT.DU:
             _user = redis_hash_to_dict(_redis, DeviceUser, _task.get("from_uuid"))
             if _user != None:
                 del _user["user_password"]
 
-        _group = None
-        if _task.get("from_type") == YVOBJECT.OG:
-            _group = redis_hash_to_dict(_redis, OrgGroup, _task.get("from_uuid"))
-
         # conversation maybe None for explicit message SYS LOGOUT
         _conversation = redis_hash_to_dict(_redis, ConversationInfo, _task.get("conversation_uuid"))
 
-        _task["_app"] = _app
         _task["_user"] = _user
-        _task["_group"] = _group
         _task["_conversation"] = _conversation
         
         self._task = _task
