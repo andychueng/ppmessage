@@ -78,7 +78,7 @@ class AbstractPolicy(Policy):
         return list(_users)
 
     @classmethod
-    def conversation_datas(cls, _app_uuid, _conversation_uuid, _users, _redis):
+    def conversation_datas(cls, _conversation_uuid, _users, _redis):
         _pi = _redis.pipeline()
         _pre = ConversationUserData.__tablename__ + ".user_uuid."
         _pos = ".conversation_uuid." + _conversation_uuid
@@ -121,7 +121,6 @@ class AbstractPolicy(Policy):
         _message["bo"] = self._task.get("body")
 
         if _message["ct"] == CONVERSATION_TYPE.S2P:
-            _message["ti"] = self._task["app_uuid"]
             _message["tt"] = YVOBJECT.AP
                 
         if isinstance(self._task.get("title"), unicode):
@@ -135,7 +134,7 @@ class AbstractPolicy(Policy):
 
         _message_body = json.dumps(self._task["message_body"])
         if isinstance(_message_body, unicode):
-            _message_body = _message_body.encode("utf-8")
+           _message_body = _message_body.encode("utf-8")
             
         _values = {
             "uuid": self._task["uuid"],
@@ -293,11 +292,10 @@ class AbstractPolicy(Policy):
         return
         
     def users(self):
-        _app_uuid = self._task["app_uuid"]
         _conversation_uuid = self._task["conversation_uuid"]
 
-        _users = AbstractPolicy.conversation_users(_app_uuid, _conversation_uuid, self._redis)
-        _datas = AbstractPolicy.conversation_datas(_app_uuid, _conversation_uuid, _users, self._redis)
+        _users = AbstractPolicy.conversation_users(_conversation_uuid, self._redis)
+        _datas = AbstractPolicy.conversation_datas(_conversation_uuid, _users, self._redis)
         _datas = dict(zip(_users, _datas))
 
         self._is_service_user = {}
@@ -357,7 +355,7 @@ class BroadcastPolicy(AbstractPolicy):
         return _a_users + _b_users
 
     @classmethod
-    def get_portal_care_users(cls, _app_uuid, _user_uuid, _redis):
+    def get_portal_care_users(cls, _user_uuid, _redis):
         _a_users = AbstractPolicy.app_users(True, _redis)
         return _a_users
 

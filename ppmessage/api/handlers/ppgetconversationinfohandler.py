@@ -35,7 +35,6 @@ class PPGetConversationInfoHandler(BaseHandler):
             return
         
         _key = ConversationUserData.__tablename__ + \
-               ".app_uuid." + self._app_uuid + \
                ".user_uuid." + self._user_uuid + \
                ".conversation_uuid." + self._conv_uuid
         _data_uuid = _redis.get(_key)
@@ -59,7 +58,6 @@ class PPGetConversationInfoHandler(BaseHandler):
         return
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)
@@ -70,13 +68,10 @@ class PPGetConversationInfoHandler(BaseHandler):
     def _Task(self):
         super(PPGetConversationInfoHandler, self)._Task()
         _request = json.loads(self.request.body)
-        self._app_uuid = _request.get("app_uuid")
         self._user_uuid = _request.get("user_uuid")
         self._conv_uuid = _request.get("conversation_uuid")
 
-        if self._conv_uuid == None or \
-           self._user_uuid == None or \
-           self._app_uuid == None:
+        if not all([self._conv_uuid, self._user_uuid]):
             self.setErrorCode(API_ERR.NO_PARA)
             return
         self._get()

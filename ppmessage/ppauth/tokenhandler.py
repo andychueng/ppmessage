@@ -70,9 +70,8 @@ class TokenHandler(RequestHandler):
             return
 
         _api = json.loads(_api)
-        _app_uuid = _api[0]
-        _api_uuid = _api[1]
-        _api_level = _api[2]
+        _api_uuid = _api[0]
+        _api_level = _api[1]
         # _api[3] is api_secret
 
         if _api_level != API_LEVEL.PPCOM and _api_level != API_LEVEL.PPCONSOLE and _api_level != API_LEVEL.THIRD_PARTY_CONSOLE:
@@ -95,8 +94,11 @@ class TokenHandler(RequestHandler):
         _api_token = hashlib.sha1(_api_token).hexdigest()
         _api_token = base64.b64encode(_api_token)
         
-        _row = ApiTokenData(uuid=str(uuid.uuid1()), api_code=_api_code, api_token=_api_token,
-                            app_uuid=_app_uuid, api_uuid=_api_uuid, api_level=_api_level)
+        _row = ApiTokenData(uuid=str(uuid.uuid1()),
+                            api_code=_api_code,
+                            api_token=_api_token,
+                            api_uuid=_api_uuid,
+                            api_level=_api_level)
         _row.async_add(_redis)
         _row.create_redis_keys(_redis)
 
@@ -123,9 +125,8 @@ class TokenHandler(RequestHandler):
             return
 
         _api = json.loads(_api)
-        _app_uuid = _api[0]
-        _api_uuid = _api[1]
-        _api_level = _api[2]
+        _api_uuid = _api[0]
+        _api_level = _api[1]
         # _api[3] is api_secret
 
         if _api_level != API_LEVEL.PPKEFU and _api_level != API_LEVEL.PPCONSOLE:
@@ -155,8 +156,11 @@ class TokenHandler(RequestHandler):
         _api_token = hashlib.sha1(_api_token).hexdigest()
         _api_token = base64.b64encode(_api_token)
         
-        _row = ApiTokenData(uuid=str(uuid.uuid1()), api_code=_api_code, api_token=_api_token,
-                            app_uuid=_app_uuid, api_uuid=_api_uuid, api_level=_api_level)
+        _row = ApiTokenData(uuid=str(uuid.uuid1()),
+                            api_code=_api_code,
+                            api_token=_api_token,
+                            api_uuid=_api_uuid,
+                            api_level=_api_level)
         _row.async_add(_redis)
         _row.create_redis_keys(_redis)
 

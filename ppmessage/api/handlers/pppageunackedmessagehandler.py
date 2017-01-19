@@ -45,7 +45,6 @@ class PPPageUnackedMessageHandler(BaseHandler):
         return
     
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)        
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         self.addPermission(api_level=API_LEVEL.THIRD_PARTY_KEFU)
@@ -137,19 +136,17 @@ class PPPageUnackedMessageHandler(BaseHandler):
         super(PPPageUnackedMessageHandler, self)._Task()
 
         _request = json.loads(self.request.body)
-        _app_uuid = _request.get("app_uuid")
         _user_uuid = _request.get("user_uuid")
 
-        if _user_uuid == None or _app_uuid == None:
+        if not _user_uuid:
             logging.error("not enough parameters.")
             self.setErrorCode(API_ERR.NO_PARA)
             return
 
-        self._app_uuid = _app_uuid
         self._user_uuid = _user_uuid
         
         _redis = self.application.redis
-        _key = MessagePush.__tablename__ + ".app_uuid." + _app_uuid + ".user_uuid." + _user_uuid
+        _key = MessagePush.__tablename__ + ".user_uuid." + _user_uuid
         _total_count = _redis.zcard(_key)
 
         _page_offset = _request.get("page_offset")

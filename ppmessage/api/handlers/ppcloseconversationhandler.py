@@ -17,18 +17,9 @@ import json
 import logging
 
 class PPCloseConversationHandler(BaseHandler):
-    """
-    requst:
-    app_uuid, coversation_uuid, user_uuid
-    
-    response:
-    json with error_code
-
-    """
-    def _close(self, _conversation_uuid, _user_uuid, _app_uuid):
+    def _close(self, _conversation_uuid, _user_uuid):
         _redis = self.application.redis
         _key = ConversationUserData.__tablename__ + \
-               ".app_uuid." + _app_uuid + \
                ".user_uuid." + _user_uuid + \
                ".conversation_uuid." + _conversation_uuid
         _uuid = _redis.get(_key)
@@ -42,7 +33,6 @@ class PPCloseConversationHandler(BaseHandler):
         return
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)      
@@ -55,10 +45,9 @@ class PPCloseConversationHandler(BaseHandler):
         _request = json.loads(self.request.body)
         _conversation_uuid = _request.get("conversation_uuid")
         _user_uuid = _request.get("user_uuid")
-        _app_uuid = _request.get("app_uuid")
-        if _conversation_uuid == None or _user_uuid == None or _app_uuid == None:
+        if _conversation_uuid == None or _user_uuid == None:
             self.setErrorCode(API_ERR.NO_PARA)
             return
-        self._close(_conversation_uuid, _user_uuid, _app_uuid)
+        self._close(_conversation_uuid, _user_uuid)
         return
 

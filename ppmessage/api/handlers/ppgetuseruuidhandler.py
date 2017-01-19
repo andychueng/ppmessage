@@ -103,7 +103,7 @@ class PPGetUserUUIDHandler(BaseHandler):
         _ent_user_id = _request.get("ent_user_id")
         _ent_user_name = _request.get("ent_user_name")
 
-        if not all([_app_uuid, _ent_user_id, _ent_user_name]):
+        if not all([_ent_user_id, _ent_user_name]):
             logging.error("wrong parameters %s" % _request)
             self.setErrorCode(API_ERR.NO_PARA)
             return

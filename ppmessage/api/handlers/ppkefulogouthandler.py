@@ -31,16 +31,14 @@ import uuid
 class PPKefuLogoutHandler(BaseHandler):
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         return
 
     def _user_online_status(self):
         _user_uuid = self.user_uuid
         _device_uuid = self.device_uuid
-        _app_uuid = self.app_uuid
         _redis = self.application.redis
-        _key0 = REDIS_PPKEFU_ONLINE_KEY + ".app_uuid." + _app_uuid
+        _key0 = REDIS_PPKEFU_ONLINE_KEY
         _redis.srem(_key0, _user_uuid + "." + _device_uuid)
         
         _today = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -96,7 +94,7 @@ class PPKefuLogoutHandler(BaseHandler):
         return
 
     def _delete_auth_token(self):
-        _key = ApiTokenData.__tablename__ + ".app_uuid." + self.app_uuid + \
+        _key = ApiTokenData.__tablename__ + \
                ".api_token." + self.api_token
         _uuid = self.application.redis.get(_key)
         if _uuid == None or len(_uuid) == 0:
@@ -110,17 +108,15 @@ class PPKefuLogoutHandler(BaseHandler):
         super(PPKefuLogoutHandler, self)._Task()
         _input = json.loads(self.request.body)
 
-        _app_uuid = _input.get("app_uuid")
         _user_uuid = _input.get("user_uuid")
         _device_uuid = _input.get("device_uuid")
     
-        if _user_uuid == None or _device_uuid == None or _app_uuid == None:
+        if not all([_user_uuid, _device_uuid]):
             self.setErrorCode(API_ERR.NO_PARA)
             return False
 
         self.user_uuid = _user_uuid
         self.device_uuid = _device_uuid
-        self.app_uuid = _app_uuid
         
         logging.info("DEVICEUSERLOGOUT with: %s." % str(self.request_body))
         self._update_device()

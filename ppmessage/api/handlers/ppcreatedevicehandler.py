@@ -66,8 +66,11 @@ class PPCreateDeviceHandler(BaseHandler):
             return
 
         _device_uuid = str(uuid.uuid1())
-        _row = DeviceInfo(uuid=_device_uuid, app_uuid=self._app_uuid, user_uuid=self._user_uuid, is_ppcom_device=True,
-                          device_ostype=self._device_ostype, terminal_uuid=_terminal_uuid)
+        _row = DeviceInfo(uuid=_device_uuid,
+                          user_uuid=self._user_uuid,
+                          is_ppcom_device=True,
+                          device_ostype=self._device_ostype,
+                          terminal_uuid=_terminal_uuid)
         _row.async_add(self.application.redis)
         _row.create_redis_keys(self.application.redis)
 
@@ -81,7 +84,6 @@ class PPCreateDeviceHandler(BaseHandler):
         device_id from mobile
         ppcom_trace_uuid from browser
         """
-        self._app_uuid = _request.get("app_uuid")
         self._device_id = _request.get("device_id")
         self._user_uuid = _request.get("user_uuid")
         self._device_ostype = _request.get("device_ostype")
@@ -105,12 +107,11 @@ class PPCreateDeviceHandler(BaseHandler):
         return True
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         return
         
     def _Task(self):
-        super(PPCreateDeviceHandler, self)._Task()
+        super(self.__class__, self)._Task()
         _request = json.loads(self.request.body)
         if not self._prepare(_request):
             return

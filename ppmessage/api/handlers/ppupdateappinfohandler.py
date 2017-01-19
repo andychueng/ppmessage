@@ -22,11 +22,6 @@ class PPUpdateAppInfoHandler(BaseHandler):
     def _update(self, _request):
         _redis = self.application.redis
         _request = json.loads(self.request.body)
-        _app_uuid = _request.get("app_uuid")
-        
-        if _app_uuid == None:
-            self.setErrorCode(API_ERR.NO_PARA)
-            return
 
         _data = copy.deepcopy(_request)
         del _data["app_uuid"]
@@ -43,13 +38,12 @@ class PPUpdateAppInfoHandler(BaseHandler):
         return
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)
         self.addPermission(api_level=API_LEVEL.THIRD_PARTY_CONSOLE)
         return
     
     def _Task(self):
-        super(PPUpdateAppInfoHandler, self)._Task()
+        super(self.__class__, self)._Task()
         _request = json.loads(self.request.body)
         self._update(_request)
         return

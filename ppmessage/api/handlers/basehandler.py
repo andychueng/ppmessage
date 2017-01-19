@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2010-2016 PPMessage.
+# Copyright (C) 2010-2017 PPMessage.
 # Guijin Ding, dingguijin@gmail.com
 # All rights reserved
 #
@@ -41,21 +41,10 @@ def getBackendQueue():
 class BaseHandler(RequestHandler):
 
     def __init__(self, *args, **kwargs):
-        """
-        api_uuid list, api_level list
-        if api_level list empty, any api level is permitted.
-        if api_uuid True, input parameters must include api_uuid
-        if app_uuid True, input parameters must include app_uuid
-
-        if app_created True, the app must be created by api
-
-        """        
 
         self._permission = {
             "api_level": [],
-            "api_uuid": False,
-            "app_uuid": False,
-            "app_owned": False,
+            "api_uuid": False
         }
 
         super(BaseHandler, self).__init__(*args, **kwargs)
@@ -68,8 +57,6 @@ class BaseHandler(RequestHandler):
         self.api_uuid = None
         self.api_token = None
         self.api_level = None
-        self.app_uuid = None
-        
         return
     
     def _header(self):
@@ -191,22 +178,6 @@ class BaseHandler(RequestHandler):
                 logging.error("api_level: %s not in permission" % self.api_level)
                 return False
 
-        _app_uuid = _permission.get("app_uuid")
-        if _app_uuid == True:
-            self.app_uuid = self.request_body.get("app_uuid")
-            if self.app_uuid == None:
-                logging.error("no app_uuid is provided")
-                return False
-
-        _api_uuid = _permission.get("api_uuid")
-        _app_owned = _permission.get("app_owned")
-        if _app_owned == True and _app_uuid == True and _api_uuid == True:
-            _key = AppInfo.__tablename__ + ".uuid." + self.app_uuid
-            _api_uuid = self.application.redis.hget(_key, "api_uuid")
-            if _api_uuid != self.api_uuid:
-                logging.error("the app:%s is not created by api:%s" % (self.app_uuid, self.api_uuid))
-                return False
-
         return True
 
     def _json(self):
@@ -250,11 +221,9 @@ class BaseHandler(RequestHandler):
     def getReturnData(self):
         return self._return_data
 
-    def addPermission(self, app_uuid=None, api_uuid=None, api_level=None):
+    def addPermission(self, api_uuid=None, api_level=None):
         if api_uuid != None:
             self._permission["api_uuid"] = api_uuid
         if api_level != None:
             self._permission["api_level"].append(api_level)
-        if app_uuid != None:
-            self._permission["app_uuid"] = app_uuid
         return

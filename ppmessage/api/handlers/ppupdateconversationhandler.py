@@ -16,16 +16,6 @@ import json
 import logging
 
 class PPUpdateConversationHandler(BaseHandler):
-    """
-    requst:
-    header
-    body:
-    conversation_uuid, owner_uuid
-    
-    response:
-    json with error_code
-
-    """
 
     def _update(self, _conv_uuid, _assigned_uuid):
         _redis = self.application.redis

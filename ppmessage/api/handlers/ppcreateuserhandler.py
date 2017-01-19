@@ -23,13 +23,7 @@ import logging
 from tornado.ioloop import IOLoop
 
 def create_user(_redis, _request):
-    '''
-    @param _redis
-    @param _request a dictionary contains create user's related param
-    @return user dict
-    '''
     
-    _app_uuid = _request.get("app_uuid")
     _user_email = _request.get("user_email")
     _user_status = _request.get("user_status")
     _user_fullname = _request.get("user_fullname")
@@ -37,18 +31,15 @@ def create_user(_redis, _request):
     _user_password = _request.get("user_password")
     _is_service_user = _request.get("is_service_user")
     
-    if _user_email == None or _app_uuid == None or _user_fullname == None:
+    if not all([_user_email, _user_fullname]):
         return None
 
     _key = DeviceUser.__tablename__ + ".user_email." + _user_email
     if _redis.exists(_key):
         return None
         
-    if _is_service_user != None:
-        _is_portal_user = not _is_service_user
-    else:
+    if _is_service_user == None:
         _is_service_user = False
-        _is_portal_user = not _is_service_user
 
     if _user_status == None:
         _user_status = USER_STATUS.THIRDPARTY
@@ -80,21 +71,7 @@ def create_user(_redis, _request):
     return _user_values
 
 class PPCreateUserHandler(BaseHandler):
-    """
-    requst:
-    header
-    require:
-    app_uuid/user_email/user_fullname/user_language
-
-    optional:
-    is_service_user(False)
-        
-    response:
-    error_code with device user record in ppmessage system
-
-    """
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)
         self.addPermission(api_level=API_LEVEL.THIRD_PARTY_CONSOLE)
         return
@@ -103,11 +80,10 @@ class PPCreateUserHandler(BaseHandler):
         super(PPCreateUserHandler, self)._Task()
         _request = json.loads(self.request.body)
         
-        _app_uuid = _request.get("app_uuid")
         _user_email = _request.get("user_email")
         _user_fullname = _request.get("user_fullname")
         
-        if _user_email == None or _app_uuid == None or _user_fullname == None:
+        if not all([_user_email, _user_fullname]):
             self.setErrorCode(API_ERR.NO_PARA)
             return
 

@@ -39,7 +39,6 @@ class Conversation():
         _rdata = {}
         _rdata["user_list"] = _member_list        
         _rdata["uuid"] = _conversation["uuid"]
-        _rdata["app_uuid"] = self._app_uuid
         _rdata["user_uuid"] = self._user_uuid
         _rdata["assigned_uuid"] = _conversation.get("assigned_uuid")
         _rdata["group_uuid"] = self._group_uuid
@@ -54,13 +53,12 @@ class Conversation():
         return _rdata
 
     def _get_conversation_user_list(self):
-        _list = BroadcastPolicy.create_conversation_users(self._app_uuid, self._group_uuid, self._redis)
+        _list = BroadcastPolicy.create_conversation_users(self._redis)
         return _list
 
     def _datarow(self, _user_uuid, _user_name, _conversation_type, _conversation_uuid, _conversation_name, _conversation_icon):
         _values = {
             "uuid": str(uuid.uuid1()),
-            "app_uuid": self._app_uuid,
             "user_uuid": _user_uuid,
             "user_name": _user_name,
             "conversation_type": _conversation_type,

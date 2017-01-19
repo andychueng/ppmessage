@@ -27,8 +27,9 @@ class PPPageUserConversationHandler(BaseHandler):
     def _return_conversations(self, _conversations):
         _pi = self._redis.pipeline()
         for _conversation_uuid in _conversations:
-            _key = ConversationUserData.__tablename__ + ".app_uuid." + self._app_uuid + \
-                   ".user_uuid." + self._user_uuid + ".conversation_uuid." + _conversation_uuid
+            _key = ConversationUserData.__tablename__ + \
+                   ".user_uuid." + self._user_uuid + \
+                   ".conversation_uuid." + _conversation_uuid
             _pi.get(_key)
         _datas = _pi.execute()
 
@@ -168,26 +169,25 @@ class PPPageUserConversationHandler(BaseHandler):
         return
     
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)        
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         self.addPermission(api_level=API_LEVEL.THIRD_PARTY_KEFU)
         return
     
     def _Task(self):
-        super(PPPageUserConversationHandler, self)._Task()
+        super(self.__class__, self)._Task()
         _body = json.loads(self.request.body)
         self._redis = self.application.redis
-        self._app_uuid = _body.get("app_uuid")
         self._user_uuid = _body.get("user_uuid")
         self._page_offset = _body.get("page_offset")
         self._page_size = _body.get("page_size")
         self._max_uuid = _body.get("max_uuid")
         self._min_uuid = _body.get("min_uuid")
-        self._set_key = ConversationUserData.__tablename__ + ".app_uuid." + self._app_uuid + \
-                        ".user_uuid." + self._user_uuid + ".conversation_status." + CONVERSATION_STATUS.OPEN
+        self._set_key = ConversationUserData.__tablename__ + \
+                        ".user_uuid." + self._user_uuid + \
+                        ".conversation_status." + CONVERSATION_STATUS.OPEN
         
-        if self._app_uuid == None or self._user_uuid == None:
+        if not self._user_uuid:
             self.setErrorCode(API_ERR.NO_PARA)
             return
         

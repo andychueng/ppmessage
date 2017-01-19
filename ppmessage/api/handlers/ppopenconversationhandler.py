@@ -14,20 +14,9 @@ import json
 import logging
 
 class PPOpenConversationHandler(BaseHandler):
-    """
-    requst:
-    app_uuid
-    user_uuid
-    conversation_uuid
-    
-    response:
-    json with error_code
-
-    """
-    def _open(self, _app_uuid, _user_uuid, _conversation_uuid):
+    def _open(self, _user_uuid, _conversation_uuid):
         _redis = self.application.redis
         _key = ConversationUserData.__tablename__ + \
-               ".app_uuid." + _app_uuid + \
                ".user_uuid." + _user_uuid + \
                ".conversation_uuid." + _conversation_uuid
         _data_uuid = _redis.get(_key)
@@ -41,7 +30,6 @@ class PPOpenConversationHandler(BaseHandler):
         return
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)
@@ -50,14 +38,15 @@ class PPOpenConversationHandler(BaseHandler):
         return
 
     def _Task(self):
-        super(PPOpenConversationHandler, self)._Task()
+        super(self.__class__, self)._Task()
         _request = json.loads(self.request.body)
         _conversation_uuid = _request.get("conversation_uuid")
         _user_uuid = _request.get("user_uuid")
-        _app_uuid = _request.get("app_uuid")
-        if _conversation_uuid == None or _app_uuid == None or _user_app == None:
+        
+        if not all([_conversation_uuid, _user_app]):
             self.setErrorCode(API_ERR.NO_PARA)
             return
-        self._open(_app_uuid, _user_uuid, _conversation_uuid)
+        
+        self._open(_user_uuid, _conversation_uuid)
         return
 

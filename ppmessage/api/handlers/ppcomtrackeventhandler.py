@@ -19,13 +19,12 @@ class PPComTrackEventHandler(BaseHandler):
 
     def _get(self):
         _request = json.loads(self.request.body)
-        _app_uuid = _request.get("app_uuid")
         _user_uuid = _request.get("user_uuid")
         _device_uuid = _request.get("device_uuid")
         _event_name = _request.get("event_name")
         _event_data = _request.get("event_data")
 
-        if not all([_app_uuid, _user_uuid, _device_uuid, _event_name, _event_data]):
+        if not all([_user_uuid, _device_uuid, _event_name, _event_data]):
             self.setErrorCode(API_ERR.NO_PARA)
             return
         
@@ -33,7 +32,6 @@ class PPComTrackEventHandler(BaseHandler):
         return
     
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         return
 

@@ -486,7 +486,6 @@ class ConversationInfo(CommonMixin, BaseModel):
             
         if self.assigned_uuid != None:
             _key = self.__tablename__ + \
-                   ".app_uuid." + self.app_uuid + \
                    ".user_uuid." + self.user_uuid + \
                    ".assigned_uuid." + self.assigned_uuid
             _redis.set(_key, self.uuid)
@@ -778,7 +777,7 @@ class ApiInfo(CommonMixin, BaseModel):
     def create_redis_keys(self, _redis, *args, **kwargs):
         CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
         _key = self.__tablename__ + ".api_key." + self.api_key
-        _v = json.dumps([self.app_uuid, self.uuid, self.api_level, self.api_secret])
+        _v = json.dumps([self.uuid, self.api_level, self.api_secret])
         _redis.set(_key, _v)
 
         _key = self.__tablename__ + \

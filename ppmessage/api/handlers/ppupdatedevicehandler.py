@@ -18,18 +18,6 @@ import copy
 import logging
 
 class PPUpdateDeviceHandler(BaseHandler):
-    """
-    requst:
-    header
-    device_uuid, ppmessage device uuid
-    device_os_type
-    device_ios_token
-    ...
-
-    response:
-    json with error_code
-
-    """
     def _update(self, _device_uuid, _request):
         _redis = self.application.redis
         _data = copy.deepcopy(_request)

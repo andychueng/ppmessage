@@ -25,13 +25,6 @@ class PPConsoleGetRealTimeCustomerNumber(BaseHandler):
 
     def _get(self):
         _request = json.loads(self.request.body)
-        _app_uuid = _request.get("app_uuid")
-        
-        if _app_uuid == None:
-            logging.error("not enough parameter provided.") 
-            self.setErrorCode(API_ERR.NO_PARA)
-            return
-
         _redis = self.application.redis
 
         _number = []
@@ -39,7 +32,8 @@ class PPConsoleGetRealTimeCustomerNumber(BaseHandler):
         for _i in range(24):
             _data = {}
             _customers = set()
-            _key = REDIS_PPCOM_ONLINE_KEY + ".app_uuid." + _app_uuid + ".day." + _today + ".hour." + str(_i)
+            _key = REDIS_PPCOM_ONLINE_KEY + \
+                   ".day." + _today + ".hour." + str(_i)
             _devices = _redis.smembers(_key)
             for _device in _devices:
                 _customers.add(_device.split(".")[0])
@@ -50,7 +44,6 @@ class PPConsoleGetRealTimeCustomerNumber(BaseHandler):
         return
         
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)
         return
 

@@ -23,7 +23,7 @@ import logging
 class PPGetConversationUserListHandler(BaseHandler):
     """
     """
-    def _get(self, _app_uuid, _conversation_uuid):
+    def _get(self, _conversation_uuid):
         _redis = self.application.redis
         _key = ConversationUserData.__tablename__ + \
                ".conversation_uuid." + _conversation_uuid
@@ -42,7 +42,6 @@ class PPGetConversationUserListHandler(BaseHandler):
         return
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)
@@ -53,11 +52,10 @@ class PPGetConversationUserListHandler(BaseHandler):
     def _Task(self):
         super(PPGetConversationUserListHandler, self)._Task()
         _request = json.loads(self.request.body)
-        _app_uuid = _request.get("app_uuid")
         _conversation_uuid = _request.get("conversation_uuid")
-        if _conversation_uuid == None or _app_uuid == None:
+        if not _conversation_uuid:
             self.setErrorCode(API_ERR.NO_PARA)
             return
-        self._get(_app_uuid, _conversation_uuid)
+        self._get(_conversation_uuid)
         return
 

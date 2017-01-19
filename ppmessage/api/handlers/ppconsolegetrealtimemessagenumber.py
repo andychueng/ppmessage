@@ -25,20 +25,14 @@ class PPConsoleGetRealTimeMessageNumber(BaseHandler):
 
     def _get(self):
         _request = json.loads(self.request.body)
-        _app_uuid = _request.get("app_uuid")
-        
-        if _app_uuid == None:
-            logging.error("not enough parameter provided.") 
-            self.setErrorCode(API_ERR.NO_PARA)
-            return
-
         _redis = self.application.redis
         _number = []
         _today = datetime.datetime.now().strftime("%Y-%m-%d")
         for _i in range(24):
             _data = {}
             _customers = set()
-            _key = MessagePushTask.__tablename__ + ".app_uuid." + _app_uuid + ".day." + _today + ".hour." + str(_i)
+            _key = MessagePushTask.__tablename__ + \
+                   ".day." + _today + ".hour." + str(_i)
             _data[str(_i)] = _redis.get(_key)
             _number.append(_data)
         _r = self.getReturnData()
@@ -46,7 +40,6 @@ class PPConsoleGetRealTimeMessageNumber(BaseHandler):
         return
 
     def initialize(self):
-        self.addPermission(app_uuid=True)        
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)
         return
 

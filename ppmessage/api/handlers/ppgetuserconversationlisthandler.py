@@ -58,7 +58,6 @@ class PPGetUserConversationListHandler(BaseHandler):
         _redis = self.application.redis
         _conv_list = []
         _d_key_pre = ConversationUserData.__tablename__ + \
-                     ".app_uuid." + self._app_uuid + \
                      ".user_uuid." + self._user_uuid + \
                      ".conversation_uuid."
         for _conversation_uuid in _conversations:
@@ -79,7 +78,6 @@ class PPGetUserConversationListHandler(BaseHandler):
     def _get(self):
         _redis = self.application.redis
         _key = ConversationUserData.__tablename__ + \
-               ".app_uuid." + self._app_uuid + \
                ".user_uuid." + self._user_uuid
         _conversations = _redis.smembers(_key)
 
@@ -87,7 +85,6 @@ class PPGetUserConversationListHandler(BaseHandler):
         _pi = _redis.pipeline()
         for _conversation_uuid in _conversations:
             _key = ConversationUserData.__tablename__ + \
-                   ".app_uuid." + self._app_uuid + \
                    ".user_uuid." + self._user_uuid + \
                    ".conversation_uuid." + _conversation_uuid
             _pi.get(_key)
@@ -112,7 +109,6 @@ class PPGetUserConversationListHandler(BaseHandler):
         return None
     
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)
@@ -123,9 +119,8 @@ class PPGetUserConversationListHandler(BaseHandler):
     def _Task(self):
         super(PPGetUserConversationListHandler, self)._Task()
         _body = json.loads(self.request.body)
-        self._app_uuid = _body.get("app_uuid")
         self._user_uuid = _body.get("user_uuid")
-        if self._app_uuid == None or self._user_uuid == None:
+        if not self._user_uuid:
             self.setErrorCode(API_ERR.NO_PARA)
             return
         self._get()

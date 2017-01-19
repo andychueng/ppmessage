@@ -28,6 +28,8 @@ from ppmessage.core.constant import SERVICE_USER_STATUS
 from ppmessage.core.constant import REDIS_PPKEFU_ONLINE_KEY
 from ppmessage.core.constant import REDIS_LOGOUT_NOTIFICATION_KEY
 
+from ppmessage.core.utils.config import _get_config
+
 from ppmessage.pcsocket.pcsocketapp import pcsocket_user_online
 from ppmessage.core.redis import redis_hash_to_dict
 
@@ -274,8 +276,10 @@ class PPKefuLoginHandler(BaseHandler):
         del _user["user_password"]
         _r = self.getReturnData()
         _r.update(_user)
-        _app = redis_hash_to_dict(_redis, AppInfo, self.app_uuid)
-        _r["app"] = _app
+
+        _app_uuid = _get_config().get("team").get("app_uuid")
+        _key = AppInfo.__tablename__ + ".uuid." + _app_uuid
+        _r["app"] = _redis.hgetall(_key)
         return
 
     def _send_online(self):

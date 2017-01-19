@@ -50,32 +50,19 @@ class PPGetConversationListHandler(BaseHandler):
         _r["list"] = _l
         return
 
-    def _get_app_conversations(self, redis, app_uuid):
-        '''
-        return conversation uuid list which app_uuid is `app_uuid`
-        '''
-        return get_app_conversations(redis, app_uuid)
+    def _get_app_conversations(self, redis):
+        return get_app_conversations(redis)
     
     def _get_user_info(self, redis, user_uuid):
-        '''
-        return user_info who's uuid is `user_uuid`
-        '''
         return get_device_user_info(redis, user_uuid)
 
     def _get_latest_message(self, redis, task_uuid):
-        '''
-        return latest message info
-        '''
         return get_message_info(redis, task_uuid)
 
     def _get_message_count(self, redis, conversation_uuid):
-        '''
-        return message count of the `conversation_uuid`
-        '''
         return get_message_count(redis, conversation_uuid)
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)        
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)        
@@ -85,12 +72,7 @@ class PPGetConversationListHandler(BaseHandler):
     
     def _Task(self):
         super(self.__class__, self)._Task()
-        _app_uuid = json.loads(self.request.body).get("app_uuid")
-        if _app_uuid == None:
-            logging.error("no app_uuid provided")
-            self.setErrorCode(API_ERR.NO_PARA)
-            return
-        self._get(_app_uuid)
+        self._get()
         return
 
         

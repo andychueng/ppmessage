@@ -194,34 +194,33 @@ class PCSocketDelegate():
         _row.update_redis_keys(self.redis)
         return
 
-    def ppcom_device_online_log(self, _app_uuid, _user_uuid, _device_uuid):
-        _key = REDIS_PPCOM_ONLINE_KEY + ".app_uuid." + _app_uuid + ".day." + datetime.datetime.now().strftime("%Y-%m-%d")
+    def ppcom_device_online_log(self, _user_uuid, _device_uuid):
+        _key = REDIS_PPCOM_ONLINE_KEY + ".day." + datetime.datetime.now().strftime("%Y-%m-%d")
         self.redis.sadd(_key, _user_uuid + "." + _device_uuid)
         _key = _key + ".hour." + str(datetime.datetime.now().hour)
         self.redis.sadd(_key, _user_uuid + "." + _device_uuid)
         return
 
-    def _get_service_care_users(self, _app_uuid, _user_uuid):
-        return BroadcastPolicy.get_service_care_users(_app_uuid, _user_uuid, self.redis)
+    def _get_service_care_users(self, _user_uuid):
+        return BroadcastPolicy.get_service_care_users(_user_uuid, self.redis)
 
-    def _get_portal_care_users(self, _app_uuid, _user_uuid):
-        return BroadcastPolicy.get_portal_care_users(_app_uuid, _user_uuid, self.redis)
+    def _get_portal_care_users(self, _user_uuid):
+        return BroadcastPolicy.get_portal_care_users(_user_uuid, self.redis)
     
     def start_watching_online(self, _ws):
         _user_uuid = _ws.user_uuid
-        _app_uuid = _ws.app_uuid
         _device_uuid = _ws.device_uuid
         _is_service_user = _ws.is_service_user
         
-        if _user_uuid == None or _app_uuid == None or _device_uuid == None:
+        if _user_uuid == None or _device_uuid == None:
             logging.error("app uuid or user uuid is None for start watching")
             return
 
         _users = None
         if _is_service_user == True:
-            _users = self._get_service_care_users(_app_uuid, _user_uuid)
+            _users = self._get_service_care_users(_user_uuid)
         else:
-            _users = self._get_portal_care_users(_app_uuid, _user_uuid)
+            _users = self._get_portal_care_users(_user_uuid)
 
         if _users == None:
             return
@@ -309,7 +308,7 @@ class PCSocketDelegate():
         self.redis.rpush(_key, json.dumps(_body))
         return
     
-    def save_extra(self, _app_uuid, _user_uuid, _extra_data):
+    def save_extra(self, _user_uuid, _extra_data):
         if _extra_data == None:
             return
 
@@ -318,8 +317,10 @@ class PCSocketDelegate():
             _visit_page_url = _extra_data.get("href")
             _extra_data = json.dumps(_extra_data)
             
-        _row = UserNavigationData(uuid=str(uuid.uuid1()), app_uuid=_app_uuid, user_uuid=_user_uuid,
-                                  visit_page_url=_visit_page_url, navigation_data=_extra_data)
+        _row = UserNavigationData(uuid=str(uuid.uuid1()),
+                                  user_uuid=_user_uuid,
+                                  visit_page_url=_visit_page_url,
+                                  navigation_data=_extra_data)
         _row.async_add(self.redis)
         _row.create_redis_keys(self.redis)
         return

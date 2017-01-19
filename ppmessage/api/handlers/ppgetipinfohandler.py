@@ -25,27 +25,18 @@ class PPGetIPInfoHandler(BaseHandler):
     def _get(self):
 
         _request = json.loads(self.request.body)
-        _app_uuid = _request.get("app_uuid")
         
         _ip = self.request.headers.get("X-Real-Ip") or \
               self.request.headers.get("remote_ip") or \
               self.request.remote_ip
 
-        url = "http://mdmforum.cn:8099/IP2GEO/"
+        url = "http://ipinfo.io/" + ip + "/json"
         http_headers = {"Content-Type" : "application/json"}
         
-        http_body = {
-            "ip": _ip,
-            "language": "en",
-            "app_uuid": self._app_uuid,
-            "app_name": "IPINFO"
-        }
-        
         http_request = HTTPRequest(
-            url, method='POST',
+            url, method='GET',
             headers=http_headers,
-            validate_cert=False,
-            body=json.dumps(http_body)
+            validate_cert=False
         )
 
         http_client = AsyncHTTPClient()
@@ -67,7 +58,6 @@ class PPGetIPInfoHandler(BaseHandler):
         return
     
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         return
 

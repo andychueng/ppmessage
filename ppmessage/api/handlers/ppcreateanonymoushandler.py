@@ -42,21 +42,13 @@ class PPCreateAnonymousHandler(BaseHandler):
         if user_uuid == None or ip == None or data_uuid == None:
             return
         
-        url = "http://mdmforum.cn:8099/IP2GEO/"
+        url = "http://ipinfo.io/" + ip + "/json"
+        
         http_headers = {"Content-Type" : "application/json"}
-        
-        http_body = {
-            "ip": ip,
-            "language": _get_config().get("server").get("language").get("locale"),
-            "team_uuid": _get_config().get("team").get("app_uuid"),
-            "team_name": _get_config().get("team").get("name")
-        }
-        
+                
         http_request = HTTPRequest(
-            url, method='POST',
-            headers=http_headers,
-            validate_cert=False,
-            body=json.dumps(http_body)
+            url, method='GET',
+            headers=http_headers
         )
 
         http_client = AsyncHTTPClient()
@@ -110,9 +102,9 @@ class PPCreateAnonymousHandler(BaseHandler):
                 _rdata["user_icon"] = _user["user_icon"]
                 _rdata["user_status"] = _user.get("user_status")
                 return
-        
-        _du_uuid = str(uuid.uuid1())
+
         _app_uuid = _get_config().get("team").get("app_uuid")
+        _du_uuid = str(uuid.uuid1())
         _user_email = _du_uuid + "@" + _app_uuid
         _user_name = self._unknown_user_name()
         _user_icon = random_identicon(_du_uuid)
@@ -122,6 +114,8 @@ class PPCreateAnonymousHandler(BaseHandler):
             "ppcom_trace_uuid": _ppcom_trace_uuid,
             "user_status": USER_STATUS.ANONYMOUS,
             "is_anonymous_user": True,
+            "is_service_user": False,
+            "is_owner_user": False,
             "user_name": _user_name,
             "user_email": _user_email,
             "user_fullname": _user_name,
@@ -144,12 +138,11 @@ class PPCreateAnonymousHandler(BaseHandler):
         return
     
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         return
 
     def _Task(self):
-        super(PPCreateAnonymousHandler, self)._Task()
+        super(self.__class__, self)._Task()
         _request = json.loads(self.request.body)
         _ppcom_trace_uuid = _request.get("ppcom_trace_uuid")
         if _ppcom_trace_uuid == None:

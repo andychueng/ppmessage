@@ -7,7 +7,6 @@
 
 from .basehandler import BaseHandler
 
-from ppmessage.db.models import OrgGroup
 from ppmessage.db.models import AppInfo
 from ppmessage.db.models import FileInfo
 from ppmessage.db.models import DeviceUser
@@ -19,7 +18,6 @@ from ppmessage.core.redis import redis_hash_to_dict
 from ppmessage.api.error import API_ERR
 
 from ppmessage.core.constant import API_LEVEL
-from ppmessage.core.constant import REDIS_AMD_KEY
 from ppmessage.core.constant import CONVERSATION_TYPE
 from ppmessage.core.constant import CONVERSATION_STATUS
 
@@ -32,17 +30,8 @@ import logging
 import datetime
 
 class PPComCreateConversationHandler(BaseHandler):
-    """
-    For the member_list length == 1, if the conversation has been created 
-    return the existed conversation
-
-    For the group_uuid != None, if the conversation has been created
-    return the existed conversation
-    
-    """
     def _return(self, _conversation_uuid, _request):
         _redis = self.application.redis
-        _app_uuid = _request.get("app_uuid")
         _user_uuid = _request.get("user_uuid")
         
         _conversation = redis_hash_to_dict(_redis, ConversationInfo, _conversation_uuid)
@@ -52,21 +41,19 @@ class PPComCreateConversationHandler(BaseHandler):
         _r = self.getReturnData()
         _r.update(_conversation)
         
-        _key = ConversationUserData.__tablename__ + ".app_uuid." + _app_uuid + \
-               ".user_uuid." + _user_uuid + ".conversation_uuid." + _conversation_uuid
+        _key = ConversationUserData.__tablename__ + \
+               ".user_uuid." + _user_uuid + \
+               ".conversation_uuid." + _conversation_uuid
         _data_uuid = _redis.get(_key)
         if _data_uuid != None:
             _key = ConversationUserData.__tablename__ + ".uuid." + _data_uuid
             logging.info(_redis.hgetall(_key))
             _data = _redis.hmget(_key, ["conversation_name", "conversation_icon"])
-            logging.info("---------%s--------" % str(_data))
             _r["conversation_name"] = _data[0]
             _r["conversation_icon"] = _data[1]
-        logging.info(_r)
         return
 
     def _create(self, _member_uuid, _request):
-        _app_uuid = _request.get("app_uuid")
         _user_uuid = _request.get("user_uuid")
         _redis = self.application.redis
 
@@ -81,11 +68,10 @@ class PPComCreateConversationHandler(BaseHandler):
         _conversation_uuid = str(uuid.uuid1())
         _values = {
             "uuid": _conversation_uuid,
-            "app_uuid": _app_uuid,
             "user_uuid": _user_uuid,
             "assigned_uuid": _member_uuid,
             "conversation_type": CONVERSATION_TYPE.P2S,
-            "status": CONVERSATION_STATUS.NEW,
+            "status": CONVERSATION_STATUS.NEW
         }
         # create it
         _row = ConversationInfo(**_values)
@@ -93,7 +79,6 @@ class PPComCreateConversationHandler(BaseHandler):
         _row.create_redis_keys(_redis)
 
         _row = ConversationUserData(uuid=str(uuid.uuid1()),
-                                    app_uuid=_app_uuid,
                                     user_uuid=_user_uuid,
                                     conversation_uuid=_conversation_uuid,
                                     conversation_type=CONVERSATION_TYPE.P2S,
@@ -104,7 +89,6 @@ class PPComCreateConversationHandler(BaseHandler):
         _row.create_redis_keys(_redis)
 
         _row = ConversationUserData(uuid=str(uuid.uuid1()),
-                                    app_uuid=_app_uuid,
                                     user_uuid=_member_uuid,
                                     conversation_uuid=_conversation_uuid,
                                     conversation_type=CONVERSATION_TYPE.P2S,
@@ -118,7 +102,6 @@ class PPComCreateConversationHandler(BaseHandler):
         return
     
     def _existed(self, _request):
-        _app_uuid = _request.get("app_uuid")
         _user_uuid = _request.get("user_uuid")
         _member_list = _request.get("member_list")
         _redis = self.application.redis
@@ -127,11 +110,13 @@ class PPComCreateConversationHandler(BaseHandler):
             _assigned_uuid = _member_list[0]
             if _assigned_uuid == None:
                 return False
-            _key = ConversationInfo.__tablename__ + ".app_uuid." + _app_uuid + \
-                   ".user_uuid." + _user_uuid + ".assigned_uuid." + _assigned_uuid
+            _key = ConversationInfo.__tablename__ + \
+                   ".user_uuid." + _user_uuid + \
+                   ".assigned_uuid." + _assigned_uuid
             _conversation_uuid = _redis.get(_key)
             if _conversation_uuid != None:
-                _key = ConversationUserData.__tablename__ + ".conversation_uuid." + _conversation_uuid
+                _key = ConversationUserData.__tablename__ + \
+                       ".conversation_uuid." + _conversation_uuid
                 _count = _redis.scard(_key)
                 if _count == 2:
                     self._return(_conversation_uuid, _request)
@@ -140,14 +125,16 @@ class PPComCreateConversationHandler(BaseHandler):
             return False
 
         if _member_list == None:
-            _key = ConversationUserData.__tablename__ + ".app_uuid." + _app_uuid + ".user_uuid." + _user_uuid
+            _key = ConversationUserData.__tablename__ + \
+                   ".user_uuid." + _user_uuid
             _conversations = _redis.smembers(_key)
             if len(_conversations) == 0:
                 return False
 
             _pi = _redis.pipeline()
             for _conversation_uuid in _conversations:
-                _key = ConversationInfo.__tablename__ + ".uuid." + _conversation_uuid
+                _key = ConversationInfo.__tablename__ + \
+                       ".uuid." + _conversation_uuid
                 _pi.hget(_key, "updatetime")
             _updatetime = _pi.execute()
             
@@ -159,18 +146,16 @@ class PPComCreateConversationHandler(BaseHandler):
         return False
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         return
     
     def _Task(self):
         super(PPComCreateConversationHandler, self)._Task()
         _request = json.loads(self.request.body)
-        _app_uuid = _request.get("app_uuid")
         _user_uuid = _request.get("user_uuid")
         _member_list = _request.get("member_list")
         
-        if _app_uuid == None or _user_uuid == None:
+        if not _user_uuid:
             self.setErrorCode(API_ERR.NO_PARA)
             return
 
@@ -182,17 +167,6 @@ class PPComCreateConversationHandler(BaseHandler):
             self._create(_member_list[0], _request)
             return
 
-        _value = {"app_uuid": _app_uuid, "user_uuid": _user_uuid}
-        _value = json.dumps(_value)
-        _hash = hashlib.sha1(_value)
-            
-        _key = REDIS_AMD_KEY + ".amd_hash." + _hash
-        self.application.redis.set(_key, _value)
-
-        _key = REDIS_AMD_KEY
-        self.application.redis.rpush(_key, _hash)
-
-        _key = REDIS_AMD_KEY + ".app_uuid." + _app_uuid
-        self.application.redis.sadd(_key, _hash)
+        # TODO create conversation
         return
 

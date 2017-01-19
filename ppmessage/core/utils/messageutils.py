@@ -11,15 +11,15 @@ from ppmessage.db.models import ConversationUserData
 from ppmessage.core.redis import redis_hash_to_dict
 from ppmessage.core.constant import CONVERSATION_STATUS
 
-def get_app_conversations(redis, app_uuid):
+def get_app_conversations(redis):
     '''
     return the conversation uuid list which app_uuid is `app_uuid`
     '''
     
-    if redis == None or app_uuid == None:
+    if redis == None:
         return []
     
-    key = ConversationUserData.__tablename__ + ".app_uuid." + app_uuid + ".conversation_status." + CONVERSATION_STATUS.OPEN
+    key = ConversationUserData.__tablename__ + ".conversation_status." + CONVERSATION_STATUS.OPEN
     conversations = redis.zrevrange(key, 0, -1) or []
     return conversations
     

@@ -60,7 +60,6 @@ class Proc():
         if not isinstance(_body, dict):
             self._body = json.loads(_body)
         
-        self._app_uuid = self._body.get("app_uuid")
         self._uuid = self._body.get("uuid")
         self._to_type = self._body.get("to_type")
         self._to_uuid = self._body.get("to_uuid")
@@ -103,7 +102,6 @@ class Proc():
     def save(self):
         _task = {
             "uuid": self._uuid,
-            "app_uuid": self._app_uuid,
             "conversation_uuid": self._conversation_uuid,
             "conversation_type": self._conversation_type,
             "message_type": self._message_type,

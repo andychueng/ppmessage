@@ -44,8 +44,6 @@ def create_device_user(redis, request):
     _ent_user_uuid = request.get("ent_user_uuid")
     _ent_user_createtime = request.get("ent_user_createtime")
     
-    _app_uuid = _get_config().get("team").get("app_uuid")
-
     import pypinyin
     if not isinstance(_user_fullname, unicode):
         _user_fullname = _user_fullname.decode("utf-8")
@@ -54,7 +52,6 @@ def create_device_user(redis, request):
 
     _values = {
         "uuid": _uuid,
-        "app_uuid": _app_uuid,
         "is_service_user": _is_service_user,
         "is_owner_user": _is_owner_user,
         "is_ppmessage_user": _is_ppmessage_user,

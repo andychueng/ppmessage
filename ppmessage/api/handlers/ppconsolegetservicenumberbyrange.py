@@ -27,11 +27,10 @@ class PPConsoleGetServiceNumberByRange(BaseHandler):
 
     def _get(self):
         _request = json.loads(self.request.body)
-        _app_uuid = _request.get("app_uuid")
         _begin_date = _request.get("begin_date")
         _end_date = _request.get("end_date")
         
-        if _app_uuid == None or _begin_date == None or _end_date == None:
+        if not all([_begin_date, _end_date]):
             logging.error("not enough parameter provided.") 
             self.setErrorCode(API_ERR.NO_PARA)
             return
@@ -40,7 +39,7 @@ class PPConsoleGetServiceNumberByRange(BaseHandler):
         _days = get_between_days(_begin_date, _end_date)
         _number = {}
         for _i in _days:
-            _key = REDIS_PPKEFU_ONLINE_KEY + ".app_uuid." + _app_uuid + ".day." + _i
+            _key = REDIS_PPKEFU_ONLINE_KEY + ".day." + _i
             _devices = _redis.smembers(_key)
             _agents = set()
             for _device in _devices:
@@ -51,7 +50,6 @@ class PPConsoleGetServiceNumberByRange(BaseHandler):
         return
 
     def initialize(self):
-        self.addPermission(app_uuid=True)        
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)
         return
 

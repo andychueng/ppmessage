@@ -30,7 +30,6 @@ class PPUpdateConversationMemberHandler(BaseHandler):
         _redis = self.application.redis        
         for _user_uuid in self._member_list:
             key = ConversationUserData.__tablename__ + \
-                  ".app_uuid." + self._app_uuid + \
                   ".user_uuid." + _user_uuid + \
                   ".conversation_uuid." + self._conv_uuid
             if _redis.exists(key):
@@ -38,7 +37,6 @@ class PPUpdateConversationMemberHandler(BaseHandler):
             _values = {
                 "uuid": str(uuid.uuid1()),
                 "user_uuid": _user_uuid,
-                "app_uuid": self._app_uuid,
                 "conversation_uuid": self._conv_uuid,
                 "conversation_status": CONVERSATION_STATUS.OPEN,
                 "conversation_type": self._conv["conversation_type"],
@@ -52,7 +50,6 @@ class PPUpdateConversationMemberHandler(BaseHandler):
         _redis = self.application.redis
         for _user_uuid in self._member_list:
             key = ConversationUserData.__tablename__ + \
-                  ".app_uuid." + self._app_uuid + \
                   ".user_uuid." + _user_uuid + \
                   ".conversation_uuid." + self._conv_uuid
             _uuid = _redis.get(key)
@@ -70,27 +67,24 @@ class PPUpdateConversationMemberHandler(BaseHandler):
         return
         
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         self.addPermission(api_level=API_LEVEL.THIRD_PARTY_KEFU)
         return
     
     def _Task(self):
-        super(PPUpdateConversationMemberHandler, self)._Task()
+        super(self.__class__, self)._Task()
         _request = json.loads(self.request.body)
 
         self._action = _request.get("action")
-        self._app_uuid = _request.get("app_uuid")
         self._group_uuid = _request.get("group_uuid")
         self._member_list = _request.get("member_list")
         self._conv_uuid = _request.get("conversation_uuid")
         
         if self._conv_uuid == None or \
-           self._app_uuid == None or \
            self._action == None or \
            self._member_list == None:
-            logging.error("no conv_uuid/app_uuid/action/member_list.")
+            logging.error("no conv_uuid/action/member_list.")
             self.setErrorCode(API_ERR.NO_PARA)
             return
 
