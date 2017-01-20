@@ -58,6 +58,7 @@ def create_user(_redis, _request):
         "user_language": _user_language,
         "user_fullname": _user_fullname,
         "user_password": _user_password,
+        "is_removed_user": False,
         "is_anonymous_user": False,
         "is_service_user": _is_service_user,
         "is_owner_user": False

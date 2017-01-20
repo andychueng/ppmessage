@@ -116,6 +116,7 @@ class PPCreateAnonymousHandler(BaseHandler):
             "is_anonymous_user": True,
             "is_service_user": False,
             "is_owner_user": False,
+            "is_removed_user": False,
             "user_name": _user_name,
             "user_email": _user_email,
             "user_fullname": _user_name,
