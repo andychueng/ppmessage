@@ -3,11 +3,10 @@ angular.module("this_app.services", []);
 
 angular.module("this_app", [
     "base64",
-    "ngCookies",
+    "ngRoute",
     "ngAnimate",
-    "toastr",
-    "ui.router",
     "ngMaterial",
+    "ui.router",
     "this_app.constants",
     "this_app.i18n",
     "this_app.route",

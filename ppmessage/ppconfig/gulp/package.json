@@ -2,7 +2,7 @@
   "name": "ppconfig",
   "version": "1.0.0",
   "license": "Apache-2.0",
-  "description": "ppconsole of ppmessage",
+  "description": "ppconfig of ppmessage",
   "dependencies": {
     "cache": "^1.1.2",
     "clone": "^1.0.2",

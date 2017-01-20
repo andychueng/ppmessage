@@ -1,5 +1,5 @@
 angular.module("this_app")
-    .controller("ConfigCtrl", function($scope, $state, $stateParams, $timeout, $window, $translate, $mdDialog, yvAjax) {
+    .controller("ConfigCtrl", function($scope, $state, $stateParams, $timeout, $window, $mdDialog, yvAjax) {
 
         var CONFIG_STATUS = {
             NONE: 0,
