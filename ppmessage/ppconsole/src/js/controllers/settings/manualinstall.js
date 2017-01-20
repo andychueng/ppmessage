@@ -1,5 +1,5 @@
 angular.module("this_app")
-	.controller("ManualInstallCtrl", function($scope, $rootScope, $stateParams, $cookies, $state, $timeout, $http, $translate, yvTransTags, yvAjax, yvUtil, yvUser, yvConstants) {
+	.controller("ManualInstallCtrl", function($scope, $rootScope, $stateParams, $cookies, $state, $timeout, $http, $translate, yvTransTags, yvAjax, yvUtil, yvUser, yvConstants, yvLogin) {
 
         $scope.integrate_code = null;
 
@@ -56,23 +56,6 @@ angular.module("this_app")
             _set_embedded_code(_own_team);
         };
         
-        var _logined = function() {
-            if(yvUser.get_status() != "OWNER_2") {
-                console.error("should not be here");
-                return;
-            };
-
-            if(!yvUser.get_team()) {
-                var _get = yvAjax.get_app_owned_by_user(yvUser.get_uuid());
-                _get.success(function(data) {
-                    yvUser.set_team(data.app);
-                    _team();
-                });
-            } else {
-                _team();
-            }
-        };
-
         var _translate = function() {
             var _tag_list = [];
             for (var i in yvTransTags.en.application.manualinstall) {
@@ -87,7 +70,7 @@ angular.module("this_app")
         
 		var _init = function() {
             _translate();
-            _logined();
+            yvLogin.prepare(_team, {});
         };
 		
 		_init();

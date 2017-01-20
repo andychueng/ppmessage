@@ -48,9 +48,10 @@ angular.module("this_app")
                 // get service user all conversations                
                 yvAjax.get_app_conversation_list({
                     app_uuid: yvUser.get_team().uuid
-                }).success(function(response) {
+                }).then(function(response) {
                     // handle empty case
 
+                    response = response.data;
                     var conversationArray = [];
                     
                     // refresh data and update dom
@@ -89,7 +90,7 @@ angular.module("this_app")
                     
                     // success callback
                     if (successCB) successCB(conversationArray);
-                }).error(function(error) {
+                }, function(error) {
                     // error callback
                     if (errorCB) errorCB(error);
                 });                
@@ -282,8 +283,7 @@ angular.module("this_app")
                 'page_offset': -1                    
             }).then(function(response) {
                 onGetHistoryMessagesSuccessCallback(response, user_uuid);
-            }, //success
-                    onGetHistoryMessageErrorCallback); //error
+            }, onGetHistoryMessageErrorCallback); //error
         };
 
         // toggle to the clicked page.

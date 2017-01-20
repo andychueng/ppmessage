@@ -81,7 +81,7 @@
 
         function createServiceUser( settings, successCallback, errorCallback ) {
             getAppServiceUsers( function( users ) {
-                yvAjax.create_user( settings ).then( successCallback ).error( errorCallback );
+                yvAjax.create_user( settings ).then( successCallback, errorCallback );
             }, function( e ) {
                 yvCallbackService.error( e, errorCallback );
             } );

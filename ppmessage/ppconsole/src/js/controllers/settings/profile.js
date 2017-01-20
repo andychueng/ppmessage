@@ -19,16 +19,15 @@ angular.module("this_app")
                 user_fullname:user.fullname
             };
             var _u = yvAjax.update_user(_d);
-            _u.success(function(data) {
-                console.log(data);
+            _u.then(function(data) {
+                data = data.data;
                 if (data.error_code == 0) {
                     yvUser.set_fullname(user.fullname);
                     _note(0, "settings.profile.UPDATE_SUCCESSFULLY_TAG");
                 } else {
                     _note(1, "settings.profile.UPDATE_FAILED_TAG");
                 }
-            });
-            _u.error(function(data) {
+            }, function(data) {
                 _note(2, "settings.profile.UPDATE_FAILED_TAG");
             });
         };

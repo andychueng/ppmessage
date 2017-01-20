@@ -72,9 +72,10 @@ angular.module("this_app")
             };
             
             var _update = yvAjax.update_user(_d);
-            _update.success(function(data) {
-                
+            _update.then(function(data) {
+                data = data.data;
                 if (data.error_code == 0) {
+                    
                     yvUser.set_password( sha1( user.user_new_password ) );
                     _note(0, "settings.profile.UPDATE_SUCCESSFULLY_TAG");
                     _reset_scope_user();
@@ -83,8 +84,7 @@ angular.module("this_app")
                     _note(1, "settings.profile.UPDATE_FAILED_TAG");
                     _reset_scope_user();
                 }
-            });
-            _update.error(function() {
+            }, function() {
                 _note(2, "settings.profile.UPDATE_FAILED_TAG");
                 _reset_scope_user();
             });

@@ -59,13 +59,14 @@ angular.module("this_app")
                 user_info.user_password = sha1($scope.edit_user_direct.password);
             }
 
-            yvAjax.update_user(user_info).success(function(data) {
+            yvAjax.update_user(user_info).then(function(data) {
+                data = data.data;
                 if (data.error_code == 0) {
                     $scope.toast_success_string("UPDATE_SUCCESSFULLY_TAG")
                 } else {
                     $scope.toast_error_string("UPDATE_FAILED_TAG")
                 }
-            }).error(function(data) {
+            }, function(data) {
                 $scope.toast_error_string("UPDATE_FAILED_TAG");
             });
             
@@ -192,8 +193,8 @@ angular.module("this_app")
             }, _uuids );
 
             var _r = yvAjax.leave_app(_uuids, yvUser.get_team().uuid);
-            _r.success(function(data) {
-
+            _r.then(function(data) {
+                data = data.data;
                 if (data.error_code == 0) {
                     jQuery("#remove_user").modal('hide');
                     $scope.selected_all.selected = false;
@@ -206,8 +207,7 @@ angular.module("this_app")
                     $scope.toast_error_string("REMOVE_FAILED_TAG");
                     return;
                 }
-            });
-            _r.error(function(data) {
+            }, function(data) {
                 jQuery("#remove_user").modal('hide');
                 $scope.selected_all.selected = false;
                 $scope.page_app_user();
