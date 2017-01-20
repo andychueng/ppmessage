@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2010-2016 PPMessage.
+# Copyright (C) 2010-2017 PPMessage.
 # Guijin Ding, dingguijin@gmail.com.
 # All rights are reserved.
 #
@@ -9,6 +9,7 @@
 
 import os
 import json
+import sys
 import logging
 import hashlib
 
@@ -40,10 +41,11 @@ def config(_d):
     return
 
 if __name__ == "__main__":
-    import sys
-
     reload(sys)
     sys.setdefaultencoding('utf-8')
+
+    _root_dir = os.path.join(_cur_dir(), "../../../../ppmessage")
+    sys.path.append(os.path.abspath(_root_dir))
 
     from ppmessage.core.constant import API_LEVEL
     from ppmessage.core.constant import CONFIG_STATUS

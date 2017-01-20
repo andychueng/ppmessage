@@ -72,7 +72,8 @@ class DeviceUser(CommonMixin, BaseModel):
     is_anonymous_user = Column("is_anonymous_user", Boolean)
     is_service_user = Column("is_service_user", Boolean)
     is_owner_user = Column("is_owner_user", Boolean)
-
+    is_removed_user = Column("is_removed_user", Boolean, default=True)
+    
     # ppcom trace id with web cookie
     ppcom_trace_uuid = Column("ppcom_trace_uuid", String(64))
 
@@ -98,9 +99,10 @@ class DeviceUser(CommonMixin, BaseModel):
 
         _key = self.__tablename__ + ".is_service_user." + str(self.is_service_user)
         _redis.sadd(_key, self.uuid)
-        
-        _key = self.__tablename__ + ".user_email." + self.user_email
-        _redis.set(_key, self.uuid)
+
+        if self.is_service_user == True and not self.is_removed_user:
+            _key = self.__tablename__ + ".user_email." + self.user_email
+            _redis.set(_key, self.uuid)
 
         if self.ppcom_trace_uuid:
             _key = DeviceUser.__tablename__ + ".ppcom_trace_uuid." + self.ppcom_trace_uuid
@@ -109,28 +111,11 @@ class DeviceUser(CommonMixin, BaseModel):
         return
 
     def delete_redis_keys(self, _redis):
-        _obj = redis_hash_to_dict(_redis, DeviceUser, self.uuid)
-        if _obj == None:
-            return
-
-        _key = self.__tablename__ + ".is_service_user." + str(_obj.get("is_service_user"))
-        _redis.srem(_key, self.uuid)
-
-        _key = self.__tablename__ + ".user_email." + _obj["user_email"]
-        _redis.delete(_key)
-
-        if _obj.get("ppcom_trace_uuid"):
-            _key = self.__tablename__ + ".ppcom_trace_uuid." + _obj["ppcom_trace_uuid"]
-            _redis.delete(_key)
-        
         CommonMixin.delete_redis_keys(self, _redis)
         return    
 
     def update_redis_keys(self, _redis):
         CommonMixin.update_redis_keys(self, _redis)
-        _obj = redis_hash_to_dict(_redis, DeviceUser, self.uuid)
-        if _obj == None:
-            return
         return
     
 class DeviceInfo(CommonMixin, BaseModel):
