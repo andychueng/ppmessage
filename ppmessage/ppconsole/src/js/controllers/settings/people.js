@@ -87,6 +87,7 @@ angular.module("this_app")
 
             yvAppPeopleService.createServiceUser( app_user_info, function( data ) {
 
+                data = data.data;
                 switch ( data.error_code ) {
                 case yvAjax.API_ERR.NO_ERR:
                     $scope.toast_success_string("CREATE_SUCCESSFULLY_TAG");
@@ -230,7 +231,8 @@ angular.module("this_app")
                 length: $scope.items_per_page
                 
             }, function( response ) {
-                
+
+                response = response.data;
                 $scope.group = response.users;
                 $scope.total_items = response.total;
                 
