@@ -124,7 +124,11 @@ function $yvAjaxService($state, $timeout, $http, $cookieStore, yvUser, yvConstan
         is_email_valid: function(requestParams) {
             return _apiPost("/PP_IS_EMAIL_VALID", requestParams);
         },
-        
+
+        get_app_info: function(requestParams) {
+            return _apiPost('/PP_GET_APP_INFO', requestParams);
+        },
+
         update_app_info: function(requestParams) {
             return _apiPost('/PP_UPDATE_APP_INFO', requestParams);
         },

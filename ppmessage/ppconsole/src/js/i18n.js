@@ -1,6 +1,6 @@
 /*
  *  guijin.ding@yvertical.com
- *  Copyright (c) 2010-2015 
+ *  Copyright (c) 2010-2017
  */
 
 angular.module("this_app.i18n", ["pascalprecht.translate"])

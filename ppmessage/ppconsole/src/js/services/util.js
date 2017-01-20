@@ -115,13 +115,11 @@ function $yvUtilService($rootScope, $translate, $http, $base64, yvConstants, yvL
                         cache: false,
                         url: url,
                         cache: false,
-                    })
-                        .success(function(response) {
-                            if (successCallback) successCallback(response);
-                        })
-                        .error(function(error) {
-                            if (errorCallback) errorCallback(error);
-                        });
+                    }).then(function(response) {
+                        if (successCallback) successCallback(response.data);
+                    }, function(error) {
+                        if (errorCallback) errorCallback(error);
+                    });
                 }
             }
             

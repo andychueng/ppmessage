@@ -10,7 +10,8 @@ angular.module("this_app")
 
         var _draw_card = function() {
             var _c = yvAjax.ppconsole_get_overview_number(yvUser.get_team().uuid);
-            _c.success(function(data) {
+            _c.then(function(response) {
+                var data = response.data;
                 if (data.error_code != 0) {
                     return;
                 }
@@ -106,12 +107,12 @@ angular.module("this_app")
         var _get_realtime_number = function(mode) {
             var _f = yvAjax["ppconsole_get_real_time_" + mode + "_number"];
             var _d = _f(yvUser.get_team().uuid);
-            _d.success(function(data) {
+            _d.then(function(response) {
+                var data = response.data;
                 if (data.error_code == 0) {
                     _draw_realtime(data.number);
                 }
-            });
-            _d.error(function(data) {
+            }, function(data) {
                 console.error(data);
             });
         };
@@ -119,12 +120,12 @@ angular.module("this_app")
         var _select_history_date = function(begin, end, mode) {
             var _f = yvAjax["ppconsole_get_" + mode + "_number_by_range"];
             var _d = _f(yvUser.get_team().uuid, begin.format("YYYY-MM-DD"), end.format("YYYY-MM-DD"))
-            _d.success(function(data) {
+            _d.then(function(response) {
+                var data = response.data;
                 if (data.error_code == 0) {
                     _draw_history(begin, end, data.number);
                 }
-            });
-            _d.error(function(data) {
+            }, function(data) {
                 console.error(data);
             });
         };

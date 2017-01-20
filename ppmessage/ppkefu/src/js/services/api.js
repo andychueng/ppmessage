@@ -161,8 +161,7 @@ function ($rootScope, $timeout, $http, yvLog, yvSys, yvUser, yvFile, yvConstants
             terminal: _session.device_uuid,
             ostype: _session.device_platform,
             osversion: _session.device_version,
-            device_fullname: _session.device_fullname,
-            ios_app_development: _session.ios_app_development
+            device_fullname: _session.device_fullname
         };
         
         if (_session.user_email) {
@@ -379,11 +378,6 @@ function ($rootScope, $timeout, $http, yvLog, yvSys, yvUser, yvFile, yvConstants
             _api_post(_url, _data, null, _success, _error, _api_error);
         },
 
-        get_latest_app: function (_success, _error, _api_error) {
-            var _url = "/GET_LATEST_APP";
-            _api_post(_url, null, null, _success, _error, _api_error);
-        },
-
         update_gpslocation: function (_latitude, _longitude, _success, _error, _api_error) {
             var _url = "/UPDATE_GPS_LOCATION";
             var _args = {latitude: _latitude, longitude: _longitude};
@@ -483,7 +477,7 @@ function ($rootScope, $timeout, $http, yvLog, yvSys, yvUser, yvFile, yvConstants
         },
 
         get_service_user_list: function (_success, _error, _api_error) {
-            var _url = "/PP_GET_APP_SERVICE_USER_LIST";
+            var _url = "/PP_GET_SERVICE_USER_LIST";
             return _api_post(_url, null, null, _success, _error, _api_error);
         },
 
@@ -523,13 +517,6 @@ function ($rootScope, $timeout, $http, yvLog, yvSys, yvUser, yvFile, yvConstants
 
         update_conversation_member: function (_args, _success, _error, _api_error) {
             var _url = "/PP_UPDATE_CONVERSATION_MEMBER";
-            return _api_post(_url, _args, null, _success, _error, _api_error);
-        },
-
-        get_app_org_group_list: function (app_uuid, _success, _error, _api_error) {
-            var _url = "/PP_GET_APP_ORG_GROUP_LIST";
-            var _args = app_uuid ? { "app_uuid": app_uuid } : {};
-
             return _api_post(_url, _args, null, _success, _error, _api_error);
         },
         

@@ -19,10 +19,9 @@
         function getAppServiceUsers( successCallback, errorCallback ) {
             
             yvAjax.get_team_service_user_list( { app_uuid: yvUser.get_team().uuid } )
-                .success( function( data ) {
-                    yvCallbackService.response( angular.copy( data ), onSuccess, onError );
-                })
-                .error( onError );
+                .then( function( response ) {
+                    yvCallbackService.response( angular.copy( response.data ), onSuccess, onError );
+                }, onError );
 
             function onSuccess( data ) {
 
@@ -82,7 +81,7 @@
 
         function createServiceUser( settings, successCallback, errorCallback ) {
             getAppServiceUsers( function( users ) {
-                yvAjax.create_user( settings ).success( successCallback ).error( errorCallback );
+                yvAjax.create_user( settings ).then( successCallback ).error( errorCallback );
             }, function( e ) {
                 yvCallbackService.error( e, errorCallback );
             } );
