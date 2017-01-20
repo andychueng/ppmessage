@@ -54,7 +54,8 @@ function yvLogin( yvUser, yvAjax, yvDebug,
         
         ERROR_CODE: ERROR_CODE,
         STATUS: STATUS,
-        
+
+        prepare: prepare,
         updateLoginedUser: updateLoginedUser,
         check_logined: check_logined,
         checkActiveUser: checkActiveUser,
@@ -68,7 +69,19 @@ function yvLogin( yvUser, yvAjax, yvDebug,
         updateActiveUserCookieKey: updateActiveUserCookieKey,
         updateLoginedUserCookieKey: updateLoginedUserCookieKey
         
+    };
+
+    function prepare( callback, config ) {
+        if (yvUser.get_team()) {
+            if (callback) {
+                callback();
+            }
+        } else {
+            $state.go("app.signin");
+        }
     }
+
+    
 
     function updateLoginedUser( user ) {
         yvLoginedUser.update( user );

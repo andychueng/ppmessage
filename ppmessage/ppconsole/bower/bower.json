@@ -38,10 +38,10 @@
     "bootstrap-daterangepicker": "^2.1.25",
     "js-sha1": "^0.4.1",
     "moment": "^2.17.1",
-    "moment-range": "^3.0.0",
     "tinycolor": "^1.4.1",
     "font-awesome": "^4.7.0",
-    "material-design-icons": "^3.0.1"
+    "material-design-icons": "^3.0.1",
+    "moment-range": "^3.0.0"
   },
   "resolutions": {
     "angular": "^1.6.1",

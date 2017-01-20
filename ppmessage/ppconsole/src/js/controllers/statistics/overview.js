@@ -50,10 +50,15 @@ angular.module("this_app")
                 _data.datasets[0].data.push(_number[i+""][i+""])
             }
             
-            _realtime_line = new Chart(ctx).Line(_data, {
-                tooltipTemplate:"<%= value %>",
-                responsive: true,
-                animationStep: 40});
+            _realtime_line = new Chart(ctx, {
+                type: 'line',
+                data:_data,
+                options: {
+                    tooltipTemplate:"<%= value %>",
+                    responsive: true,
+                    animationStep: 40
+                }
+            });
         };
 
         var _draw_history = function(_begin, _end, _number) {
@@ -70,12 +75,16 @@ angular.module("this_app")
                 }]
             };
 
-            var _range = moment.range(_begin, _end);
             var _label = [];
-            _range.by("days", function(m) {
+            var m = _begin;
+            while(true) {
                 _data.labels.push(m.format("MM-DD"));
                 _data.datasets[0].data.push(_number[m.format("YYYY-MM-DD")]);
-            });
+                m = m.add("days", 1);
+                if (m > _end) {
+                    break;
+                }
+            }
             
             if(_history_line) {
                 _history_line.destroy();
@@ -84,10 +93,15 @@ angular.module("this_app")
 
             var _target = document.getElementById("history-statistics");
             var ctx = _target.getContext("2d");
-            _history_line = new Chart(ctx).Line(_data, {
-                tooltipTemplate:"<%= value %>",
-                responsive: true,
-                animationStep: 40});
+            _history_line = new Chart(ctx, {
+                type: "line",
+                data: _data,
+                options: {
+                    tooltipTemplate:"<%= value %>",
+                    responsive: true,
+                    animationStep: 40
+                }
+            });
             
         };
         
@@ -197,9 +211,7 @@ angular.module("this_app")
         var _init = function() {
             _translate();
             $scope.refresh_settings_menu();
-            yvLogin.prepare( function( errorCode ) {
-                _draw();
-            }, { $scope: $scope, onRefresh: _draw } );
+            _draw();
         };
 
         _init();
