@@ -97,8 +97,8 @@ angular.module("this_app")
         
         $scope.start_ppmessage = function(in_this) {
             var userUuid = yvUser.get_uuid();
-            var password = yvUser.get_password();
-            var userEmail = yvUser.get_email();
+            var password = yvUser.get("user_password");
+            var userEmail = yvUser.get("user_email");
             var body = {
                 user_email: userEmail,
                 user_password: password,
