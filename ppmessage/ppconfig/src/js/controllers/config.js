@@ -118,11 +118,10 @@ angular.module("this_app")
         };
 
         $scope._init_config_status = function() {
-            yvAjax.status().success(function(data) {
+            yvAjax.status().then(function(data) {
                 $scope._config_status.status = CONFIG_STATUS[data.status];
                 $scope._config_status.ip = data.ip;
-                console.log($scope._config_status);
-            }).error(function() {
+            }, function() {
             });
         };
 
