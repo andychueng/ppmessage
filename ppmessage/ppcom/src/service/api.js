@@ -217,10 +217,10 @@
             this._post( '/PP_GET_CONVERSATION_USER_LIST', $.extend( {}, data ), success, fail );
         };
 
-        // data: { app_uuid: xxx, user_uuid: xxx, device_uuid: xxx, group_uuid: xxx }
-        this.cancelWaitingCreateConversation = function ( data, success, fail ) {
-            this._post( '/PP_CANCEL_WAITING_CREATE_CONVERSATION', $.extend( {}, data ), success, fail );
-        };
+        // // data: { app_uuid: xxx, user_uuid: xxx, device_uuid: xxx, group_uuid: xxx }
+        // this.cancelWaitingCreateConversation = function ( data, success, fail ) {
+        //     this._post( '/PP_CANCEL_WAITING_CREATE_CONVERSATION', $.extend( {}, data ), success, fail );
+        // };
 
         // data: { app_uuid: xxx, user_uuid: xxx, device_uuid: xxx }
         this.getPPComDefaultConversation = function ( data, success, fail ) {
@@ -237,10 +237,10 @@
             this._post( '/PP_GET_CONVERSATION_INFO', $.extend( {}, data ), success, fail );
         };
 
-        // data: { app_uuid: xxx }
-        this.getWaitingQueueLength = function( data, success, fail ) {
-            this._post( '/PP_GET_AMD_QUEUE_LENGTH', $.extend( {}, data ), success, fail );
-        };
+        // // data: { app_uuid: xxx }
+        // this.getWaitingQueueLength = function( data, success, fail ) {
+        //     this._post( '/PP_GET_AMD_QUEUE_LENGTH', $.extend( {}, data ), success, fail );
+        // };
 
         // data: { app_uuid: xxx }
         this.getIPInfo = function( data, success, fail ) {

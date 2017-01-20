@@ -438,29 +438,12 @@ class AppInfo(CommonMixin, BaseModel):
         return
 
 
-# for ppkefu
 class ConversationInfo(CommonMixin, BaseModel):
     __tablename__ = "conversation_infos"
-        
-    # who create this conversation
-    user_uuid = Column("user_uuid", String(64))
-    
-    # which peer user is assigned
-    # when portal user create this conversation,
-    #   the assigned uuid is the service user assigned
-    # when service user create this conversation,
-    #   the assigned uuid is the peer service user or portal user
-    assigned_uuid = Column("assigned_uuid", String(64))
-    
-    # OPEN/CLOSE create as OPEN, explicit to CLOSE
-    status = Column("status", String(32))
 
-    conversation_name = Column("conversation_name", String(64))
-    conversation_icon = Column("conversation_icon", String(512))
-    conversation_type = Column("conversation_type", String(8))
-    
+    user_uuid = Column("user_uuid", String(64))
     latest_task = Column("latest_task", String(64))
-    
+        
     __table_args__ = (
     )
 
@@ -469,65 +452,33 @@ class ConversationInfo(CommonMixin, BaseModel):
         return
         
     def create_redis_keys(self, _redis, *args, **kwargs):
-        CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
-        _key = self.__tablename__ + \
-               ".user_uuid." + self.user_uuid + \
-               ".conversation_uuid." + self.uuid + \
-               ".conversation_type." + self.conversation_type
-        _redis.set(_key, self.uuid)
-            
-        if self.assigned_uuid != None:
-            _key = self.__tablename__ + \
-                   ".user_uuid." + self.user_uuid + \
-                   ".assigned_uuid." + self.assigned_uuid
-            _redis.set(_key, self.uuid)
-       
+        CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)   
         return
     
     def delete_redis_keys(self, _redis):
-        _obj = redis_hash_to_dict(_redis, ConversationInfo, self.uuid)
-        if _obj == None:
-            return
-        
-        _key = self.__tablename__ + \
-               ".user_uuid." + _obj["user_uuid"] + \
-               ".conversation_uuid." + _obj["uuid"] + \
-               ".conversation_type." + _obj["conversation_type"]
-        _redis.delete(_key)
-
-        if _obj["assigned_uuid"] != None:
-            _key = self.__tablename__ + \
-                   ".user_uuid." + _obj["user_uuid"] + \
-                   ".assigned_uuid." + _obj["assigned_uuid"]
-            _redis.delete(_key)
-
         CommonMixin.delete_redis_keys(self, _redis)
         return
 
     def update_redis_keys(self, _redis):
         CommonMixin.update_redis_keys(self, _redis)
-        _obj = redis_hash_to_dict(_redis, ConversationInfo, self.uuid)
-        if _obj == None:
-            return
         return
     
 
 class ConversationUserData(CommonMixin, BaseModel):
     __tablename__ = "conversation_user_datas"
-    
-    user_uuid = Column("user_uuid", String(64))
 
-    # the user in this notification but unlike the push notification
-    user_mute_notification = Column("user_mute_notification", Boolean)
+    user_uuid = Column("user_uuid", String(64))
+        
+    # which is the peer user in the conversation since in conversation could be many users
+    peer_uuid = Column("peer_uuid", String(64))
 
     # the user can define the conversation name and user name only show to himself
     conversation_name = Column("conversation_name", String(64))
     conversation_icon = Column("conversation_icon", String(512))
-    conversation_type = Column("conversation_type", String(8))
-    
-    user_name = Column("user_name", String(64))
-    
     conversation_uuid = Column("conversation_uuid", String(64))
+
+    # S2P and S2S for service user, P2S is for customer user
+    conversation_type = Column("conversation_type", String(8))
     
     # NEW/OPEN/CLOSE
     conversation_status = Column("conversation_status", String(16))
@@ -543,27 +494,27 @@ class ConversationUserData(CommonMixin, BaseModel):
         CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
         
         _key = self.__tablename__ + \
-               + ".user_uuid." + self.user_uuid + \
+               ".user_uuid." + self.user_uuid + \
                ".conversation_uuid." + self.conversation_uuid
         _redis.set(_key, self.uuid)
         
-        _key = self.__tablename__ + ".user_uuid." + self.user_uuid
+        _key = self.__tablename__ + \
+               ".user_uuid." + self.user_uuid
         _redis.sadd(_key, self.conversation_uuid)
 
         _key = self.__tablename__ + \
                ".user_uuid." + self.user_uuid + \
                ".conversation_status." + self.conversation_status
-        if self.updatetime != None:
-            _updatetime = time.mktime(self.updatetime.timetuple())*1000*1000 + self.updatetime.microsecond
-            _redis.zadd(_key, self.conversation_uuid, _updatetime)
+        _updatetime = time.mktime(self.updatetime.timetuple())*1000*1000 + self.updatetime.microsecond
+        _redis.zadd(_key, self.conversation_uuid, _updatetime)
 
         _key = self.__tablename__ + ".conversation_status." + self.conversation_status
-        if self.updatetime != None:
-            _updatetime = time.mktime(self.updatetime.timetuple())*1000*1000 + self.updatetime.microsecond
-            _redis.zadd(_key, self.conversation_uuid, _updatetime)
+        _updatetime = time.mktime(self.updatetime.timetuple())*1000*1000 + self.updatetime.microsecond
+        _redis.zadd(_key, self.conversation_uuid, _updatetime)
         
         _key = self.__tablename__ + ".conversation_uuid." + self.conversation_uuid
         _redis.sadd(_key, self.user_uuid)
+
         _key = self.__tablename__ + ".conversation_uuid." + self.conversation_uuid + ".datas"
         _redis.sadd(_key, self.uuid)
         return
