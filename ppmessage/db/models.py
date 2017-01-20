@@ -768,14 +768,14 @@ class ApiInfo(CommonMixin, BaseModel):
     
     def create_redis_keys(self, _redis, *args, **kwargs):
         CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
+        _v = json.dumps([self.uuid, self.api_level, self.api_key, self.api_secret])
+        
         _key = self.__tablename__ + ".api_key." + self.api_key
-        _v = json.dumps([self.uuid, self.api_level, self.api_secret])
         _redis.set(_key, _v)
 
         _key = self.__tablename__ + \
                ".user_uuid." + self.user_uuid + \
                ".api_level." + self.api_level
-        _v = json.dumps([self.uuid, self.api_level, self.api_key, self.api_secret])
         _redis.set(_key, _v)
         
         return

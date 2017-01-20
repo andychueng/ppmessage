@@ -72,7 +72,6 @@ class TokenHandler(RequestHandler):
         _api = json.loads(_api)
         _api_uuid = _api[0]
         _api_level = _api[1]
-        # _api[3] is api_secret
 
         if _api_level != API_LEVEL.PPCOM and _api_level != API_LEVEL.PPCONSOLE and _api_level != API_LEVEL.THIRD_PARTY_CONSOLE:
             self.send_error(400)
