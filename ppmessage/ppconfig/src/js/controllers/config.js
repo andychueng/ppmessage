@@ -119,6 +119,7 @@ angular.module("this_app")
 
         $scope._init_config_status = function() {
             yvAjax.status().then(function(data) {
+                data = data.data;
                 $scope._config_status.status = CONFIG_STATUS[data.status];
                 $scope._config_status.ip = data.ip;
             }, function() {

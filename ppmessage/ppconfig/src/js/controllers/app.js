@@ -17,13 +17,5 @@ angular.module("this_app")
                 );
             });
         };
-
-        $scope.$on("$destroy", function() {            
-        });
-
-        var _init = function() {
-        };
-
-        _init();
         
     }); // end app ctrl

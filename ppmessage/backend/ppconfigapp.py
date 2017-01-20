@@ -338,6 +338,7 @@ class FirstHandler(tornado.web.RequestHandler):
             user_fullname=_user_fullname,
             user_password=_user_password,
             user_language=_user_language,
+            is_removed_user=False,
             is_owner_user=True,
             is_service_user=True,
             is_anonymous_user=False
