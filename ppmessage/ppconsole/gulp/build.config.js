@@ -78,7 +78,6 @@ module.exports = {
         
 
         "../../resource/share/ppconsole/bower_components/moment/min/moment.min.js",
-        "../../resource/share/ppconsole/bower_components/moment-range/dist/moment-range.js",
 
         "../../resource/share/ppconsole/bower_components/bootstrap-colorpickersliders/dist/bootstrap.colorpickersliders.min.js",
         "../../resource/share/ppconsole/bower_components/bootstrap-daterangepicker/daterangepicker.js",
