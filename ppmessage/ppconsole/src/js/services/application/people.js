@@ -18,19 +18,15 @@
 
         function getAppServiceUsers( successCallback, errorCallback ) {
             
-            yvAjax.get_team_service_user_list( { app_uuid: yvUser.get_team().uuid } )
-                .then( function( response ) {
-                    yvCallbackService.response( angular.copy( response.data ), onSuccess, onError );
-                }, onError );
-
+            yvAjax.get_team_service_user_list( { app_uuid: yvUser.get_team().uuid } ).then( function( response ) {
+                yvCallbackService.response( angular.copy(response), onSuccess, onError );
+            }, onError );
+            
             function onSuccess( data ) {
-
-                // Find who is `is_owner_user`
                 var appTeamServiceUsers = data.list || [];
                 angular.forEach( appTeamServiceUsers, function( value, index ) {
                     value.is_owner_user = ( value.user_email === yvUser.get_email() );
                 } );
-                
                 successCallback && successCallback( appTeamServiceUsers );
             }
 

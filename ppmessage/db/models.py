@@ -96,6 +96,9 @@ class DeviceUser(CommonMixin, BaseModel):
     def create_redis_keys(self, _redis, *args, **kwargs):
         CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
 
+        _key = self.__tablename__ + ".is_service_user." + str(self.is_service_user)
+        _redis.sadd(_key, self.uuid)
+        
         _key = self.__tablename__ + ".user_email." + self.user_email
         _redis.set(_key, self.uuid)
 
@@ -109,6 +112,9 @@ class DeviceUser(CommonMixin, BaseModel):
         _obj = redis_hash_to_dict(_redis, DeviceUser, self.uuid)
         if _obj == None:
             return
+
+        _key = self.__tablename__ + ".is_service_user." + str(_obj.get("is_service_user"))
+        _redis.srem(_key, self.uuid)
 
         _key = self.__tablename__ + ".user_email." + _obj["user_email"]
         _redis.delete(_key)
