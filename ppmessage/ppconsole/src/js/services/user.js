@@ -188,18 +188,11 @@ function $yvUserService() {
         },
 
         set_login_data: function(data) {
+            console.log(">>>>>>>>>>>>>><<<<<<<<<<<<<<< data:%o", data);
             this.set_logined(true);
-            this.set_fullname(data.user_fullname);
-            this.set_lastname(data.user_lastname);
-            this.set_firstname(data.user_firstname);
-            this.set_company(data.user_company);
-            this.set_email(data.user_email);
-            this.set_session(data.session_uuid);
-            this.set_uuid(data.uuid);
-            this.set_password(data.user_password);
-            this.set_app_uuid(data.app_uuid);
-            this.set_icon(data.user_icon);
-            this.set_status(data.user_status);
+            angular.forEach(data, function(v, k) {
+                _user[k] = v;
+            });
             return;
         },
 

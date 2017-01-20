@@ -193,7 +193,7 @@ angular.module("this_app")
                 this.push( member.uuid );
             }, _uuids );
 
-            var _r = yvAjax.leave_app(_uuids, yvUser.get_team().uuid);
+            var _r = yvAjax.remove_user(_uuids);
             _r.then(function(data) {
                 data = data.data;
                 if (data.error_code == 0) {
@@ -232,7 +232,6 @@ angular.module("this_app")
                 
             }, function( response ) {
 
-                response = response.data;
                 $scope.group = response.users;
                 $scope.total_items = response.total;
                 
@@ -247,10 +246,6 @@ angular.module("this_app")
 
         var _team = function() {
             var _own_team = yvUser.get_team();
-            if (_own_team == null) {
-                console.error("no team info");
-                return;
-            }
             $scope.page_app_user();
         };
         

@@ -49,10 +49,11 @@ angular.module("this_app")
                         return;
                     }
 
-                    yvUser.set_team(_udata.team);
-                    
+                    yvLogin.updateActiveUser( angular.copy( _udata ) );
                     yvLogin.updateLoginedUser( angular.copy( _udata ) );
                     yvLogin.setLogined( true );
+
+                    yvUser.set_team(_udata.team);
                     
                     var _url = yvConstants.USER_STATUS[_udata.user_status];
                     

@@ -1,8 +1,8 @@
 //// this is data service for `ApplicationPeopleCtrl` ///////
 (function() {
 
-    yvAppPeopleService.$inject = [ 'yvAjax', 'yvUser', 'yvCallbackService', 'yvDebug' ];
-    function yvAppPeopleService( yvAjax, yvUser, yvCallbackService, yvDebug ) {
+    yvAppPeopleService.$inject = [ 'yvAjax', 'yvUser', 'yvDebug' ];
+    function yvAppPeopleService( yvAjax, yvUser, yvDebug ) {
 
         var DEFAULT_PAGE_COUNT = 12, jQuery = $;
         
@@ -16,17 +16,20 @@
 
         ////// Implementation //////////
 
-        function getAppServiceUsers( successCallback, errorCallback ) {
+        function getAppServiceUsers(successCallback, errorCallback) {
             
-            yvAjax.get_team_service_user_list( { app_uuid: yvUser.get_team().uuid } ).then( function( response ) {
-                yvCallbackService.response( angular.copy(response), onSuccess, onError );
-            }, onError );
+            yvAjax.get_service_user_list().then(function( response ) {
+                if (response.data && response.data.error_code == 0) {
+                    onSuccess(response.data);
+                } else {
+                    onError(response);
+                }
+            }, function(e) {
+                onError(e);
+            });
             
             function onSuccess( data ) {
                 var appTeamServiceUsers = data.list || [];
-                angular.forEach( appTeamServiceUsers, function( value, index ) {
-                    value.is_owner_user = ( value.user_email === yvUser.get_email() );
-                } );
                 successCallback && successCallback( appTeamServiceUsers );
             }
 
@@ -65,22 +68,19 @@
                     total = filteredUsers.length,
                     paginationUsers = pagination( s, sort( s, filteredUsers ) );
                 
-                yvCallbackService.success( {
-                    users: paginationUsers,
-                    total: total
-                } , successCallback );
-                
+                if (successCallback) {
+                    successCallback({
+                        users: paginationUsers,
+                        total: total
+                    });
+                }   
             }, function( e ) {
-                yvCallbackService.error( e, errorCallback );
-            } );
+                errorCallback && errorCallback(e);
+            });
         }
 
         function createServiceUser( settings, successCallback, errorCallback ) {
-            getAppServiceUsers( function( users ) {
-                yvAjax.create_user( settings ).then( successCallback, errorCallback );
-            }, function( e ) {
-                yvCallbackService.error( e, errorCallback );
-            } );
+            yvAjax.create_user( settings ).then( successCallback, errorCallback );
         }
 
         function filter( settings, users ) {

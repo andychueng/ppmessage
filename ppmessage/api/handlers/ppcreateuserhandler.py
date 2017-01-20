@@ -49,6 +49,7 @@ def create_user(_redis, _request):
     IOLoop.current().spawn_callback(download_random_identicon, _user_icon)
     
     _du_uuid = str(uuid.uuid1())
+    
     _values = {
         "uuid": _du_uuid,
         "user_status": _user_status,

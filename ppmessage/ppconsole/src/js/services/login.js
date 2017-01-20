@@ -57,6 +57,8 @@ function yvLogin( yvUser, yvAjax, yvDebug,
 
         prepare: prepare,
         updateLoginedUser: updateLoginedUser,
+        updateActiveUser: updateActiveUser,
+
         check_logined: check_logined,
         checkActiveUser: checkActiveUser,
         checkLoginedUser: checkLoginedUser,
