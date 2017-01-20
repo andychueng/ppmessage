@@ -2,13 +2,13 @@
 angular.module("this_app.services", []);
 
 angular.module("this_app", [
+    "ui.router",
     "base64",
     "ngRoute",
+    "ngMessages",
     "ngAnimate",
     "ngMaterial",
-    "ui.router",
     "this_app.constants",
-    "this_app.i18n",
     "this_app.route",
     "this_app.services",
 ])
