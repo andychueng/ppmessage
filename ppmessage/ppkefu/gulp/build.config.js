@@ -88,6 +88,7 @@ module.exports = {
         "../src/js/directives/file-chooser-modal.js",
         "../src/js/directives/search-modal.js",
         "../src/js/directives/conversation-member.js",
+        "../src/js/directives/add-service-user-modal.js",
         "../src/js/directives/add-member-modal.js",
         "../src/js/directives/add-member-by-contact.js",
         "../src/js/directives/add-member-by-group.js",
@@ -131,10 +132,11 @@ module.exports = {
         "../src/js/controllers/switch-language.js",
         "../src/js/controllers/switch-app.js",
         "../src/js/controllers/about.js",
-
+        "../src/js/controllers/change-password.js",
         "../src/js/controllers/change-avatar.js",
         "../src/js/controllers/change-fullname.js",
         "../src/js/controllers/change-signature.js",
+        "../src/js/controllers/developer-keys.js",
         "../src/js/controllers/widget-code.js",
         "../src/js/controllers/widget-link.js"
     ],

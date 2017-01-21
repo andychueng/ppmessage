@@ -1,0 +1,19 @@
+.add-service-user-modal-view {
+    
+    .modal-content {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+    }
+
+    @media (min-width: 768px) {
+        .save-button {
+            height: 200px;
+            
+            .button {
+                margin-top: 20px;
+            }
+        }
+    }
+    
+}

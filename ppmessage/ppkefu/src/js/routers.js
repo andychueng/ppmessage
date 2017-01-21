@@ -169,6 +169,21 @@ function ($stateProvider, $urlRouterProvider) {
             }
         })
 
+    
+        .state("app.developer-keys", {
+            url: "/developer-keys",
+            views: {
+                "app-setting-list": {
+                    templateUrl: "templates/controllers/app.setting-list.html",
+                    controller: "SettingListCtrl"
+                },
+                "side-menu-content": {
+                    templateUrl: "templates/controllers/app.developer-keys.html",
+                    controller: "DeveloperKeysCtrl"
+                }
+            }
+        })
+
 
         .state("app.widget-code", {
             url: "/widget-code",

@@ -1,19 +1,4 @@
 <ion-view view-title="{{ 'app.messages.CONVERSATIONS_TAG' | translate }}" class="yv-conversation-list-view">
-
-  <div class="item filter-bar hide-fade" ng-show="showFilterBar">
-    <label class="filter-item">
-      <span>S2S<input type="checkbox" ng-model="showS2S"></span>
-    </label>
-    <label class="filter-item">    
-      <span>P2S<input type="checkbox" ng-model="showP2S"></span>
-    </label>
-    <label class="filter-item">
-      <span>{{ "app.GLOBAL.ONLINE" | translate }}<input type="checkbox" ng-model="showOnline"></span>
-    </label>
-    <label class="filter-item">
-      <span>{{ "app.GLOBAL.OFFLINE" | translate }}<input type="checkbox" ng-model="showOffline"></span>
-    </label>
-  </div>      
   
   <ion-content class="yv-sidemenu-left-content yv-conversation-list" ng-class="showFilterBar ? 'has-filter-bar' : ''"
                delegate-handle="conversation-list-scroll" on-scroll="onScroll()">    

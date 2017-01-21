@@ -3,13 +3,14 @@ ppmessageModule.controller("ContactCtrl", [
     "$state",
     "$timeout",
     "$stateParams",
+    "$rootScope",
     "yvSys",
     "yvLink",
     "yvMain",
     "yvUser",
     "yvBase",
     "yvConstants",
-function ($scope, $state, $timeout, $stateParams, yvSys, yvLink, yvMain, yvUser, yvBase, yvConstants) {
+function ($scope, $state, $timeout, $stateParams, $rootScope, yvSys, yvLink, yvMain, yvUser, yvBase, yvConstants) {
     
     function openConversationCallback(conversation) {
         var params = {
@@ -27,7 +28,10 @@ function ($scope, $state, $timeout, $stateParams, yvSys, yvLink, yvMain, yvUser,
             });
         }
     }
-    
+
+    $scope.createServiceUser = function($event) {
+        $rootScope.$broadcast("event:add-service-user-modal");
+    };
     
     $scope.chatWithContact = function () {
         var params = {

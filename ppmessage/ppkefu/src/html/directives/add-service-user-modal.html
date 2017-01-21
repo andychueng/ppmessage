@@ -1,0 +1,46 @@
+<script id="add-service-user-modal.html" type="text/ng-template">
+  <ion-modal-view class="add-service-user-modal-view">
+    
+    <ion-header-bar class="bar-dark" no-tap-scroll="true">
+      <h1 class="title">{{ "app.GLOBAL.ADD_SERVICE_USER" | translate }}</h1>
+      <div class="buttons">
+        <button class="button button-icon ion-ios-close-empty" ng-click="closeModal()"></button>
+      </div>
+    </ion-header-bar>
+        
+    <div class="has-header modal-content">
+      <form novalidate ng-submit="createServiceUser()">
+        <div class="list list-inset">
+
+          <label class="item item-input" style="padding: 6px 5px 5px 8px;">
+            <input type="text" style="font-family: Helvetica; padding-right: 1px;" placeholder="{{ 'app.GLOBAL.USER_FULLNAME' | translate }}"
+                   ng-model="user.user_fullname" />
+          </label>
+
+          <label class="item item-input" style="padding: 6px 5px 5px 8px;">
+            <input type="text" style="font-family: Helvetica; padding-right: 1px;" placeholder="{{ 'app.GLOBAL.USER_EMAIL' | translate }}"
+                   ng-model="user.user_email" />
+          </label>
+
+          <label class="item item-input" style="padding: 6px 5px 5px 8px;">
+            <input type="text" style="font-family: Helvetica; padding-right: 1px;" placeholder="{{ 'app.GLOBAL.USER_PASSWORD' | translate }}"
+                   ng-model="user.user_password" />
+          </label>
+
+          <label class="item item-input" style="padding: 6px 5px 5px 8px;">
+            <input type="text" style="font-family: Helvetica; padding-right: 1px;" placeholder="{{ 'app.GLOBAL.USER_PASSWORD_REPEAT' | translate }}"
+                   ng-model="user.user_password_repeat" />
+          </label>
+
+          <button type="submit" class="button button-block button-balanced" ng-disabled="disableCreate()">
+            {{ "app.GLOBAL.ADD_SERVICE_USER" | translate }}
+          </button>
+
+
+        </div>
+      </form>
+
+    </div>
+    
+  </ion-modal-view>
+</script>

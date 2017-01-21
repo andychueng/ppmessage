@@ -1,0 +1,28 @@
+<ion-view view-title="{{ 'app.settings.developer_keys.DEVELOPER_KEYS_TAG' | translate }}">
+    
+  <ion-content style="overflow-scroll: true; -webkit-user-select: auto !important;
+                      -moz-user-select: auto !important;
+                      -ms-user-select: auto !important;
+                      user-select: auto !important;">
+    <ion-list>
+
+      <ion-item>
+        <h2>APP UUID:</h2>
+        <input style="width:100%;" type="text" ng-model="keys.app_uuid"> </input>
+      </ion-item>
+
+      <ion-item>
+        <h2>PPCOM API KEY:</h2>
+        <input style="width:100%;" type="text" ng-model="keys.ppcom.api_key"> </input>
+      </ion-item>
+
+      <ion-item>
+        <h2>PPCOM API SECRET:</h2>
+        <input style="width:100%;" type="text" ng-model="keys.ppcom.api_secret"> </input>
+      </ion-item>
+      
+    </ion-list>
+      
+  </ion-content>
+  
+</ion-view>

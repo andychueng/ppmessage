@@ -125,6 +125,10 @@ ppmessageModule.config([
                     WIDGET_LINK_TAG: "Widget Link"
                 },
 
+                developer_keys: {
+                    DEVELOPER_KEYS_TAG: "Developer Keys"
+                },
+
                 language: {
                     LANGUAGE_TAG: "Language",
                     CHINESE_TAG: "中文",
@@ -534,6 +538,13 @@ ppmessageModule.config([
                 REST: "Rest",
 
                 USER_STATUS_AFTER_LOGIN: "User status after login",
+
+                USER_FULLNAME: "User Fullname",
+                USER_PASSWORD: "User Password",
+                USER_PASSWORD_REPEAT: "Repeat User Password",
+                USER_EMAIL: "User Email",
+                ADD_SERVICE_USER: "Add Service User"
+
             }
         }
     },
@@ -631,6 +642,10 @@ ppmessageModule.config([
                     INPUT_ORIGIN_PASSWORD_TAG: "请输入原密码",
                     INPUT_NEW_PASSWORD_TAG: "请输入新密码",
                     INPUT_NEW_PASSWORD_AGAIN_TAG: "请再输入一次新密码"
+                },
+
+                developer_keys: {
+                    DEVELOPER_KEYS_TAG: "开发者秘钥"
                 },
 
                 widget_code: {
@@ -1052,6 +1067,12 @@ ppmessageModule.config([
                 REST: "休息",
 
                 USER_STATUS_AFTER_LOGIN: "登录后用户状态",
+
+                USER_FULLNAME: "用户全名",
+                USER_PASSWORD: "用户密码",
+                USER_PASSWORD_REPEAT: "重复用户密码",
+                USER_EMAIL: "用户邮箱",
+                ADD_SERVICE_USER: "添加座席"
             }
         }
     }

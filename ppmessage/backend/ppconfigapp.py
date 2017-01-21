@@ -78,7 +78,7 @@ def _cur_dir():
 class PPConfigHandler(tornado.web.RequestHandler):
     def get(self, id=None):
         if _get_config() != None and _get_config().get("config_status") == CONFIG_STATUS.RESTART:
-            self.redirect("/ppconsole/")
+            self.redirect("/ppkefu/")
             return
         
         _dir = os.path.dirname(os.path.abspath(__file__))
