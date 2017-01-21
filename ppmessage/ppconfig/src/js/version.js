@@ -2,9 +2,9 @@
 
     if ( window ) {
 
-        if ( window.ppconsole === undefined ) {
+        if ( window.ppconfig === undefined ) {
             
-            window.ppconsole = {
+            window.ppconfig = {
                 
                 /**
                  * major.minor.status.revision

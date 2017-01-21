@@ -30,7 +30,6 @@ from ppmessage.backend.ppauthapp import PPAuthWebService
 from ppmessage.backend.ppconfigapp import PPConfigWebService
 from ppmessage.backend.dispatcher import DispatcherWebService
 from ppmessage.backend.identiconapp import IdenticonWebService
-from ppmessage.backend.ppconsoleapp import PPConsoleWebService
 from ppmessage.pcsocket.pcsocketapp import PCSocketWebService
 from ppmessage.backend.tornadouploadapp import UploadWebService
 from ppmessage.backend.downloadapplication import DownloadWebService
@@ -51,7 +50,7 @@ class EntryHandler(tornado.web.RequestHandler):
         if _get_config() == None or _get_config().get("config_status") != CONFIG_STATUS.RESTART:
             self.redirect("/ppconfig/")
         else:
-            self.redirect("/ppconsole/")
+            self.redirect("/ppkefu/")
         return
 
 class MainApplication(tornado.web.Application):

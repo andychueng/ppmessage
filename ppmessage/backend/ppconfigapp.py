@@ -422,24 +422,12 @@ class FirstHandler(tornado.web.RequestHandler):
         config(_d)
         return True
 
-    def _dist_ppconsole(self, _request):
-        from ppmessage.ppconsole.config.config import config
-        _d = {
-            "app_uuid": self._app_uuid,
-            "api_uuid": self._api.get(API_LEVEL.PPCONSOLE.lower()).get("uuid"),
-            "api_key": self._api.get(API_LEVEL.PPCONSOLE.lower()).get("key"),
-            "api_secret": self._api.get(API_LEVEL.PPCONSOLE.lower()).get("secret")
-        }
-        config(_d)
-        return True
 
     def _dist(self, _request):
         if not self._dist_ppcom(_request):
             return False
         if not self._dist_ppkefu(_request):
             return False
-        if not self._dist_ppconsole(_request):
-            return False  
         return True
 
     def _dump_config(self, _request):

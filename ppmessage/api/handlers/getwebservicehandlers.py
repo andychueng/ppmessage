@@ -51,16 +51,6 @@ from .ppkefulogouthandler import PPKefuLogoutHandler
 
 from .ppgetuserdetailhandler import PPGetUserDetailHandler
 
-from .ppconsolelogouthandler import PPConsoleLogoutHandler
-
-from .ppconsolegetoverviewnumber import PPConsoleGetOverviewNumber
-from .ppconsolegetrealtimecustomernumber import PPConsoleGetRealTimeCustomerNumber
-from .ppconsolegetrealtimeservicenumber import PPConsoleGetRealTimeServiceNumber
-from .ppconsolegetrealtimemessagenumber import PPConsoleGetRealTimeMessageNumber
-from .ppconsolegetservicenumberbyrange import PPConsoleGetServiceNumberByRange
-from .ppconsolegetcustomernumberbyrange import PPConsoleGetCustomerNumberByRange
-from .ppconsolegetmessagenumberbyrange import PPConsoleGetMessageNumberByRange
-
 from .ppgetapiinfohandler import PPGetApiInfoHandler
 
 from .ppvalidateonlinedevicehandler import PPValidateOnlineDeviceHandler
@@ -87,16 +77,6 @@ def getWebServiceHandlers():
 
     handler_list.append((r"/PPCOM_GET_DEFAULT_CONVERSATION", PPComGetDefaultConversationHandler))
     handler_list.append((r"/PPCOM_CREATE_CONVERSATION", PPComCreateConversationHandler))
-
-    handler_list.append((r"/PPCONSOLE_GET_OVERVIEW_NUMBER", PPConsoleGetOverviewNumber))
-    handler_list.append((r"/PPCONSOLE_GET_REAL_TIME_CUSTOMER_NUMBER", PPConsoleGetRealTimeCustomerNumber))
-    handler_list.append((r"/PPCONSOLE_GET_REAL_TIME_SERVICE_NUMBER", PPConsoleGetRealTimeServiceNumber))
-    handler_list.append((r"/PPCONSOLE_GET_REAL_TIME_MESSAGE_NUMBER", PPConsoleGetRealTimeMessageNumber))
-    handler_list.append((r"/PPCONSOLE_GET_SERVICE_NUMBER_BY_RANGE", PPConsoleGetServiceNumberByRange))
-    handler_list.append((r"/PPCONSOLE_GET_CUSTOMER_NUMBER_BY_RANGE", PPConsoleGetCustomerNumberByRange))
-    handler_list.append((r"/PPCONSOLE_GET_MESSAGE_NUMBER_BY_RANGE", PPConsoleGetMessageNumberByRange))
-
-    handler_list.append((r"/PPCONSOLE_LOGOUT", PPConsoleLogoutHandler))
 
     handler_list.append((r"/PPKEFU_LOGIN", PPKefuLoginHandler))
     handler_list.append((r"/PPKEFU_LOGOUT", PPKefuLogoutHandler))

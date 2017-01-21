@@ -220,37 +220,33 @@ function ppmessage_log()
 
 function ppmessage_gulp()
 {
-    echo "generate PPCom/PPKefu/PPConsole js";
+    echo "generate PPCom/PPKefu js";
     cd ppmessage/ppkefu/gulp; gulp; cd -;
     cd ppmessage/ppcom/gulp; gulp; cd -;
-    cd ppmessage/ppconsole/gulp; gulp; cd -;
     cd ppmessage/ppconfig/gulp; gulp; cd -;
 }
 
 function ppmessage_bower()
 {
-    echo "install PPCom/PPKefu/PPConsole js bower depends";
+    echo "install PPCom/PPKefu js bower depends";
     cd ppmessage/ppcom/bower; bower install --allow-root; cd -;
     cd ppmessage/ppkefu/bower; bower install --allow-root; cd -;
-    cd ppmessage/ppconsole/bower; bower install --allow-root; cd -;
     cd ppmessage/ppconfig/bower; bower install --allow-root; cd -;
 }
 
 function ppmessage_npm()
 {
-    echo "install PPCom/PPKefu/PPConsole js node depends";
+    echo "install PPCom/PPKefu js node depends";
     cd ppmessage/ppcom/gulp; npm install; cd -;
     cd ppmessage/ppkefu/gulp; npm install; cd -;
-    cd ppmessage/ppconsole/gulp; npm install; cd -;
     cd ppmessage/ppconfig/gulp; npm install; cd -;
 }
 
 function ppmessage_cnpm()
 {
-    echo "install PPCom/PPKefu/PPConsole js node depends";
+    echo "install PPCom/PPKefu js node depends";
     cd ppmessage/ppcom/gulp; cnpm install; cd -;
     cd ppmessage/ppkefu/gulp; cnpm install; cd -;
-    cd ppmessage/ppconsole/gulp; cnpm install; cd -;
 }
 
 function ppmessage_build()
@@ -261,9 +257,6 @@ function ppmessage_build()
 
 function ppmessage_apply_config()
 {
-    echo "Apply config for ppconsole"
-    python ppmessage/ppconsole/config/config.py
-
     echo "Apply config for ppkefu"
     python ppmessage/ppkefu/config/config.py
 
@@ -283,10 +276,6 @@ case "$1" in
 
     build-ppconfig)
         ppmessage_build "ppconfig"
-        ;;
-
-    build-ppconsole)
-        ppmessage_build "ppconsole"
         ;;
 
     build-ppkefu)
