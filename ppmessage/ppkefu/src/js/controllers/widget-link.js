@@ -12,7 +12,7 @@ function ($scope, yvUtil, yvUser) {
         // `base64_encode` only accept `255 ascii` characters, so we need `escape` here
         var _appObj = {
             uuid: yvUser.get("app").uuid,
-            app_name: encodeURI(app.app_name || '')
+            app_name: encodeURI(yvUser.get("app").app_name || '')
         }; 
         var _param = yvUtil.base64_encode(JSON.stringify(_appObj));
 
