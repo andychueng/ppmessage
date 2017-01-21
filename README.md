@@ -10,13 +10,9 @@
 
 With PPMessage, you can chat with visitor or customer via Web or mobile App.
 
-PPMessage targets to run on Linux, macOS and even **Windows** operating systems. PPMessage includes a clear API system which could be integrated with any open source Content Management System like Wordpress, Drupal and any commercial system, even an e-commerce system.
+PPMessage targets to run on Linux, macOS and even **Windows** operating systems, including a series of frontend SDK named **PPCom** which run on your visitor or customer side, and a series of frontend App named **PPKefu** which run on your service team side. (Kefu comes from **客服** a chinese word, which means **agent** whose duty is customer service)
 
-PPMessage includes a series of frontend SDK named **PPCom** which run on your visitor or customer side, and a series of frontend App named **PPKefu** which run on your service team side.
-
-**PPConsole** is Web admin interface of PPMessage and open sourced as well. After PPMessage backend running, PPConsole provides a Web interface to manage the PPMessage system. 
-
-**PPConfig** is the first web UI you may meet. If you want to run a PPMessage server from source, PPMessage will guide you to config itself at first.
+**PPConfig** is the first web UI you may meet. If you want to run a PPMessage server from source, PPMessage will guide you to config itself at first. After config is done, you will not need **PPConfig** any more. (Remove the `config.json` file under ppmessage/bootstrap, you can reconfig PPMessage with PPConfig)
 
 
 ## EASY START
@@ -58,7 +54,7 @@ Check [this](ppmessage/doc/en-us/install-ppmessage-on-windows.md)
 
 
 ```bash
-Open your browser and visit `http://127.0.0.1:8945`, check the log of `main.py` to use your URL to replace `http://127.0.0.1:8945`.
+Open your browser and visit `http://your.local.ip:8945`, check the log of `main.py` to use your URL instead.
 
 ```
 
