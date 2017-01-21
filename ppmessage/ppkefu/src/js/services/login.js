@@ -23,14 +23,11 @@ function ($state, $timeout, $ionicLoading, yvSys, yvAPI, yvNav, yvLog, yvNoti, y
         this.user_email = null;
         this.user_password = null;
         this.access_token = null;
-        this.user_status = null;
         
         // make sure init one time
         if (typeof this.device_token !== "string") {
             // device info
             LoginSession.prototype.device_uuid = yvSys.get_device_uuid();
-            LoginSession.prototype.device_token = null;           // iOS only
-            LoginSession.prototype.ios_app_development = true;  // iOS only
             LoginSession.prototype.device_model = yvSys.get_device_model();
             LoginSession.prototype.device_version = yvSys.get_device_version();
             LoginSession.prototype.device_platform = yvSys.get_device_platform();
@@ -142,32 +139,13 @@ function ($state, $timeout, $ionicLoading, yvSys, yvAPI, yvNav, yvLog, yvNoti, y
    
         session.user_email = user.user_email;
         session.user_password = user.user_password;
-        session.user_status = user.user_status;
-        console.log("-------user status", user.user_status);
         
         if (!server || server.id === -1) {
             session._login_error("app.GLOBAL.ERR_NO_SERVER");
             return;
         }
 
-        if (yvSys.in_mobile_app()) {
-            // 'is_development' decide which APNS push service mode this device will apply,
-            // true for development mode, false for produciton mode.
-            var token = yvPush.get_token();
-            session.device_token = token;
-            if (yvSys.in_ios_app()) {
-                session.ios_app_development = !!ppmessage.developer_mode;
-            }
-            if (yvSys.in_android_app() && yvUser.get("android_notification_type") === yvConstants.NOTIFICATION_TYPE.MQTT) {
-                session.device_token = null;
-            }
-            session.login();
-            return;
-        }
-
-        session.device_uuid = yvSys.get_device_uuid(session.user_email);
-        console.log("session device_uuid is %s", session.device_uuid);
-        
+        session.device_uuid = yvSys.get_device_uuid(session.user_email);        
         session.login();
         return;
     }

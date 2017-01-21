@@ -34,10 +34,7 @@ function ($scope, $state, $stateParams, $ionicHistory, yvNav, yvMain, yvLogin, y
         }
 
         var _body_str = yvUtil.base64_decode($scope.user.request_body);
-        console.log("auto login with %o", _body_str);
         _body = JSON.parse(_body_str);
-        console.log("auto login with %o", _body);
-        
         $scope.user.user_email = _body.user_email;
         $scope.user.user_password = _body.user_password;
         var current_session = yvLogin.current_session();

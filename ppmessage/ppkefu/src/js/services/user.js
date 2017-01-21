@@ -53,6 +53,8 @@ function (yvSys, yvConstants) {
 
     // update user from API return
     function _update_user_from_login(data) {
+        console.log("set user login data: %o", data);
+
         user.app = data.app;
         user.uuid = data.uuid;
         user.icon = data.user_icon;
@@ -62,14 +64,8 @@ function (yvSys, yvConstants) {
         user.signature = data.user_signature;
         user.updatetime = data.updatetime;
         user.is_online = true;
-        user.status = data.service_user_status || yvConstants.USER_STATUS.READY;
-        
-        if (yvSys.in_mobile_app()) {
-            user.device_uuid = data.mobile_device_uuid;
-        } else {
-            user.device_uuid = data.browser_device_uuid;
-        }
-        
+        user.status = yvConstants.USER_STATUS.READY;
+        user.device_uuid = data.ppkefu_browser_device_uuid;
         user.show_badge = !!data.user_show_badge;
         user.mute_notification = !!data.user_mute_notification;
         user.silence_notification = !!data.user_silence_notification;

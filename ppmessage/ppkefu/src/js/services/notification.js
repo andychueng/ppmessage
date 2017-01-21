@@ -10,10 +10,9 @@ ppmessageModule.factory("yvNoti", [
     "yvAlert",
     "yvLocal",
     "yvBase",
-    "yvPush",
     "yvMessage",
     "yvConstants",
-function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvAlert, yvLocal, yvBase, yvPush, yvMessage, yvConstants) {
+function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvAlert, yvLocal, yvBase, yvMessage, yvConstants) {
     
     var SOCKET_STATE = ["CONNECTING", "OPEN", "CLOSING", "CLOSED"];
     var _pc_socket = null;
@@ -23,7 +22,6 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
 
     function _on_resume() {
         $timeout(function () {
-            yvPush.retry();
             __open_socket();
         });
     }
@@ -98,7 +96,6 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
     }
     
     function _handle_socket_message_data(obj) {
-        console.log("incoming message: %o", obj);
         $rootScope.$broadcast("event:add_message", obj);
         if (yvSys.in_pc_browser()) {
             _desktop_notification(obj);
@@ -233,14 +230,9 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
     function _exit() {
         if (yvSys.in_mobile_app()) {
             // As the app doesn't register push when login, it should not unregister push when logout
-            // yvPush.unregister_push();
             document.removeEventListener('resume', _on_resume, false);
             document.removeEventListener('pause', _on_pause, false);
-        }
-        if (yvSys.in_android_app() && yvUser.get("android_notification_type") === yvConstants.NOTIFICATION_TYPE.MQTT) {
-            yvPush.disconnect_mqtt();
-        }
-        
+        }        
         // for every platform
         __close_socket();
     }
@@ -271,12 +263,6 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
                 document.addEventListener('resume', _on_resume, false);
                 document.addEventListener('pause', _on_pause, false);
             }
-            if (yvSys.in_android_app() && yvUser.get("android_notification_type") === yvConstants.NOTIFICATION_TYPE.MQTT) {
-                yvPush.connect_mqtt();
-            }
-            
-            // every platform
-            // force close previous active socket and reconnect interval
             __close_socket();            
             __open_socket();
         },

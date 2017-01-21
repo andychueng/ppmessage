@@ -17,6 +17,7 @@ def _cur_dir():
     return os.path.dirname(__file__)
 
 def _replace(_d):
+    print("CONFIG WITH %s" % _d)
     _key = _d.get("key")
     
     TEMPLATE_MIN_JS = "../../resource/assets/ppkefu/assets/js/ppkefu-template.min.js"
