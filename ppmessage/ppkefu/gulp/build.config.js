@@ -89,7 +89,6 @@ module.exports = {
         "../src/js/directives/search-modal.js",
         "../src/js/directives/conversation-member.js",
         "../src/js/directives/add-member-modal.js",
-        // "../src/js/directives/select-group-user-modal.js",
         "../src/js/directives/add-member-by-contact.js",
         "../src/js/directives/add-member-by-group.js",
 
@@ -136,7 +135,8 @@ module.exports = {
         "../src/js/controllers/change-avatar.js",
         "../src/js/controllers/change-fullname.js",
         "../src/js/controllers/change-signature.js",
-        "../src/js/controllers/push-notification.js",
+        "../src/js/controllers/widget-code.js",
+        "../src/js/controllers/widget-link.js"
     ],
 
     libJs: [

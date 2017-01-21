@@ -169,20 +169,36 @@ function ($stateProvider, $urlRouterProvider) {
             }
         })
 
-        .state("app.push-notification", {
-            url: "/push-notification",
+
+        .state("app.widget-code", {
+            url: "/widget-code",
             views: {
                 "app-setting-list": {
                     templateUrl: "templates/controllers/app.setting-list.html",
                     controller: "SettingListCtrl"
                 },
                 "side-menu-content": {
-                    templateUrl: "templates/controllers/app.push-notification.html",
-                    controller: "PushNotificationCtrl"
+                    templateUrl: "templates/controllers/app.widget-code.html",
+                    controller: "WidgetCodeCtrl"
                 }
             }
         })
-        
+
+    
+        .state("app.widget-link", {
+            url: "/widget-link",
+            views: {
+                "app-setting-list": {
+                    templateUrl: "templates/controllers/app.setting-list.html",
+                    controller: "SettingListCtrl"
+                },
+                "side-menu-content": {
+                    templateUrl: "templates/controllers/app.widget-link.html",
+                    controller: "WidgetLinkCtrl"
+                }
+            }
+        })
+
         .state("app.switch-language", {
             url: "/switch-language",
             views: {

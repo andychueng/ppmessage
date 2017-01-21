@@ -104,27 +104,37 @@ ppmessageModule.config([
                     NAME_TAG: "Name",
                     INPUT_NEW_NAME_TAG: "Please input your new name"
                 },
+
                 signature: {
                     SIGNATURE_TAG: "Signature",
                     WRITE_SOMETHING: "Write something"
                 },
+
                 password: {
                     PASSWORD_TAG: "Password",
                     INPUT_ORIGIN_PASSWORD_TAG: "Input your original password",
                     INPUT_NEW_PASSWORD_TAG: "Input your new password",
                     INPUT_NEW_PASSWORD_AGAIN_TAG: "Input your new password again"
                 },
-                push_noti: {
-                    PUSH_NOTIFICATION_TAG: "Notifications"
+
+                widget_code: {
+                    WIDGET_CODE_TAG: "Widget Code"
                 },
+
+                widget_link: {
+                    WIDGET_LINK_TAG: "Widget Link"
+                },
+
                 language: {
                     LANGUAGE_TAG: "Language",
                     CHINESE_TAG: "中文",
                     ENGLISH_TAG: "English"
                 },
+
                 app: {
                     APP_TAG: "App"
                 },
+
                 about: {
                     ABOUT_TAG: "About",
                     CANT_GET_NEWEST_VERSION_TAG: "Can't get application version",
@@ -622,9 +632,15 @@ ppmessageModule.config([
                     INPUT_NEW_PASSWORD_TAG: "请输入新密码",
                     INPUT_NEW_PASSWORD_AGAIN_TAG: "请再输入一次新密码"
                 },
-                push_noti: {
-                    PUSH_NOTIFICATION_TAG: "通知"
+
+                widget_code: {
+                    WIDGET_CODE_TAG: "聊天组件代码"
                 },
+
+                widget_link: {
+                    WIDGET_LINK_TAG: "聊天组件链接"
+                },
+
                 language: {
                     LANGUAGE_TAG: "语言",
                     CHINESE_TAG: "中文",
