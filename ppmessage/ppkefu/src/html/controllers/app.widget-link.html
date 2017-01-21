@@ -1,18 +1,11 @@
-<ion-view class="yv-change-signature-view" view-title="{{ 'app.settings.signature.SIGNATURE_TAG' | translate }}">
-  
-  <ion-nav-buttons side="secondary">
-    <button class="button button-clear" ng-click="save()" ng-disabled="disableSave()">
-      {{ "app.common.SAVE_TAG" | translate }}
-    </button>
-  </ion-nav-buttons>
-  
+<ion-view class="yv-widget-link-view" view-title="{{ 'app.settings.widget_link.WIDGET_LINK_TAG' | translate }}">
+    
   <ion-content scroll="false">
     <div class="list list-inset">
       <label class="item item-input">
-        <textarea class="signature-textarea" placeholder="{{ 'app.settings.signature.WRITE_SOMETHING' | translate }}" maxlength="50"
-                  ng-model="data.signature">
+        <textarea class="widget-link-textarea"
+                  ng-model="data.widget_link">
         </textarea>
-        <span class="signature-length"> {{ data.signature.length }} / 50</span>
       </label>
     </div>
   </ion-content>

@@ -1,12 +1,25 @@
 ppmessageModule.controller("WidgetLinkCtrl", [
     "$scope",
-    "$ionicLoading",
-    "$ionicHistory",
-    "yvSys",
-    "yvAPI",
+    "yvUtil",
     "yvUser",
-    "yvMain",
-    "yvLocal",
-function ($scope, $ionicLoading, $ionicHistory, yvSys, yvAPI, yvUser, yvMain, yvLocal) {
+function ($scope, yvUtil, yvUser) {
+
+    $scope.data = {
+        widget_link: _generate_enterprise_link()
+    };
     
+    function _generate_enterprise_link() {
+        // `base64_encode` only accept `255 ascii` characters, so we need `escape` here
+        var _appObj = {
+            uuid: yvUser.get("app").uuid,
+            app_name: encodeURI(app.app_name || '')
+        }; 
+        var _param = yvUtil.base64_encode(JSON.stringify(_appObj));
+
+        var _link_template = "{{server_url}}/ppcom/enterprise/{{app_signature}}";
+        return _link_template
+            .replace("{{server_url}}", window.ppmessage.server_url)
+            .replace("{{app_signature}}", _param);
+    }
+
 }]);

@@ -416,7 +416,8 @@ class FirstHandler(tornado.web.RequestHandler):
     def _dist_ppkefu(self, _request):
         from ppmessage.ppkefu.config.config import config
         _d = {
-            "key": self._api.get(API_LEVEL.PPKEFU.lower()).get("key")
+            "key": self._api.get(API_LEVEL.PPKEFU.lower()).get("key"),
+            "server_url": _get_config().get("server").get("url")
         }
         config(_d)
         return True

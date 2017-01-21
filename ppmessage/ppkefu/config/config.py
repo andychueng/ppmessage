@@ -19,6 +19,7 @@ def _cur_dir():
 def _replace(_d):
     print("CONFIG WITH %s" % _d)
     _key = _d.get("key")
+    _server_url = _d.get("server_url")
     
     TEMPLATE_MIN_JS = "../../resource/assets/ppkefu/assets/js/ppkefu-template.min.js"
     MIN_JS = "../../resource/assets/ppkefu/assets/js/ppkefu.min.js"
@@ -33,6 +34,7 @@ def _replace(_d):
     with open(_template, "r") as _f:
         _ppkefu_js_str = _f.read()
         _ppkefu_js_str = _ppkefu_js_str.replace("{{api_key}}", _key)
+        _ppkefu_js_str = _ppkefu_js_str.replace("{{server_url}}", _server_url)
         with open(_min, "w") as _of:
             _of.write(_ppkefu_js_str)
     return
@@ -56,6 +58,7 @@ if __name__ == "__main__":
         sys.exit()
         
     _d = {
-        "key": _get_config().get("api").get(API_LEVEL.PPKEFU.lower()).get("key")
+        "key": _get_config().get("api").get(API_LEVEL.PPKEFU.lower()).get("key"),
+        "server_url": _get_config().get("server").get("url")
     }
     config(_d)
