@@ -14,17 +14,7 @@ angular.module("this_app")
                     api_uuid: null,
                     api_key: null,
                     api_secret: null,
-                },
-                ppconsole_thirdparty: {
-                    api_uuid: null,
-                    api_key: null,
-                    api_secret: null,
-                },
-                ppkefu_thirdparty: {
-                    api_uuid: null,
-                    api_key: null,
-                    api_secret: null,
-                },
+                }
             };
         };
         
@@ -58,8 +48,8 @@ angular.module("this_app")
                 "app_name": $scope.team_info.app_name,
             };
             yvAjax.update_app_info(update)
-                .success(function(data) {
-                    console.log("update team info back",data);
+                .then(function(data) {
+                    data = data.data;
                     if(data.error_code == 0) {
                         $scope.team_info.app_name = data.app_name;
                         team_name = data.app_name;
@@ -72,28 +62,23 @@ angular.module("this_app")
                     } else {
                         $scope.toast_error_string("UPDATE_FAILED_TAG");
                     }
-                })
-                .error(function(data) {
-                    console.log("error data is",data);
+                }, function(data) {
                     $scope.toast_error_string("UPDATE_FAILED_TAG");
                 });
         };
 
         var _team = function() {
             var _own_team = yvUser.get_team();
-            if (_own_team == null) {
-                console.error("no team info");
-                return;
-            }
 
-            var app_uuid = _own_team.uuid;
-            $scope.team_info.app_uuid = app_uuid;
+            $scope.team_info.app_uuid = _own_team.uuid;
             $scope.team_info.app_name = _own_team.app_name;
-            var _get = yvAjax.get_api_info({app_uuid: app_uuid, user_uuid: yvUser.get_uuid()});
-            _get.success(function(data) {
+
+            console.log("yvUser uuid: %s ---- %s", yvUser.get("uuid"), yvUser.get_uuid());
+            var _get = yvAjax.get_api_info({user_uuid:yvUser.get_uuid()});
+            
+            _get.then(function(data) {
+                data = data.data;
                 $scope.team_info.ppcom = data.ppcom;
-                $scope.team_info.ppconsole_thirdparty = data.ppconsole_thirdparty;
-                $scope.team_info.ppkefu_thirdparty = data.ppkefu_thirdparty;
             });
         };
         

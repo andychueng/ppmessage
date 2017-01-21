@@ -138,8 +138,11 @@ class WSHandler(tornado.websocket.WebSocketHandler):
             self.send_ack({"code": DIS_ERR.NODBKEY, "what": DIS_WHAT.AUTH})
             return
 
-        _token = json.loads(_token)
-        if _token[1] != API_LEVEL.PPCOM and _token[1] != API_LEVEL.PPKEFU and _token[1] != API_LEVEL.THIRD_PARTY_KEFU:
+        _key = ApiTokenData.__tablename__ + ".uuid." + _token
+        _token = self.redis.hgetall(_key)
+        
+        _level = _token.get("api_level")
+        if _level != API_LEVEL.PPCOM and _level != API_LEVEL.PPKEFU:
             self.send_ack({"code": DIS_ERR.WRLEVEL, "what": DIS_WHAT.AUTH})
             return
         
@@ -312,7 +315,7 @@ class WSHandler(tornado.websocket.WebSocketHandler):
             logging.error("can not hanle message: %s" % message)
             self.send_ack({"code": DIS_ERR.TYPE, "what": DIS_WHAT.WS})
             return
-        
+
         _f(_body)
         return
     

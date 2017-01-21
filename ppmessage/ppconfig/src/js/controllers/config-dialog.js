@@ -38,9 +38,9 @@ function ConfigServerController($scope, $mdDialog, yvAjax) {
 
     $scope.confirm = function() {
         $scope.server.disable_submit = true;
-        yvAjax.server($scope.server).success(function(){
+        yvAjax.server($scope.server).then(function() {
             $mdDialog.hide("success");
-        }).error(function(){
+        }, function() {
             $scope.server.disable_submit = false;
             console.log("server config failed");
         });
@@ -115,9 +115,9 @@ function ConfigDatabaseController($scope, $mdDialog, yvAjax) {
 
     $scope.confirm = function() {
         $scope.database.disable_submit = true;
-        yvAjax.database($scope.database).success(function(){
+        yvAjax.database($scope.database).then(function() {
             $mdDialog.hide("success");
-        }).error(function(){
+        }, function() {
             $scope.database.disable_submit = false;
             console.log("database config failed");
         });
@@ -153,9 +153,9 @@ function CreateFirstController($scope, $mdDialog, yvAjax) {
 
     $scope.confirm = function() {
         $scope.user.disable_submit = true;
-        yvAjax.first($scope.user).success(function(){
+        yvAjax.first($scope.user).then(function(){
             $mdDialog.hide("success");
-        }).error(function(){
+        }, function(){
             $scope.user.disable_submit = false;
             console.log("first user create failed");
         });
@@ -197,9 +197,9 @@ function RestartController($scope, $mdDialog, yvAjax) {
 
     $scope.confirm = function() {
         $scope.user.disable_submit = true;
-        yvAjax.restart($scope.user).success(function() {
+        yvAjax.restart($scope.user).then(function() {
             $mdDialog.hide("success");
-        }).error(function(){
+        }, function(){
             $scope.user.disable_submit = false;
         });
     };

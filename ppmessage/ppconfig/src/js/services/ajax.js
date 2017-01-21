@@ -1,5 +1,5 @@
-$yvAjaxService.$inject = ["$state", "$timeout", "$http", "$cookies", "yvConstants"];
-function $yvAjaxService($state, $timeout, $http, $cookies, yvConstants) {
+$yvAjaxService.$inject = ["$state", "$timeout", "$http", "yvConstants"];
+function $yvAjaxService($state, $timeout, $http, yvConstants) {
 
     var _api_post = function(_url, _data) {
         _data = _data || {};

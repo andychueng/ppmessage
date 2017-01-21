@@ -8,16 +8,15 @@ angular.module("this_app")
         
         var _ajax_update_team_info = function(update, cb) {
             yvAjax.update_app_info(update)
-                .success(function(data) {
-                    console.log(data);
+                .then(function(data) {
+                    data = data.data;
                     if(data.error_code == 0) {
                         $scope.toast_success_string("UPDATE_SUCCESSFULLY_TAG");
                         cb && cb();
                     } else {
                         $scope.toast_error_string("UPDATE_FAILED_TAG");
                     };
-                })
-                .error(function(data) {
+                }, function(data) {
                     $scope.toast_error_string("UPDATE_FAILED_TAG");
                 });
         };

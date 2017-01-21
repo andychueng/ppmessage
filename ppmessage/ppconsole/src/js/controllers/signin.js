@@ -1,5 +1,5 @@
 angular.module("this_app")
-    .controller("SignInCtrl", function($scope, $state, $stateParams, $timeout, $translate, $cookieStore, yvAjax, yvUtil, yvUser, yvTransTags, yvConstants, yvDebug, yvLogin, yvAppService) {
+    .controller("SignInCtrl", function($scope, $state, $stateParams, $timeout, $translate, $cookieStore, yvAjax, yvUtil, yvUser, yvTransTags, yvConstants, yvDebug, yvLogin) {
 
         $scope.user = {
             user_status: "OWNER_2",
@@ -48,9 +48,12 @@ angular.module("this_app")
                     if (_udata.error_code != 0) {
                         return;
                     }
-                    
+
+                    yvLogin.updateActiveUser( angular.copy( _udata ) );
                     yvLogin.updateLoginedUser( angular.copy( _udata ) );
                     yvLogin.setLogined( true );
+
+                    yvUser.set_team(_udata.team);
                     
                     var _url = yvConstants.USER_STATUS[_udata.user_status];
                     
@@ -62,11 +65,13 @@ angular.module("this_app")
                     
                     if (_udata.user_status == "OWNER_2") {
                         $state.go(_url);
+                        return;
                     }
                     
                     yvDebug.d("do not know how to handle user_status: %s", data.user_status);
                     return;
                 }, function() {
+                    $scope.toast_error_string("SIGNIN_FAILED_TAG");
                 });
             }, function(response) {
                 $scope.toast_error_string("SIGNIN_FAILED_TAG");

@@ -1,7 +1,6 @@
-angular.module("this_app.route", ["ui.router", "this_app.constants"])
+angular.module("this_app.route", [])
 
-    .config(function($stateProvider, $urlRouterProvider, yvConstants, blockUIConfig) {
-        blockUIConfig.autoInjectBodyBlock = false;
+    .config(function($stateProvider, $urlRouterProvider) {
 
         $stateProvider
 

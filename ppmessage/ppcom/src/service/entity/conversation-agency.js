@@ -121,10 +121,10 @@ Service.$conversationAgency = ( function() {
             return;
         }
 
-        Service.$api.cancelWaitingCreateConversation( {
-            app_uuid: Service.$app.appId(),
-            user_uuid: Service.$user.quickId(),
-        }, onCompleted, onCompleted );
+        // Service.$api.cancelWaitingCreateConversation( {
+        //     app_uuid: Service.$app.appId(),
+        //     user_uuid: Service.$user.quickId(),
+        // }, onCompleted, onCompleted );
 
         function onCompleted( someThing ) {
             state = STATE.CANCEL;

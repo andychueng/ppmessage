@@ -21,8 +21,13 @@ class PPGetAppInfoHandler(BaseHandler):
 
     def _get(self):
         _redis = self.application.redis
-        _app_uuid = self.app_uuid
 
+        _request = json.loads(self.request.body)
+        
+        _app_uuid = _request.get("app_uuid")
+        if not _app_uuid:
+            self.setErrorCode(API_ERR.NO_PARA)
+            return
         _data = redis_hash_to_dict(_redis, AppInfo, _app_uuid)
         if _data == None:
             self.setErrorCode(API_ERR.NO_APP)
@@ -35,7 +40,6 @@ class PPGetAppInfoHandler(BaseHandler):
         return
 
     def initialize(self):
-        self.addPermission(app_uuid=True)
         self.addPermission(api_level=API_LEVEL.PPCOM)
         self.addPermission(api_level=API_LEVEL.PPKEFU)
         self.addPermission(api_level=API_LEVEL.PPCONSOLE)

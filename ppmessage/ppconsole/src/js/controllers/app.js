@@ -1,5 +1,5 @@
 angular.module("this_app")
-    .controller("AppCtrl", function($window, $scope, $rootScope, $location, $state, $translate, $timeout, $cookies, $filter, toastr, yvAjax, yvUser, yvUtil, yvDebug, yvLogin, yvAppService, yvConstants, yvLoginedUser, yvTransTags) {
+    .controller("AppCtrl", function($window, $scope, $rootScope, $location, $state, $translate, $timeout, $cookies, $filter, toastr, yvAjax, yvUser, yvUtil, yvDebug, yvLogin, yvConstants, yvLoginedUser, yvTransTags) {
 
         $scope._languages = [
             {lang: "zh-CN"},            
@@ -97,8 +97,8 @@ angular.module("this_app")
         
         $scope.start_ppmessage = function(in_this) {
             var userUuid = yvUser.get_uuid();
-            var password = yvUser.get_password();
-            var userEmail = yvUser.get_email();
+            var password = yvUser.get("user_password");
+            var userEmail = yvUser.get("user_email");
             var body = {
                 user_email: userEmail,
                 user_password: password,
@@ -120,7 +120,6 @@ angular.module("this_app")
             $timeout(function() {
                 yvLogin.logout();
                 isLogin = false;
-                yvAppService.clear();
                 $scope.menuStyle[ 'margin-top' ] = '24px';
                 $scope.isAdminUser = false;
             });

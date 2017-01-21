@@ -59,13 +59,14 @@ angular.module("this_app")
                 user_info.user_password = sha1($scope.edit_user_direct.password);
             }
 
-            yvAjax.update_user(user_info).success(function(data) {
+            yvAjax.update_user(user_info).then(function(data) {
+                data = data.data;
                 if (data.error_code == 0) {
                     $scope.toast_success_string("UPDATE_SUCCESSFULLY_TAG")
                 } else {
                     $scope.toast_error_string("UPDATE_FAILED_TAG")
                 }
-            }).error(function(data) {
+            }, function(data) {
                 $scope.toast_error_string("UPDATE_FAILED_TAG");
             });
             
@@ -86,6 +87,7 @@ angular.module("this_app")
 
             yvAppPeopleService.createServiceUser( app_user_info, function( data ) {
 
+                data = data.data;
                 switch ( data.error_code ) {
                 case yvAjax.API_ERR.NO_ERR:
                     $scope.toast_success_string("CREATE_SUCCESSFULLY_TAG");
@@ -191,9 +193,9 @@ angular.module("this_app")
                 this.push( member.uuid );
             }, _uuids );
 
-            var _r = yvAjax.leave_app(_uuids, yvUser.get_team().uuid);
-            _r.success(function(data) {
-
+            var _r = yvAjax.remove_user(_uuids);
+            _r.then(function(data) {
+                data = data.data;
                 if (data.error_code == 0) {
                     jQuery("#remove_user").modal('hide');
                     $scope.selected_all.selected = false;
@@ -206,8 +208,7 @@ angular.module("this_app")
                     $scope.toast_error_string("REMOVE_FAILED_TAG");
                     return;
                 }
-            });
-            _r.error(function(data) {
+            }, function(data) {
                 jQuery("#remove_user").modal('hide');
                 $scope.selected_all.selected = false;
                 $scope.page_app_user();
@@ -230,7 +231,7 @@ angular.module("this_app")
                 length: $scope.items_per_page
                 
             }, function( response ) {
-                
+
                 $scope.group = response.users;
                 $scope.total_items = response.total;
                 
@@ -245,10 +246,6 @@ angular.module("this_app")
 
         var _team = function() {
             var _own_team = yvUser.get_team();
-            if (_own_team == null) {
-                console.error("no team info");
-                return;
-            }
             $scope.page_app_user();
         };
         

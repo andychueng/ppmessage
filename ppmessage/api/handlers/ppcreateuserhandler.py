@@ -49,6 +49,7 @@ def create_user(_redis, _request):
     IOLoop.current().spawn_callback(download_random_identicon, _user_icon)
     
     _du_uuid = str(uuid.uuid1())
+    
     _values = {
         "uuid": _du_uuid,
         "user_status": _user_status,
@@ -58,6 +59,7 @@ def create_user(_redis, _request):
         "user_language": _user_language,
         "user_fullname": _user_fullname,
         "user_password": _user_password,
+        "is_removed_user": False,
         "is_anonymous_user": False,
         "is_service_user": _is_service_user,
         "is_owner_user": False

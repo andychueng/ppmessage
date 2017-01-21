@@ -68,14 +68,22 @@ module.exports = {
 
     scriptLibFiles: [
         "../../resource/share/ppconsole/bower_components/js-sha1/build/sha1.min.js",
+
+
         "../../resource/share/ppconsole/bower_components/jquery/dist/jquery.min.js",
+
+
         "../../resource/share/ppconsole/bower_components/bootstrap/dist/js/bootstrap.min.js",
-        "../../resource/share/ppconsole/bower_components/moment/min/moment-with-locales.min.js",
         "../../resource/share/ppconsole/bower_components/tinycolor/tinycolor.js",
+        
+
+        "../../resource/share/ppconsole/bower_components/moment/min/moment.min.js",
+
         "../../resource/share/ppconsole/bower_components/bootstrap-colorpickersliders/dist/bootstrap.colorpickersliders.min.js",
         "../../resource/share/ppconsole/bower_components/bootstrap-daterangepicker/daterangepicker.js",
-        "../../resource/share/ppconsole/bower_components/Chart.js/Chart.js",
-        "../../resource/share/ppconsole/bower_components/moment-range/dist/moment-range.min.js",
+
+        "../../resource/share/ppconsole/bower_components/chart.js/dist/Chart.min.js",
+
         
         "../../resource/share/ppconsole/bower_components/angular/angular.min.js",
         

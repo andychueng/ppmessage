@@ -10,7 +10,6 @@ module.exports = {
         "../src/js/global.js",
         "../src/js/thisapp.js",
         "../src/js/constants.js",
-        "../src/js/i18n.js",
         "../src/js/route.js",
 
         "../src/js/services/ajax.js",
@@ -26,21 +25,15 @@ module.exports = {
         "../../resource/share/ppconfig/bower_components/jquery/dist/jquery.min.js",        
         "../../resource/share/ppconfig/bower_components/angular/angular.min.js",
         
-        "../../resource/share/ppconfig/bower_components/angular-aria/angular-aria.js",
-        "../../resource/share/ppconfig/bower_components/angular-animate/angular-animate.js",
+        "../../resource/share/ppconfig/bower_components/angular-aria/angular-aria.min.js",
+        "../../resource/share/ppconfig/bower_components/angular-animate/angular-animate.min.js",
         "../../resource/share/ppconfig/bower_components/angular-messages/angular-messages.min.js",
-        
-        "../../resource/share/ppconfig/bower_components/angular-cookies/angular-cookies.min.js",
-        "../../resource/share/ppconfig/bower_components/angular-file-upload/dist/angular-file-upload.min.js",
-        "../../resource/share/ppconfig/bower_components/angular-block-ui/dist/angular-block-ui.min.js",
-        "../../resource/share/ppconfig/bower_components/angular-utils-pagination/dirPagination.js",
-        "../../resource/share/ppconfig/bower_components/angular-translate/angular-translate.min.js",
+
+        "../../resource/share/ppconfig/bower_components/angular-route/angular-route.min.js",
         "../../resource/share/ppconfig/bower_components/angular-ui-router/release/angular-ui-router.min.js",
-        "../../resource/share/ppconfig/bower_components/angular-base64/angular-base64.min.js",
-        "../../resource/share/ppconfig/bower_components/angular-tooltips/dist/angular-tooltips.min.js",
-        "../../resource/share/ppconfig/bower_components/angular-toastr/dist/angular-toastr.tpls.js",
-        "../../resource/share/ppconfig/bower_components/angular-material/angular-material.min.js",
         
+        "../../resource/share/ppconfig/bower_components/angular-base64/angular-base64.min.js",
+        "../../resource/share/ppconfig/bower_components/angular-material/angular-material.min.js"        
     ],
     
     cssFiles: [
@@ -50,8 +43,6 @@ module.exports = {
 
     cssLibFiles: [
         "../../resource/share/ppconfig/bower_components/material-design-icons/iconfont/material-icons.css",
-        "../../resource/share/ppconfig/bower_components/angular-tooltips/dist/angular-tooltips.min.css",
-        "../../resource/share/ppconfig/bower_components/angular-toastr/dist/angular-toastr.min.css",
         "../../resource/share/ppconfig/bower_components/angular-material/angular-material.min.css"
     ],
 

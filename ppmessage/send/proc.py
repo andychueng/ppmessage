@@ -117,7 +117,7 @@ class Proc():
         _row.async_add(self._redis)
         _row.create_redis_keys(self._redis)
 
-        _row = ConversationInfo(uuid=self._conversation_uuid, status=CONVERSATION_STATUS.OPEN, latest_task=self._uuid)
+        _row = ConversationInfo(uuid=self._conversation_uuid, latest_task=self._uuid)
         _row.async_update(self._redis)
         _row.update_redis_keys(self._redis)
 

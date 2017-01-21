@@ -124,7 +124,11 @@ function $yvAjaxService($state, $timeout, $http, $cookieStore, yvUser, yvConstan
         is_email_valid: function(requestParams) {
             return _apiPost("/PP_IS_EMAIL_VALID", requestParams);
         },
-        
+
+        get_app_info: function(requestParams) {
+            return _apiPost('/PP_GET_APP_INFO', requestParams);
+        },
+
         update_app_info: function(requestParams) {
             return _apiPost('/PP_UPDATE_APP_INFO', requestParams);
         },
@@ -137,11 +141,11 @@ function $yvAjaxService($state, $timeout, $http, $cookieStore, yvUser, yvConstan
             return _apiPost('/PP_UPDATE_USER', requestParams);
         },
 
-        remove_user: function(user_uuid) {
-            return _apiPost("/PP_REMOVE_USER", {user_uuid: user_uuid});
+        remove_user: function(p) {
+            return _apiPost("/PP_REMOVE_USER", p);
         },
 
-        get_app_conversation_list: function(requestParams) {
+        get_conversation_list: function(requestParams) {
             return _apiPost('/PP_GET_CONVERSATION_LIST', requestParams);
         },
 
@@ -150,8 +154,8 @@ function $yvAjaxService($state, $timeout, $http, $cookieStore, yvUser, yvConstan
             return _apiPost('/PP_PAGE_HISTORY_MESSAGE', requestParams);
         },
 
-        get_team_service_user_list: function(requestParams) {
-            return _apiPost('/PP_GET_SERVICE_USER_LIST', requestParams);
+        get_service_user_list: function() {
+            return _apiPost('/PP_GET_SERVICE_USER_LIST', {});
         },
 
         get_api_info: function(requestParams) {

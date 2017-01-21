@@ -1,6 +1,6 @@
 /*
  *  guijin.ding@yvertical.com
- *  Copyright (c) 2010-2015 
+ *  Copyright (c) 2010-2017
  */
 
 angular.module("this_app.i18n", ["pascalprecht.translate"])
@@ -13,17 +13,21 @@ angular.module("this_app.i18n", ["pascalprecht.translate"])
                 ADD_TAG: "Add",
 
                 CANCEL_TAG: "Cancel",
+
                 CONFIRM_TAG: "Confirm",
 
                 CREATE_TAG: "Create",
 
                 DELETE_TAG: "Delete",
-                                
+
+                EDIT_TAG: "Edit",
+                
                 PREVIEW_TAG: "Preview",
                 
                 SAVE_TAG: "Save",
 
                 SEARCH_TAG: "Search",
+
                 SELECT_ALL_TAG: "Select all",
 
                 SUBMIT_TAG: "Submit",
@@ -49,7 +53,9 @@ angular.module("this_app.i18n", ["pascalprecht.translate"])
                 TEAM_NAME_TAG: "Team name",
                 
                 USER_FULLNAME_TAG: "User fullname",
+                
                 USER_EMAIL_TAG: "User email",
+
                 USER_PASSWORD_TAG: "User password",
 
             },
@@ -245,6 +251,8 @@ angular.module("this_app.i18n", ["pascalprecht.translate"])
 
                 DELETE_TAG: "删除",
 
+                EDIT_TAG: '编辑',
+                
                 PREVIEW_TAG: "预览",
                 
                 SAVE_TAG: "保存",
@@ -256,6 +264,7 @@ angular.module("this_app.i18n", ["pascalprecht.translate"])
 
             field: {
                 CURRENT_PASSWORD_TAG: "当前密码",
+                
                 NEW_PASSWORD_TAG: "新密码",
 
                 OWNER_TAG: "拥有者",
@@ -268,7 +277,9 @@ angular.module("this_app.i18n", ["pascalprecht.translate"])
                 TEAM_NAME_TAG: "团队名称",
                 
                 USER_FULLNAME_TAG: "用户姓名",
+                
                 USER_EMAIL_TAG: "用户邮箱",
+
                 USER_PASSWORD_TAG: "用户密码",
 
                 MEMBERS_TAG: "成员"

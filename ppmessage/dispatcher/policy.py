@@ -260,10 +260,10 @@ class AbstractPolicy(Policy):
         return
         
     def _push(self):
-        if len(self._online_users) == 0:
-            self.no_online_user()
+        if not self._online_users:
+            logging.error("no online user")
             return
-                
+
         for _user_uuid in self._online_users:
             _user = self._users_hash[_user_uuid]
             _online_devices = _user.get("_online_devices")
@@ -301,8 +301,8 @@ class AbstractPolicy(Policy):
         self._is_service_user = {}
         for _user_uuid in _users:
            _key = DeviceUser.__tablename__ + ".uuid." + _user_uuid
-           self._is_serivce_user[_user_uuid] = True
-           if self.redis.hget("is_service_user") != "True":
+           self._is_service_user[_user_uuid] = True
+           if self._redis.hget(_key, "is_service_user") != "True":
               self._is_service_user[_user_uuid] = False
         
         # remove the sender self
@@ -332,7 +332,6 @@ class AbstractPolicy(Policy):
         self.users()
         self._users_devices()
         self._push()
-        self._other_device()
         return
     
 class BroadcastPolicy(AbstractPolicy):

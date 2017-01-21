@@ -37,9 +37,9 @@ class PPCreateAnonymousHandler(BaseHandler):
         return _locale_string.get("unknown") + "." + _locale_string.get("user")
 
     @coroutine
-    def _create_user_name(self, user_uuid=None, data_uuid=None, ip=None):
+    def _create_user_name(self, user_uuid=None, ip=None):
         logging.info("create anonymous user_uuid: %s, ip: %s" % (user_uuid, ip))
-        if user_uuid == None or ip == None or data_uuid == None:
+        if user_uuid == None or ip == None:
             return
         
         url = "http://ipinfo.io/" + ip + "/json"
@@ -57,7 +57,7 @@ class PPCreateAnonymousHandler(BaseHandler):
         logging.info("geoservice return: %s" % response.body)
         _body = json.loads(response.body)
         
-        if _body == None or _body.get("error_code") != 0:
+        if not _body:
             logging.error("cant get user name by ip: %s" % ip)
             return
         
@@ -116,6 +116,7 @@ class PPCreateAnonymousHandler(BaseHandler):
             "is_anonymous_user": True,
             "is_service_user": False,
             "is_owner_user": False,
+            "is_removed_user": False,
             "user_name": _user_name,
             "user_email": _user_email,
             "user_fullname": _user_name,
@@ -134,7 +135,7 @@ class PPCreateAnonymousHandler(BaseHandler):
         _rdata["user_icon"] = _user_icon
 
         _ip = self.request.headers.get("X-Real-Ip") or self.request.headers.get("remote_ip") or self.request.remote_ip
-        IOLoop.current().spawn_callback(self._create_user_name, user_uuid=_du_uuid, data_uuid=_data_uuid, ip=_ip)
+        IOLoop.current().spawn_callback(self._create_user_name, user_uuid=_du_uuid, ip=_ip)
         return
     
     def initialize(self):

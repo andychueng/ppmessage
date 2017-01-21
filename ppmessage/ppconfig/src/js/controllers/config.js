@@ -1,5 +1,5 @@
 angular.module("this_app")
-    .controller("ConfigCtrl", function($scope, $state, $stateParams, $timeout, $window, $translate, $mdDialog, yvAjax) {
+    .controller("ConfigCtrl", function($scope, $state, $stateParams, $timeout, $window, $mdDialog, yvAjax) {
 
         var CONFIG_STATUS = {
             NONE: 0,
@@ -118,11 +118,11 @@ angular.module("this_app")
         };
 
         $scope._init_config_status = function() {
-            yvAjax.status().success(function(data) {
+            yvAjax.status().then(function(data) {
+                data = data.data;
                 $scope._config_status.status = CONFIG_STATUS[data.status];
                 $scope._config_status.ip = data.ip;
-                console.log($scope._config_status);
-            }).error(function() {
+            }, function() {
             });
         };
 
