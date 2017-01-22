@@ -21,16 +21,10 @@ from ppmessage.core.constant import YVOBJECT
 from ppmessage.core.constant import API_LEVEL
 from ppmessage.core.constant import TASK_STATUS
 from ppmessage.core.constant import MESSAGE_TYPE
-from ppmessage.core.constant import PCSOCKET_SRV
-from ppmessage.core.constant import ONLINE_STATUS
 from ppmessage.core.constant import MESSAGE_SUBTYPE
 from ppmessage.core.constant import SERVICE_USER_STATUS
-from ppmessage.core.constant import REDIS_PPKEFU_ONLINE_KEY
-from ppmessage.core.constant import REDIS_LOGOUT_NOTIFICATION_KEY
 
 from ppmessage.core.utils.config import _get_config
-
-from ppmessage.pcsocket.pcsocketapp import pcsocket_user_online
 from ppmessage.core.redis import redis_hash_to_dict
 
 import traceback
@@ -97,17 +91,7 @@ class PPKefuLoginHandler(BaseHandler):
         _row.update_redis_keys(self.application.redis)
         _row.async_update(self.application.redis)
         return
-    
-    def _update_device_online(self):
-        _values = {
-            "uuid": self.device.get("uuid"),
-            "device_is_online": True
-        }
-        _row = DeviceInfo(**_values)
-        _row.update_redis_keys(self.application.redis)
-        _row.async_update(self.application.redis)
-        return
-    
+        
     #L2=========================================
 
     def _parameter(self, _p):
@@ -183,7 +167,6 @@ class PPKefuLoginHandler(BaseHandler):
 
         self._update_device_with_user(self.device.get("uuid"), self.user.get("uuid"))        
         self._update_user_with_device(self.user.get("uuid"), self.device.get("uuid"))
-        self._update_device_online()
         self._return()
 
         return

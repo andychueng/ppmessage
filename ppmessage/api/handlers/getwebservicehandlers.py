@@ -55,11 +55,6 @@ from .ppgetapiinfohandler import PPGetApiInfoHandler
 
 from .ppvalidateonlinedevicehandler import PPValidateOnlineDeviceHandler
 
-from .ppkefusetbusy import PPKefuSetBusy
-from .ppkefusetready import PPKefuSetReady
-from .ppkefusetrest import PPKefuSetRest
-from .ppkefusetserviceuserstatus import PPKefuSetServiceUserStatus
-
 from .ppcomgetdefaultconversationhandler import PPComGetDefaultConversationHandler
 from .ppcomcreateconversationhandler import PPComCreateConversationHandler
 
@@ -80,10 +75,6 @@ def getWebServiceHandlers():
 
     handler_list.append((r"/PPKEFU_LOGIN", PPKefuLoginHandler))
     handler_list.append((r"/PPKEFU_LOGOUT", PPKefuLogoutHandler))
-    handler_list.append((r"/PPKEFU_SET_BUSY", PPKefuSetBusy))
-    handler_list.append((r"/PPKEFU_SET_READY", PPKefuSetReady))
-    handler_list.append((r"/PPKEFU_SET_REST", PPKefuSetRest))
-    handler_list.append((r"/PPKEFU_SET_SERVICE_USER_STATUS", PPKefuSetServiceUserStatus))
     
     # set deviceinfo
     handler_list.append((r"/SET_DEVICE_INFO", SetDeviceInfoHandler))
