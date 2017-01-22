@@ -16,11 +16,6 @@ function ($scope, $timeout, $rootScope, $stateParams, yvLog, yvSys, yvAPI, yvBas
 
     var content_delegate = yvDelegate.get_scroll_delegate("conversation-list-scroll");
 
-    $scope.showS2S = true;
-    $scope.showP2S = true;
-    $scope.showOnline = true;
-    $scope.showOffline = true;
-    $scope.showFilterBar = false;
     $scope.eableInfiniteScroll = true;
     $scope.canShowNoConversation = true;
 
@@ -37,21 +32,7 @@ function ($scope, $timeout, $rootScope, $stateParams, yvLog, yvSys, yvAPI, yvBas
     
     $scope.showConversation = function (conversation) {
         if (!conversation.show) return false;
-        var type_filter = false;
-        var status_filter = false;
-
-        switch (conversation.type) {
-        case yvConstants.CONVERSATION_TYPE.S2S:
-            if ($scope.showOnline) status_filter = true;
-            if ($scope.showS2S) type_filter = true;
-            break;
-        case yvConstants.CONVERSATION_TYPE.P2S:
-            var status = yvMain.is_conversation_online(conversation);
-            if (($scope.showOnline && status) || ($scope.showOffline && !status)) status_filter = true;
-            if ($scope.showP2S) type_filter = true;
-            break;
-        }
-        return type_filter && status_filter;
+        return true;
     };
 
     $scope.loadMoreConversation = function () {
@@ -98,33 +79,6 @@ function ($scope, $timeout, $rootScope, $stateParams, yvLog, yvSys, yvAPI, yvBas
     };
 
     $scope.onScroll = function () {
-        var min = yvSys.in_mobile() ? 0 : -5;
-        var max = 5;
-        var position = content_delegate.getScrollPosition();
-        if (position.top <= min) {
-            if ($scope.showFilterBar == false) {
-                $timeout(function () {
-                    $scope.showFilterBar = true;
-                    content_delegate.resize();
-                });
-            }
-            return;
-        }
-        if (position.top >= max) {
-            if ($scope.showFilterBar == true) {
-                $timeout(function () {
-                    $scope.showFilterBar = false;
-                    content_delegate.resize();
-                });
-            }
-        }
-    };
-
-    $scope.toggleShowFilterBar = function () {
-        $timeout(function () {
-            $scope.showFilterBar = !$scope.showFilterBar;
-            content_delegate.resize();
-        });
     };
         
 }]);

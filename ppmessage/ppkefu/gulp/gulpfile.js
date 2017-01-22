@@ -123,7 +123,7 @@ function generate_lib_css(done) {
 }
 
 function copy_ionic_fonts(done) {
-    var src = "../../resource/share/bower_components/ionic/fonts/*";
+    var src = "../../resource/share/ppkefu/bower_components/ionic/fonts/*";
     var dest = buildConfig.buildFontPath;
 
     gulp.src(src)
@@ -132,7 +132,7 @@ function copy_ionic_fonts(done) {
 }
 
 function copy_jcrop_gif(done) {
-    var src =  "../../resource/share/bower_components/Jcrop/css/Jcrop.gif";
+    var src =  "../../resource/share/ppkefu/bower_components/Jcrop/css/Jcrop.gif";
     var dest =  buildConfig.buildCssPath;
 
     gulp.src(src)

@@ -41,15 +41,9 @@ function ($scope, $timeout, $rootScope, $stateParams, $ionicLoading, yvAPI, yvSy
         clearInterval($scope.typingInterval);
         yvBase.active("conversation", null);
         $scope.$broadcast("event:save-chat-text", $scope.conversation);
-        if ($scope.conversation && $scope.conversation.uuid) {
-            yvNoti.unwatch_typing($scope.conversation.uuid);
-        }
     });
 
     $scope.$on("event:open-conversation", function (event, params) {
-        if ($scope.conversation && $scope.conversation.uuid) {
-            yvNoti.unwatch_typing($scope.conversation.uuid);
-        }
         $scope.$broadcast("event:save-chat-text", $scope.conversation);
         $ionicLoading.show({duration: 5000});
         _init_core(params);
@@ -131,7 +125,6 @@ function ($scope, $timeout, $rootScope, $stateParams, $ionicLoading, yvAPI, yvSy
         
         _load_messages();
         yvMain.unread_zero(conversation);
-        yvNoti.watch_typing(conversation.uuid);
         $scope.$broadcast("event:restore-chat-text", conversation);
     }
     

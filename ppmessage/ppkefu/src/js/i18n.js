@@ -122,6 +122,7 @@ ppmessageModule.config([
                 },
 
                 widget_link: {
+                    LOOK_NOW_TAG: "Take a look",
                     WIDGET_LINK_TAG: "Widget Link"
                 },
 
@@ -653,6 +654,8 @@ ppmessageModule.config([
                 },
 
                 widget_link: {
+                    LOOK_NOW_TAG: "现在就看看",
+                    
                     WIDGET_LINK_TAG: "聊天组件链接"
                 },
 

@@ -22,13 +22,9 @@ function ($scope, yvSys, yvNav, yvMain, yvUser, yvLogin, yvUpdater, yvConstants)
     }
 
     function init() {
-        console.log("0000000000000000");
+
         yvMain.init_yvdb(function (user) {
-            console.log("0000000000000000111111");
-            yvUpdater.check_update();
-            console.log("00000000000000003333333");
             nav_login(user);
-            console.log("0000000000000000222222");
         });
     }
 

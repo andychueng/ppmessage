@@ -1,6 +1,6 @@
 <ion-view view-title="{{ 'app.messages.CONVERSATIONS_TAG' | translate }}" class="yv-conversation-list-view">
   
-  <ion-content class="yv-sidemenu-left-content yv-conversation-list" ng-class="showFilterBar ? 'has-filter-bar' : ''"
+  <ion-content class="yv-sidemenu-left-content yv-conversation-list"
                delegate-handle="conversation-list-scroll" on-scroll="onScroll()">    
     <div class="yv-no-conversation" ng-if="canShowNoConversation && !conversations.list.length">
       <div class="tip-content">

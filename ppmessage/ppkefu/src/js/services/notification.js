@@ -94,7 +94,6 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
     }
     
     function __close_socket() {
-        console.log("closing socket..... %o", _pc_socket);
         
         if (_pc_socket != null) {
             _pc_socket.close();
@@ -124,7 +123,6 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
         };
 
         if (_socket_state === WebSocket.OPEN) {
-            console.log("pc socket is open, will send auth type message to server...");
             _pc_socket.send(JSON.stringify(_auth));
 
             // send pending message

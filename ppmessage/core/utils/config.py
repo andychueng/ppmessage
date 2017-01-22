@@ -10,7 +10,6 @@
 """
 {
 "configed": false,
-"language": "zh_cn",
 "server": {
 "ssl": "on",
 "port": 443,
@@ -55,11 +54,6 @@ def _dump_config(_config):
     _f.close()
     return
 
-def get_config_language():
-    _config = _get_config()
-    if _config == None:
-        return None
-    return _config.get("server").get("language").get("locale")
 
 def get_config_server_url():
     _config = _get_config()

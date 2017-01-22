@@ -20,14 +20,6 @@ function ($scope, yvDB, yvLog, yvSys, yvNav, yvBase, yvLogin) {
     });
 
     
-    $scope.isInMobile = function () {
-        if (yvSys.in_mobile()) {
-            return true;
-        }
-        return false;
-    };
-
-
     $scope.showNavButton = function () {
         if (window.innerWidth >= 768) {
             return false;

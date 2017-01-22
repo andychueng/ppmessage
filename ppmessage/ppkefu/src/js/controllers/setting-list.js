@@ -8,8 +8,6 @@ ppmessageModule.controller("SettingListCtrl", [
     "yvLogout",
 function ($scope, $state, yvSys, yvUser, yvLink, yvLogin, yvLogout) {
 
-    $scope.uiPostfix = yvSys.in_mobile() ? "-mobile" : "";    
-    
     $scope.$on("$ionicView.beforeEnter", function (event, currentView) {
         yvLogin.check_session();
     });
@@ -41,7 +39,7 @@ function ($scope, $state, yvSys, yvUser, yvLink, yvLogin, yvLogout) {
             return;
         }
         
-        $state.go("app.change-avatar" + $scope.uiPostfix);
+        $state.go("app.change-avatar");
         return;
     }
     

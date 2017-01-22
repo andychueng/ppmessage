@@ -27,7 +27,6 @@ from ppmessage.core.constant import CONVERSATION_STATUS
 from ppmessage.core.constant import REDIS_AMD_KEY
 
 from ppmessage.core.utils.config import _get_config
-from ppmessage.core.utils.config import get_config_language
 
 from ppmessage.core.utils.datetimeencoder import DateTimeEncoder
 

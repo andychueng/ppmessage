@@ -41,20 +41,14 @@ function (yvSys, yvConstants) {
         user.signature = data.user_signature;
         user.updatetime = data.updatetime;
         user.is_online = true;
-        
-        if (yvSys.in_mobile_app()) {
-            user.device_uuid = data.mobile_device_uuid;
-        } else {
-            user.device_uuid = data.browser_device_uuid;
-        }
-                
+        user.device_uuid = data.ppkefu_browser_device_uuid;
+                       
         return user;
     }
 
     // update user from API return
     function _update_user_from_login(data) {
-        console.log("set user login data: %o", data);
-
+        
         user.app = data.app;
         user.uuid = data.uuid;
         user.icon = data.user_icon;

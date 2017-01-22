@@ -4,8 +4,14 @@ ppmessageModule.controller("WidgetLinkCtrl", [
     "yvUser",
 function ($scope, yvUtil, yvUser) {
 
+        
     $scope.data = {
         widget_link: _generate_enterprise_link()
+    };
+
+    
+    $scope.lookNow = function() {
+        window.open($scope.data.widget_link, "_blank");
     };
     
     function _generate_enterprise_link() {

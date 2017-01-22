@@ -30,11 +30,7 @@ from tornado.httpclient import AsyncHTTPClient
 class PPCreateAnonymousHandler(BaseHandler):
 
     def _unknown_user_name(self):
-        _language = "en"
-        _locale_string = USER_NAME["en"]
-        if _get_config().get("server").get("language").get("locale").lower() == "zh_cn":
-            _locale_string = USER_NAME["cn"]
-        return _locale_string.get("unknown") + "." + _locale_string.get("user")
+        return "unknown.area.user"
 
     @coroutine
     def _create_user_name(self, user_uuid=None, ip=None):
