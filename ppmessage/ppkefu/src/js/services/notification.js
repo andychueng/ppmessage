@@ -31,15 +31,6 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
             __close_socket();
         });
     }
-
-    function _typing() {
-        if (_typing_promise == null) {
-            _typing_promise = $timeout(function () {
-                _typing_promise = null;
-            }, 1500);
-            _send_type_message({type: "typing"});
-        }
-    }
         
     function _socket_reconnect_interval() {
         var _d = new Date(), _s = _socket_reconnect();
@@ -76,7 +67,6 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
         //FIXME: typing message
 
         if (obj.type == "ONLINE" || obj.type == "TYPING") {
-            $rootScope.$broadcast("event:" + obj.type.toLowerCase(), obj);
             return;
         }
         
@@ -86,21 +76,16 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
         }
 
         if (obj.type == "ACK") {
-            console.log("ws ack message: %o", obj);
             $rootScope.$broadcast("event:receive_ack_message", obj);
             return;
         }
 
-        console.error("unknown ws message: %o", obj)
+        //console.error("unknown ws message: %o", obj)
         return;
     }
     
     function _handle_socket_message_data(obj) {
         $rootScope.$broadcast("event:add_message", obj);
-        if (yvSys.in_pc_browser()) {
-            _desktop_notification(obj);
-            return;
-        }
     }
 
     function __open_socket() {
@@ -121,38 +106,7 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
             _reconnect_interval = null;
         }
     }
-    
-    function _desktop_notification(_incoming) {
-        // don't care about logout message or sync message
-        if (yvType.is_logout(_incoming) || _incoming.fi == yvUser.get("uuid")) {
-            return;
-        }
         
-        var _noti_icon = null, _noti_body = null;
-        var _from_object = yvBase.get("object", _incoming.fi);
-        var _noti_title = yvLocal.translate("app.GLOBAL.TITLE_DESKTOP");
-        var _message_title = yvMessage.get_localized_title(_incoming.bo, _incoming.ms);
-        var _conversation_uuid = _incoming.ci, _conversation_type = _incoming.ct;
-
-        _noti_body =  "...: " + _message_title;
-        _noti_icon = yvLink.default_user_icon();
-       
-        if (_from_object) {
-            _noti_body = _from_object.fullname + ": " + _message_title;
-            _noti_icon = yvLink.get_user_icon(_from_object.icon);
-        } 
-
-        // pass conversation uuid here
-        yvSys.desktop_notification({
-            body: _noti_body,
-            icon: _noti_icon,
-            title: _noti_title,
-            conversation_type: _conversation_type,
-            conversation_uuid: _conversation_uuid
-        });
-        
-    }
-    
     function _fn_pc_open() {
         if (!_pc_socket) {
             console.error("there is no pc socket");
@@ -192,14 +146,12 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
 
     function _fn_pc_listener(message) {
         var _o = JSON.parse(message.data);
-        console.log("ws message: ", _o);
 
         if (_is_socket_type_data(_o)) {
             _handle_socket_type_data(_o);
             return;
         }
         
-        console.error("unknown message: ", _o);
         return;
     }
 
@@ -228,11 +180,6 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
     }
 
     function _exit() {
-        if (yvSys.in_mobile_app()) {
-            // As the app doesn't register push when login, it should not unregister push when logout
-            document.removeEventListener('resume', _on_resume, false);
-            document.removeEventListener('pause', _on_pause, false);
-        }        
         // for every platform
         __close_socket();
     }
@@ -259,10 +206,6 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
     
     return {
         init: function (_success, _error) {
-            if (yvSys.in_mobile_app()) {
-                document.addEventListener('resume', _on_resume, false);
-                document.addEventListener('pause', _on_pause, false);
-            }
             __close_socket();            
             __open_socket();
         },
@@ -270,31 +213,7 @@ function ($timeout, $rootScope, yvAPI, yvSys, yvSSL, yvUser, yvLink, yvType, yvA
         exit: function () {
             _exit();
         },
-
-        watch_typing: function(_conversation_uuid) {
-            var _m = {
-                type: "typing_watch",
-                conversation_uuid: _conversation_uuid
-            };
-            _send_type_message(_m);
-        },
-
-        unwatch_typing: function(_conversation_uuid) {
-            var _m = {
-                type: "typing_unwatch",
-                conversation_uuid: _conversation_uuid
-            };
-            _send_type_message(_m);
-        },
-
-        typing: function() {
-            _typing();
-        },
         
-        get_ios_token: function (_success, _error) {
-            _real_ios_register(_success, _error);
-        },
-
         send_message: function(_m, _s, _e, _e) {
             _send_pp_message(_m, _s, _e, _e);
         },

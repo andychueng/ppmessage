@@ -6,11 +6,10 @@ ppmessageModule.controller("MainWithLogoCtrl", [
     "yvMain",
     "yvUser",
     "yvFile",
-    "yvPush",
     "yvLogin",
     "yvUpdater",
     "yvConstants",
-function ($scope, yvSys, yvNav, yvLog, yvMain, yvUser, yvFile, yvPush, yvLogin, yvUpdater, yvConstants) {
+function ($scope, yvSys, yvNav, yvLog, yvMain, yvUser, yvFile, yvLogin, yvUpdater, yvConstants) {
 
     function nav_login(user) {
         yvNav.clear(function () {
@@ -27,30 +26,6 @@ function ($scope, yvSys, yvNav, yvLog, yvMain, yvUser, yvFile, yvPush, yvLogin, 
     function init_db() {
         yvMain.init_yvdb(function (user) {
             yvUpdater.check_update();
-            if (yvSys.in_ios_app()) {
-                yvPush.register_push(null, null, function () {
-                    nav_login(user);
-                });
-                return;
-            }
-            if (yvSys.in_android_app()) {
-                if (yvUser.get("android_notification_type") === yvConstants.NOTIFICATION_TYPE.GCM) {
-                    yvPush.register_push(function () {
-                        yvLog.green("gcm push init successfully");
-                        yvMain.update_android_notification_type(yvConstants.NOTIFICATION_TYPE.GCM);
-                    }, function () {
-                        yvLog.yellow("gcm push failed, downgrade to mqtt ");
-                        yvMain.update_android_notification_type(yvConstants.NOTIFICATION_TYPE.MQTT);
-                    }, function () {
-                        nav_login(user);
-                    });
-                    return;
-                }
-
-                nav_login(user);
-                return;
-            }
-            
             nav_login(user);
         });
     }

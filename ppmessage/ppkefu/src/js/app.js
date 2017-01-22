@@ -5,11 +5,5 @@ angular.element(document).ready(function () {
         } catch (e) {
             console.error(e);
         }
-    }
-    
-    if (window.cordova) {
-        document.addEventListener("deviceready", onDeviceReady, false);
-    } else {
-        onDeviceReady();
-    }
+    }    
 });

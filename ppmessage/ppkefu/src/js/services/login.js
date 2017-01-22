@@ -10,11 +10,10 @@ ppmessageModule.factory("yvLogin", [
     "yvUser",
     "yvMain",
     "yvLink",
-    "yvPush",
     "yvAlert",
     "yvLogout",
     "yvConstants",
-function ($state, $timeout, $ionicLoading, yvSys, yvAPI, yvNav, yvLog, yvNoti, yvUser, yvMain, yvLink, yvPush, yvAlert, yvLogout, yvConstants) {
+function ($state, $timeout, $ionicLoading, yvSys, yvAPI, yvNav, yvLog, yvNoti, yvUser, yvMain, yvLink, yvAlert, yvLogout, yvConstants) {
 
     var session = null;
     

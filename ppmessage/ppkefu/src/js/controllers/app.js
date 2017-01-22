@@ -10,10 +10,6 @@ function ($scope, yvDB, yvLog, yvSys, yvNav, yvBase, yvLogin) {
 
     yvNav.clear();
 
-    if (yvSys.in_pc_browser()) {
-        yvSys.request_desktop_notification();
-    }
-
     $scope.$on("event:reload", function (e, m) {
         yvNav.clear();
     });
@@ -23,18 +19,7 @@ function ($scope, yvDB, yvLog, yvSys, yvNav, yvBase, yvLogin) {
         console.log("appctrl onloaded....");
     });
 
-    $scope.isInAndroidApp = function () {
-        return yvSys.in_android_app();
-    };
     
-    $scope.isInMobileNative = function () {
-        if (yvSys.in_mobile_app()) {
-            return true;
-        }
-        return false;
-    };
-
-
     $scope.isInMobile = function () {
         if (yvSys.in_mobile()) {
             return true;
