@@ -8,7 +8,6 @@
 from ppmessage.core.constant import OS
 from ppmessage.core.constant import DIS_WHAT
 from ppmessage.core.constant import API_LEVEL
-from ppmessage.core.constant import ONLINE_STATUS
 from ppmessage.core.constant import MESSAGE_TYPE
 from ppmessage.core.constant import MESSAGE_SUBTYPE
 from ppmessage.core.constant import WEBSOCKET_STATUS
@@ -48,77 +47,6 @@ class WSHandler(tornado.websocket.WebSocketHandler):
         self.is_service_user = False
         self.is_mobile_device = False
 
-        self._watch_online = {"users": None}
-        self._watch_typing = {"users": None, "conversation": None}
-
-        return
-
-    def _please_logout(self, _ws, _other):
-        _key = DeviceInfo.__tablename__ + ".uuid." + _other
-        _new_name = self.redis.hget(_key, "device_fullname")
-
-        _key = DeviceInfo.__tablename__ + ".uuid." + _ws.device_uuid
-        _old_name = self.redis.hget(_key, "device_fullname")
-        
-        logging.info("%s force %s logout" % (_new_name, _old_name))
-        
-        _please = {
-            "mt": MESSAGE_TYPE.SYS,
-            "ms": MESSAGE_SUBTYPE.LOGOUT,
-            "bo": _ws.device_uuid,
-        }
-
-        # stop watching
-        self.delegate.stop_watching_online(_ws)
-        self.delegate.stop_watching_typing(_ws)
-        
-        _ws.send_msg(_please)
-        
-        self.sockets[_ws.device_uuid] = None
-        del self.sockets[_ws.device_uuid]
-
-        self.delegate.unmap_device(_ws.device_uuid)
-        
-        if _ws.is_service_user == True and _ws.is_mobile_device == False:
-            self.delegate.device_online(_ws.device_uuid, _is_online=False)
-
-        if _ws.is_service_user == False:
-            self.delegate.device_online(_ws.device_uuid, _is_online=False)
-
-        # let wshandler on_close handle the normal
-        # but the force logout should not
-        # the close function has been done here
-        _ws.device_uuid = None
-        #_ws.close()
-
-        return
-
-    def _check_ostype(self, _device_uuid):
-        _is_mobile = False
-        _key = DeviceInfo.__tablename__ + ".uuid." + _device_uuid
-        _ostype = self.redis.hget(_key, "device_ostype")
-        if _ostype == OS.AND or _ostype == OS.IOS:
-            _is_mobile = True
-        return _is_mobile
-
-    def _user_online(self, _status):
-        # ignore the service user who logined with mobile device
-        # which is called ppkefulogin, and should be always online
-        logging.info("online service:%s, mobile:%s" % (str(self.is_service_user), str(self.is_mobile_device)))
-        if self.is_service_user == True and self.is_mobile_device == True:
-            return
-
-        _body = {
-            "user_uuid": self.user_uuid,
-            "extra_data": self.extra_data,
-            "mobile": ONLINE_STATUS.UNCHANGED,
-            "browser": ONLINE_STATUS.UNCHANGED
-        }
-        if self.is_mobile_device == True:
-            _body["mobile"] = _status
-        else:
-            _body["browser"] = _status
-        self.delegate.user_online(self.user_uuid, _body)
         return
     
     def _on_auth(self, _body):
@@ -154,54 +82,21 @@ class WSHandler(tornado.websocket.WebSocketHandler):
             self.send_ack({"code": DIS_ERR.NOSERVICE, "what": DIS_WHAT.AUTH})
             return
 
-        self.is_mobile_device = self._check_ostype(self.device_uuid)
         if self.is_service_user == False and self.extra_data == None:
             self.send_ack({"code": DIS_ERR.NOEXTRA, "what": DIS_WHAT.AUTH})
             return
 
         self.send_ack({"code": DIS_ERR.NOERR, "what": DIS_WHAT.AUTH})
 
-        if self.device_uuid in self.sockets:
-            _ws = self.sockets.get(self.device_uuid)
-            if _ws.ws_uuid != self.ws_uuid:
-                logging.error("should not be there, same device:%s %s:%s" % (self.device_uuid, _ws.ws_uuid, self.ws_uuid))
-                
-                self._please_logout(_ws, self.device_uuid)
-
         self.delegate.save_extra(self.user_uuid, self.extra_data)
         self.delegate.map_device(self.device_uuid)
+        self.delegate.device_is_online(self.device_uuid, True)
+
         self.sockets[self.device_uuid] = self
-        self.delegate.start_watching_online(self)
-        
-        if self.is_service_user == False:
-            self.delegate.ppcom_device_online_log(self.user_uuid, self.device_uuid)
-
-        if self.is_service_user == True and self.is_mobile_device == False:
-            self.delegate.device_online(self.device_uuid)
-
-        if self.is_service_user == False:
-            self.delegate.device_online(self.device_uuid)
-            
-        self._user_online(ONLINE_STATUS.ONLINE)
+                    
         logging.info("AUTH DEVICE:%s USER:%s." % (self.device_uuid, self.user_uuid))
         return
     
-    def _on_watch_typing(self, _body):
-        self.delegate.start_watching_typing(self, _body)
-        return
-
-    def _on_unwatch_typing(self, _body):
-        self.delegate.stop_watching_typing(self)
-        return
-
-    def _on_typing(self, _body):
-        _conversation = self._watch_typing.get("conversation")
-        if _conversation == None:
-            logging.error("no watching conversation")
-            return
-        self.delegate.user_typing(self.user_uuid, _conversation)
-        return
-
     def _on_send(self, _body):
         _send = _body.get("send")
         if _send == None:
@@ -214,9 +109,6 @@ class WSHandler(tornado.websocket.WebSocketHandler):
     def _which(self, _type):
         _map = {
             DIS_WHAT.AUTH: self._on_auth,
-            DIS_WHAT.TYPING_WATCH: self._on_watch_typing,
-            DIS_WHAT.TYPING_UNWATCH: self._on_unwatch_typing,
-            DIS_WHAT.TYPING: self._on_typing,
             DIS_WHAT.SEND: self._on_send
         }
         return _map.get(_type)
@@ -327,38 +219,11 @@ class WSHandler(tornado.websocket.WebSocketHandler):
         logging.info("CLOSE device_uuid:%s." % self.device_uuid)
         self.sockets[self.device_uuid] = None
         del self.sockets[self.device_uuid]
+
         self.delegate.unmap_device(self.device_uuid)
-        self.delegate.stop_watching_online(self)
-        self.delegate.stop_watching_typing(self)
-
-        if self.is_service_user == True and self.is_mobile_device == False:
-            self.delegate.device_online(self.device_uuid, _is_online=False)
-
-        if self.is_service_user == False:
-            self.delegate.device_online(self.device_uuid, _is_online=False)
-
-        self._user_online(ONLINE_STATUS.OFFLINE)
+        self.delegate.device_is_online(self.device_uuid, False)
         return
     
-    def send_typing(self, _user_uuid, _conversation_uuid):
-        if _conversation_uuid != self._watch_typing["conversation"]:
-            return
-        _m = {
-            "type": DIS_WHAT.TYPING,
-            "user_uuid": _user_uuid,
-            "conversation_uuid": _conversation_uuid
-        }
-        self.write_message(_m)
-        return
-
-    def send_online(self, _online):
-        _m = {"type": DIS_WHAT.ONLINE}
-        _m.update(_online)
-        if "task_type" in _m:
-            del _m["task_type"]
-        self.write_message(_m)
-        return
-
     def send_ack(self, _body):
         _what = _body.get("what")
         _code = _body.get("code")
@@ -377,14 +242,12 @@ class WSHandler(tornado.websocket.WebSocketHandler):
             "extra": _extra
         }
         self.write_message(_d)
-        logging.info("ack:%s" % (_d))
-        
+            
         if _what != DIS_WHAT.AUTH:
             return
 
         # especially handle for auth
         if _code == DIS_ERR.NOERR:
-            logging.info("pcsocket SUCCESS body:%s" % (self.body))
             return
         
         self.device_uuid = None
@@ -396,7 +259,6 @@ class WSHandler(tornado.websocket.WebSocketHandler):
             "type": DIS_WHAT.MSG,
             "msg": _body
         }
-        logging.info("send msg: %s, device_uuid:%s" % (_body.get("bo"), self.device_uuid))
         self.write_message(_d)
         return
 

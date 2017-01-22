@@ -12,17 +12,9 @@ from ppmessage.core.constant import REDIS_PORT
 
 from ppmessage.core.constant import PCSOCKET_SRV
 
-from ppmessage.core.constant import REDIS_TYPING_LISTEN_KEY
-from ppmessage.core.constant import REDIS_ONLINE_LISTEN_KEY
-
 from ppmessage.core.constant import REDIS_ACK_NOTIFICATION_KEY
 from ppmessage.core.constant import REDIS_PUSH_NOTIFICATION_KEY
 from ppmessage.core.constant import REDIS_SEND_NOTIFICATION_KEY
-from ppmessage.core.constant import REDIS_TYPING_NOTIFICATION_KEY
-from ppmessage.core.constant import REDIS_ONLINE_NOTIFICATION_KEY
-from ppmessage.core.constant import REDIS_LOGOUT_NOTIFICATION_KEY
-
-from ppmessage.core.constant import REDIS_PPCOM_ONLINE_KEY
 
 from ppmessage.core.constant import DIS_WHAT
 from ppmessage.core.constant import PP_WEB_SERVICE
@@ -58,16 +50,6 @@ import time
 import json
 import copy
 
-def pcsocket_user_online(_redis, _user_uuid, _body):
-    _key = REDIS_ONLINE_LISTEN_KEY + ".user_uuid." + _user_uuid
-    _listeners = _redis.smembers(_key)
-    for _i in _listeners:
-        _listener = json.loads(_i)
-        _body["device_uuid"] = _listener["device_uuid"]
-        _body["createtime"] = datetime.datetime.now().strftime(DATETIME_FORMAT["basic"])
-        _key = REDIS_ONLINE_NOTIFICATION_KEY + ".host." + _listener["host"] + ".port." + _listener["port"]
-        _redis.rpush(_key, json.dumps(_body))
-    return
 
 @singleton
 class PCSocketDelegate():
@@ -169,135 +151,12 @@ class PCSocketDelegate():
         self._remove_device_data_by_uuid(_data)
         return
     
-    def user_typing(self, _user_uuid, _conversation_uuid):
-        _key = REDIS_TYPING_LISTEN_KEY + ".user_uuid." + _user_uuid
-        _listens = self.redis.smembers(_key)
-        for _listen in _listens:
-            _listen = json.loads(_listen)
-            _body = {
-                "typing_user": _user_uuid,
-                "listen_device": _listen["device_uuid"],
-                "typing_conversation": _conversation_uuid,
-                "createtime": datetime.datetime.now().strftime(DATETIME_FORMAT["basic"])
-            }
-            _key = REDIS_TYPING_NOTIFICATION_KEY + ".host." + _listen["host"] + ".port." + _listen["port"]
-            self.redis.rpush(_key, json.dumps(_body))
-        return
-
-    def user_online(self, _user_uuid, _body):
-        pcsocket_user_online(self.redis, _user_uuid, _body)
-        return
-
     def device_online(self, _device_uuid, _is_online=True):
         _row = DeviceInfo(uuid=_device_uuid, device_is_online=_is_online)
         _row.async_update(self.redis)
         _row.update_redis_keys(self.redis)
         return
-
-    def ppcom_device_online_log(self, _user_uuid, _device_uuid):
-        _key = REDIS_PPCOM_ONLINE_KEY + ".day." + datetime.datetime.now().strftime("%Y-%m-%d")
-        self.redis.sadd(_key, _user_uuid + "." + _device_uuid)
-        _key = _key + ".hour." + str(datetime.datetime.now().hour)
-        self.redis.sadd(_key, _user_uuid + "." + _device_uuid)
-        return
-
-    def _get_service_care_users(self, _user_uuid):
-        return BroadcastPolicy.get_service_care_users(_user_uuid, self.redis)
-
-    def _get_portal_care_users(self, _user_uuid):
-        return BroadcastPolicy.get_portal_care_users(_user_uuid, self.redis)
-    
-    def start_watching_online(self, _ws):
-        _user_uuid = _ws.user_uuid
-        _device_uuid = _ws.device_uuid
-        _is_service_user = _ws.is_service_user
         
-        if _user_uuid == None or _device_uuid == None:
-            logging.error("app uuid or user uuid is None for start watching")
-            return
-
-        _users = None
-        if _is_service_user == True:
-            _users = self._get_service_care_users(_user_uuid)
-        else:
-            _users = self._get_portal_care_users(_user_uuid)
-
-        if _users == None:
-            return
-
-        _d = {
-            "host": self.register["host"],
-            "port": self.register["port"],
-            "device_uuid": _device_uuid
-        }
-        _s = json.dumps(_d)
-        for _user_uuid in _users:
-            _key = REDIS_ONLINE_LISTEN_KEY + ".user_uuid." + _user_uuid
-            self.redis.sadd(_key, _s)
-
-        _ws._watch_online["users"] = _users
-        return
-
-    def stop_watching_online(self, _ws):
-        _users = _ws._watch_online.get("users")
-        if _users == None:
-            return
-        _device_uuid = _ws.device_uuid
-        _d = {
-            "host": self.register["host"],
-            "port": self.register["port"],
-            "device_uuid": _device_uuid
-        }
-        _s = json.dumps(_d)
-        for _user_uuid in _users:
-            _key = REDIS_ONLINE_LISTEN_KEY + ".user_uuid." + _user_uuid
-            self.redis.srem(_key, _s)
-        _ws._watch_online["users"] = None
-        return
-
-    def start_watching_typing(self, _ws, _body):
-        _conversation_uuid = _body.get("conversation_uuid")
-        if _conversation_uuid == None:
-            logging.error("conversation not in: %s" % str(_body))
-            _ws.send_ack({"code": DIS_ERR.PARAM, "what": DIS_WHAT.TYPING_WATCH})
-            return
-        _key = ConversationUserData.__tablename__ + \
-               ".conversation_uuid." + _conversation_uuid
-        _d = {
-            "host": self.register["host"],
-            "port": self.register["port"],
-            "device_uuid": _ws.device_uuid
-        }
-        _v = json.dumps(_d)
-        _users = self.redis.smembers(_key)
-        for _user_uuid in _users:
-            if _user_uuid == _ws.user_uuid:
-                continue
-            
-            _users.add(_user_uuid)
-            _listen_key = REDIS_TYPING_LISTEN_KEY + ".user_uuid." + _user_uuid
-            self.redis.sadd(_listen_key, _v)
-        _ws._watch_typing["users"] = _users
-        _ws._watch_typing["conversation"] = _conversation_uuid
-        return
-
-    def stop_watching_typing(self, _ws):
-        _users = _ws._watch_typing.get("users")
-        if _users == None:
-            return
-        _d = {
-            "host": self.register["host"],
-            "port": self.register["port"],
-            "device_uuid": _ws.device_uuid
-        }
-        _v = json.dumps(_d)
-        for _user_uuid in _users:
-            _listen_key = REDIS_TYPING_LISTEN_KEY + ".user_uuid." + _user_uuid
-            self.redis.srem(_listen_key, _v)
-        _ws._watch_typing["users"] = None
-        _ws._watch_typing["conversation"] = None
-        return
-    
     def send_send(self, _device_uuid, _body):
         _body["pcsocket"] = {
             "host": self.register["host"],
@@ -323,75 +182,6 @@ class PCSocketDelegate():
                                   navigation_data=_extra_data)
         _row.async_add(self.redis)
         _row.create_redis_keys(self.redis)
-        return
-
-    def online_loop(self):
-        """
-        every 1000ms check online notification
-        """
-        _host = str(self.register.get("host"))
-        _port = str(self.register.get("port"))
-
-        key = REDIS_ONLINE_NOTIFICATION_KEY + ".host." + _host + ".port." + _port
-        while True:
-            noti = self.redis.lpop(key)
-            if noti == None:
-                # no message
-                return
-            body = json.loads(noti)
-            ws = self.sockets.get(body.get("device_uuid"))
-            if ws == None:
-                logging.error("No WS to handle online body: %s" % body) 
-                continue
-            ws.send_online(body)
-        return
-
-    def typing_loop(self):
-        """
-        every 1000ms check typing notification
-        """
-
-        _host = str(self.register.get("host"))
-        _port = str(self.register.get("port"))
-
-        key = REDIS_TYPING_NOTIFICATION_KEY + ".host." + _host + ".port." + _port
-        while True:
-            noti = self.redis.lpop(key)
-            if noti == None:
-                # no message
-                return
-            body = json.loads(noti)
-            ws = self.sockets.get(body.get("listen_device"))
-            if ws == None:
-                logging.error("No WS to handle typing body: %s" % body) 
-                continue
-            
-            user_uuid = body.get("typing_user")
-            conversation_uuid = body.get("typing_conversation")
-            ws.send_typing(user_uuid, conversation_uuid)
-
-        return
-    
-    def logout_loop(self):
-        """
-        every 1000ms check logout notification
-        """
-        
-        _host = str(self.register.get("host"))
-        _port = str(self.register.get("port"))
-
-        key = REDIS_LOGOUT_NOTIFICATION_KEY + ".host." + _host + ".port." + _port
-        while True:
-            noti = self.redis.lpop(key)
-            if noti == None:
-                # no message
-                return
-            body = json.loads(noti)
-            ws = self.sockets.get(body.get("device_uuid"))
-            if ws == None:
-                logging.error("No WS to handle logout body: %s" % body) 
-                continue
-            ws.send_logout(body)
         return
     
     def ack_loop(self):
@@ -450,15 +240,6 @@ class PCSocketDelegate():
             self.register_service(str(options.port))
         except:
             self.register_service(str(options.main_port))
-
-        # set the periodic check online every 1000 ms
-        PeriodicCallback(self.online_loop, 1000).start()
-
-        # set the periodic check typing every 1000 ms
-        PeriodicCallback(self.typing_loop, 1000).start()
-
-        # set the periodic check logout every 1000 ms
-        PeriodicCallback(self.logout_loop, 1000).start()
 
         # set the periodic check ack every 100 ms
         PeriodicCallback(self.ack_loop, 100).start()
