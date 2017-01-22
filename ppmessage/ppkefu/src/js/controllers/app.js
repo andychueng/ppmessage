@@ -16,7 +16,7 @@ function ($scope, yvDB, yvLog, yvSys, yvNav, yvBase, yvLogin) {
 
 
     $scope.$on("$ionicView.unloaded", function () {
-        console.log("appctrl onloaded....");
+        
     });
 
     

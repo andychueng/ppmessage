@@ -32,11 +32,10 @@ function ($timeout, yvLog, yvSys, yvAPI, yvUser, yvNoti, yvConstants, yvUploader
 
         $scope.prepareText = function () {
             if ($scope.textarea.text === "") {
-                console.log("can't send empty message");
+                console.error("can't send empty message");
                 return;
             }
 
-            console.log("prepareTextMessage...");
             var _text = $scope.textarea.text,
                 _len = yvSys.encode_utf8(_text).length,
                 _form = $element.find("form")[0];
@@ -70,7 +69,6 @@ function ($timeout, yvLog, yvSys, yvAPI, yvUser, yvNoti, yvConstants, yvUploader
                     $scope.prepareText();
                 }
             }
-            yvNoti.typing();
         };
 
         $scope.onFocus = function () {

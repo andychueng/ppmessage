@@ -23,7 +23,6 @@ function ($scope, $timeout, $rootScope, $stateParams, $ionicLoading, yvAPI, yvSy
     $scope.chatStatus = { "status": yvConstants.CHAT_STATUS.NULL };
 
     _init_common();
-    _init_typing_animate();
     
     $scope.$on("$ionicView.beforeEnter", function () {
         if (yvSys.in_mobile()) {
@@ -38,7 +37,6 @@ function ($scope, $timeout, $rootScope, $stateParams, $ionicLoading, yvAPI, yvSy
     });
 
     $scope.$on('$destroy', function () {
-        clearInterval($scope.typingInterval);
         yvBase.active("conversation", null);
         $scope.$broadcast("event:save-chat-text", $scope.conversation);
     });
@@ -47,18 +45,6 @@ function ($scope, $timeout, $rootScope, $stateParams, $ionicLoading, yvAPI, yvSy
         $scope.$broadcast("event:save-chat-text", $scope.conversation);
         $ionicLoading.show({duration: 5000});
         _init_core(params);
-    });
-
-    $scope.$on("event:typing", function(event, params) {
-        console.log("receiving typing message in conversation.");
-        $timeout(function() {
-            var _name = yvBase.get("object", params.user_uuid, "fullname");
-            $scope.typingName = _name;
-            if ($scope.typingAnimateIndex == 0) {
-                $scope.typingTitle = _name + yvLocal.translate("app.GLOBAL.TYPING");
-            }
-            $scope.typingValue = 3;
-        });
     });
 
     function _stop_loading() {
@@ -78,33 +64,6 @@ function ($scope, $timeout, $rootScope, $stateParams, $ionicLoading, yvAPI, yvSy
         $scope.showMember = false;
         $scope.timestamp = { "pre": 0};
         $scope.max_display_count = page_size;
-    }
-
-    function _init_typing_animate() {
-        $scope.typingAnimateIndex = 0;
-        $scope.typingAnimate = [
-            yvLocal.translate("app.GLOBAL.TYPING") + ".",
-            yvLocal.translate("app.GLOBAL.TYPING") + "..",
-            yvLocal.translate("app.GLOBAL.TYPING") + "...",
-        ];
-        $scope.typingInterval = setInterval(function() {
-            if ($scope.typingValue > 0) {
-                $scope.typingValue--;
-                var _value = $scope.typingAnimateIndex % 3;
-                $scope.$apply(function() {
-                    $scope.typingTitle = $scope.typingName + $scope.typingAnimate[_value];
-                });
-                if ($scope.typingValue == 0) {
-                    $scope.$apply(function() {
-                        $scope.typingTitle = null;
-                    });
-                    $scope.typingName = null;
-                    $scope.typingAnimateIndex = 0;
-                } else {
-                    $scope.typingAnimateIndex++;
-                }
-            }
-        }, 1000);
     }
 
     function _init_valid (conversation) {

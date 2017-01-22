@@ -31,7 +31,6 @@ function ($timeout, $ionicGesture, yvLog, yvSys, yvNoti, yvFile, yvDelegate, yvC
             if (_s.status !== _S.TEXTING) {
                 return;
             }
-            yvNoti.typing();
         }
 
         function _iframe_onload() {
