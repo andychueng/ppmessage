@@ -2,17 +2,16 @@
 
 [In English](/README.md)
 
-# PPMessage - 皮皮消息，即插即用，在线客服，移动应用内即时通讯，开源，纯Python实现。
+# PPMessage - 皮皮消息，即插即用，客户沟通，开源，纯Python实现。
 
-PPMessage 是一个开源的在线客服平台。PPMessage能够帮助你在第一时间与你的客户建立联系，开发人员可以非常容易的将 PPMessage 集成到你的网站或者 iOS、Android 的应用中。PPMessage 的前端后端都是开源的，后端全部基于 Python，简洁高效。前端根据不同平台提供原生的SDK。
+PPMessage 是一个开源的客户沟通平台。PPMessage 能够帮助你在第一时间与客人建立联系。开发人员可以非常容易的将 PPMessage 集成到网站移动应用之中。 PPMessage 同时提供在线[托管服务](https://ppmessage.com)，托管服务提供了更加丰富的功能。[托管服务](https://ppmessage.com)在接口层面与开源系统兼容。
 
-基于 PPMessage 还能实现私有的·微信·功能，在企业内部或者私有云上建立自主的·微信·服务器；也可以将 PPMessage 与企业业务系统整合，实现自建的·钉钉·系统。
 
 PPMessage 后端建议部署到 Linux 上，推荐使用 Debian 或者 Ubuntu，同时支持 macOS 系统，方便开发者测试。
 
 PPMessage 提供了完整而清晰的 API 和 OAuth 系统，所有前端应用和 SDK 都是通过调用或者封装后端的 API 而实现。PPMessage 能够做到最大程度和最底层的整合开发。
 
-PPMessage 的前端开发 SDK 称为 PPCom，PPCom 会被集成到你的企业 Web 站点，Android、iOS 应用之中，为客户提供建立联系的入口；给客服和企业组织内部人员使用的前端应用叫做 PPKefu，PPKefu 可以运行在 Web 端，Windows、macOS、Linux 桌面端，Android、iOS 移动应用端。
+PPMessage 的前端 SDK 称为 PPCom，PPCom 可以集成到网站或者移动应用之中，为企业提供与客户建立交互的入口；给客服人员使用的 Web 应用叫做 PPKefu。
 
 
 PPConfig 只是用来辅助生成 PPMessage 运行所需的配置信息，保存在 ppmessge/bootstrap/config.json，如果想重新配置，只需要把这个文件删除，再运行 main.py。
