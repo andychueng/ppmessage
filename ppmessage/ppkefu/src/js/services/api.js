@@ -28,7 +28,7 @@ function ($rootScope, $timeout, $http, yvLog, yvSys, yvUser, yvFile, yvConstants
 
     function _api_post(_url, _data, _config, _success, _error, _api_error) {
 
-        function _default_success(response, status, headers, config) {
+        function _default_success(response) {
             var code = response.error_code;
             
             yvLog.log("POST SUCCESS URL: %s, DATA: %o, RESPONSE: %o.", _url, _data, response);
@@ -38,7 +38,7 @@ function ($rootScope, $timeout, $http, yvLog, yvSys, yvUser, yvFile, yvConstants
             }
 
             if (_api_error) {
-                _api_error(response, status, headers, config);
+                _api_error(response);
             }
 
             if (code === yvConstants.API_ERR.NO_ACCESS_TOKEN || code === yvConstants.API_ERR.WRONG_ACCESS_TOKEN) {
@@ -54,10 +54,10 @@ function ($rootScope, $timeout, $http, yvLog, yvSys, yvUser, yvFile, yvConstants
             }
         }
 
-        function _default_error(response, status, headers, config) {
+        function _default_error(response) {
             yvLog.error("POST ERROR url: %s, data: %o, response:%o.", _url, _data, response);
             if (_error) {
-                _error(response, status, headers, config);
+                _error(response);
             }
         }
 
@@ -87,17 +87,12 @@ function ($rootScope, $timeout, $http, yvLog, yvSys, yvUser, yvFile, yvConstants
         
         yvLog.log("API POST url: %s, data: %o.", _api_config.url, _api_config.data);
         
-        try {
-            return $http(_api_config)
-                .success(function (response, status, headers, config) {
-                    _default_success(response, status, headers, config);
-                })
-                .error(function (response, status, headers, config) {
-                    _default_error(response, status, headers, config);
-                });
-        } catch (e) {
-            yvLog.error(e);
-        }
+        return $http(_api_config)
+            .then(function (response) {
+                _default_success(response.data);
+            }, function(response) {
+                _default_error(response);
+            });
     }
 
     function _api_token(_session, _success, _error, _api_error) {
@@ -138,18 +133,11 @@ function ($rootScope, $timeout, $http, yvLog, yvSys, yvUser, yvFile, yvConstants
         
         yvLog.log("AUTH POST url: %s, data: %o.", _auth_config.url, _auth_config.data);
         
-        try {
-            return $http(_auth_config)
-                .success(function (response, status, headers, config) {
-                    _default_success(response, status, headers, config);
-                })
-                .error(function (response, status, headers, config) {
-                    _default_error(response, status, headers, config);
-                });
-        } catch (e) {
-            yvLog.error(e);
-        }
-
+        return $http(_auth_config).then(function(response) {
+            _default_success(response.data);
+        }, function (response) {
+            _default_error(response);
+        });
     }
     
     function _api_login(_session, _success, _error, _api_error) {
