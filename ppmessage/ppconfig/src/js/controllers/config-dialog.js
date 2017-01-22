@@ -1,20 +1,6 @@
 function ConfigServerController($scope, $mdDialog, yvAjax) {
-    var LANGUAGE = [
-        {
-            name: "Simplified Chinese",
-            locale: "zh_CN"
-        },
-        
-        {
-            name: "English",
-            locale: "en_US"
-        }
-    ];
 
-    var _languages = angular.copy(LANGUAGE);
     $scope.server = {
-        languages: _languages,
-        language: _languages[0],
 
         url: "http://" + $scope._config_status.ip + ":8945",
 

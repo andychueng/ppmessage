@@ -162,7 +162,7 @@ class ServerHandler(tornado.web.RequestHandler):
 
         # SERVER
         _server = _request
-        if _server == None or _server.get("url") == None or _server.get("language") == None:
+        if _server == None or _server.get("url") == None:
             logging.error("config server wrong for request: %s." % _server)
             return _return(self, -1)
 
@@ -325,7 +325,6 @@ class FirstHandler(tornado.web.RequestHandler):
         _user_email = _request.get("user_email")
         _user_fullname = _request.get("user_fullname")
         _user_password = _request.get("user_password")
-        _user_language = _get_config().get("server").get("language").get("locale")
         _user_icon = random_identicon(_user_email)
 
         IOLoop.current().spawn_callback(download_random_identicon, _user_icon)
@@ -337,7 +336,6 @@ class FirstHandler(tornado.web.RequestHandler):
             user_status=USER_STATUS.OWNER_2,
             user_fullname=_user_fullname,
             user_password=_user_password,
-            user_language=_user_language,
             is_removed_user=False,
             is_owner_user=True,
             is_service_user=True,
