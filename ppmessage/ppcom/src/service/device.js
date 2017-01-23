@@ -5,9 +5,6 @@
 
         var w = window,
 
-            deviceWidth = (w.innerWidth > 0) ? w.innerWidth : screen.width,
-            deviceHeight = (w.innerHeight > 0) ? w.innerHeight : screen.height,
-
             DEVICE_ID_COOKIE_KEY = 'pp-device-id',
             DEVICE_ID_COOKIE_EXPIRE = 10 * 365 * 24 * 3600, // 10 years, never delete it
             deviceId, // device identifier
@@ -28,20 +25,24 @@
                 MAC: 'MAB',
                 LIN: 'LIB',
                 WIN: 'WIB'
-            };
+            },
+
+            MOBILE_MAX_WIDTH = 736;
 
         this.getDeviceWidth = function() {
-            return deviceWidth;
+            return (w.innerWidth > 0) ? w.innerWidth : screen.width;
         };
 
         this.getDeviceHeight = function() {
-            return deviceHeight;
+            return (w.innerHeight > 0) ? w.innerHeight : screen.height;
         };
 
         this.inMobile = function() {
             var w = this.getDeviceWidth();
-            return w <= 736;
+            return w <= MOBILE_MAX_WIDTH;
         };
+
+        this.inMobileWidth = this.inMobile;
 
         this.disableScroll = function() {
             $('html, body').css({

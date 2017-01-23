@@ -20,8 +20,10 @@ View.$groupContentItem = (function() {
             buildAvatar = function( users ) {
                 users = users || [];
 
-                if ( users.length <= 1 ) {
+                if ( users.length === 0 ) {
                     return new View.Img( { src: icon, className: 'pp-group-item-first-of-one-avatar' } );
+                } else if ( users.length === 1 ) {
+                    return new View.Img( { src: users[ 0 ].user_avatar, className: 'pp-group-item-first-of-one-avatar' } );
                 } else if ( users.length === 2 ) { 
                     var $container = new View.Div( 'pp-group-item-avatar-container' ),
                         len = users.length,

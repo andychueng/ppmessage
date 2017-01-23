@@ -10,7 +10,7 @@ View.$conversation = (function() {
         clsPanelSelector = '.' + clsPanel,
 
         PANEL_WIDTH = Service.Constants.STYLE.PANEL_WIDTH,
-        extraPadding = Service.$device.isMobileBrowser() ? 0 : 20;
+        extraPadding = Service.$device.isMobileBrowser() || Service.$device.inMobileWidth() ? 0 : 20;
 
     return {
         
