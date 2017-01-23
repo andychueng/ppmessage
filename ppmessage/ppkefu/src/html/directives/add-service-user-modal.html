@@ -9,7 +9,7 @@
     </ion-header-bar>
         
     <div class="has-header modal-content">
-      <form novalidate ng-submit="createServiceUser()">
+      <form novalidate ng-submit="save()">
         <div class="list list-inset">
 
           <label class="item item-input" style="padding: 6px 5px 5px 8px;">
@@ -23,16 +23,16 @@
           </label>
 
           <label class="item item-input" style="padding: 6px 5px 5px 8px;">
-            <input type="text" style="font-family: Helvetica; padding-right: 1px;" placeholder="{{ 'app.GLOBAL.USER_PASSWORD' | translate }}"
+            <input type="password" style="font-family: Helvetica; padding-right: 1px;" placeholder="{{ 'app.GLOBAL.USER_PASSWORD' | translate }}"
                    ng-model="user.user_password" />
           </label>
 
           <label class="item item-input" style="padding: 6px 5px 5px 8px;">
-            <input type="text" style="font-family: Helvetica; padding-right: 1px;" placeholder="{{ 'app.GLOBAL.USER_PASSWORD_REPEAT' | translate }}"
+            <input type="password" style="font-family: Helvetica; padding-right: 1px;" placeholder="{{ 'app.GLOBAL.USER_PASSWORD_REPEAT' | translate }}"
                    ng-model="user.user_password_repeat" />
           </label>
 
-          <button type="submit" class="button button-block button-balanced" ng-disabled="disableCreate()">
+          <button type="submit" class="button button-block button-balanced">
             {{ "app.GLOBAL.ADD_SERVICE_USER" | translate }}
           </button>
 

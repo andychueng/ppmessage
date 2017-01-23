@@ -5,7 +5,8 @@ ppmessageModule.directive("yvAddServiceUserModal", [
     "yvAPI",
     "yvLink",
     "yvBase",
-function ($rootScope, $ionicModal, yvLog, yvAPI, yvLink, yvBase) {
+    "yvAlert",
+function ($rootScope, $ionicModal, yvLog, yvAPI, yvLink, yvBase, yvAlert) {
 
     function _link($scope, $element, $attrs) {
         var thisModal = null;
@@ -51,9 +52,47 @@ function ($rootScope, $ionicModal, yvLog, yvAPI, yvLink, yvBase) {
 
         
         $scope.disableCreate = function () {
-            
         };
-        
+    
+        var _create = function() {
+            var _d = yvAPI.request("/PP_CREATE_USER", {
+                is_service_user: true,
+                user_fullname: $scope.user.user_fullname,
+                user_email: $scope.user.user_email,
+                user_password: hex_sha1($scope.user.user_password)
+            }, function(response) {
+                yvAlert.success();
+                $scope.closeModal();
+                $rootScope.$broadcast("event:add-service-user");
+            }, function() {
+                yvAlert.fail();
+            }, function() {
+                yvAlert.fail();
+            });
+        };
+
+        $scope.save = function() {
+            if (!$scope.user.user_fullname  ||
+                !$scope.user.user_email     ||
+                !$scope.user.user_password  ||
+                !$scope.user.user_password_repeat) {
+                yvAlert.tip("app.GLOBAL.REQUIRED_NOT_PROVIDED");
+                return;
+            }
+
+            if ($scope.user.user_password != $scope.user.user_password_repeat) {
+                yvAlert.tip("app.GLOBAL.PASSWORD_REPEAT_NOT_MATCH");
+                return;
+            }
+
+            if ($scope.user.user_password.lenght > 32) {
+                yvAlert.tip("app.GLOBAL.PASSWORD_TOO_LONG");
+                return;
+            }
+
+            _create();
+        };
+
     }
     
     return {

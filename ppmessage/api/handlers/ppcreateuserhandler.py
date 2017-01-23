@@ -25,9 +25,7 @@ from tornado.ioloop import IOLoop
 def create_user(_redis, _request):
     
     _user_email = _request.get("user_email")
-    _user_status = _request.get("user_status")
     _user_fullname = _request.get("user_fullname")
-    _user_language = _request.get("user_language")
     _user_password = _request.get("user_password")
     _is_service_user = _request.get("is_service_user")
     
@@ -41,9 +39,6 @@ def create_user(_redis, _request):
     if _is_service_user == None:
         _is_service_user = False
 
-    if _user_status == None:
-        _user_status = USER_STATUS.THIRDPARTY
-
     _user_icon = random_identicon(_user_email)
 
     IOLoop.current().spawn_callback(download_random_identicon, _user_icon)
@@ -52,11 +47,9 @@ def create_user(_redis, _request):
     
     _values = {
         "uuid": _du_uuid,
-        "user_status": _user_status,
-        "user_name": _user_email,
+        "user_name": _user_fullname,
         "user_email": _user_email,
         "user_icon": _user_icon,
-        "user_language": _user_language,
         "user_fullname": _user_fullname,
         "user_password": _user_password,
         "is_removed_user": False,
@@ -74,12 +67,11 @@ def create_user(_redis, _request):
 
 class PPCreateUserHandler(BaseHandler):
     def initialize(self):
-        self.addPermission(api_level=API_LEVEL.PPCONSOLE)
-        self.addPermission(api_level=API_LEVEL.THIRD_PARTY_CONSOLE)
+        self.addPermission(api_level=API_LEVEL.PPKEFU)
         return
 
     def _Task(self):
-        super(PPCreateUserHandler, self)._Task()
+        super(self.__class__, self)._Task()
         _request = json.loads(self.request.body)
         
         _user_email = _request.get("user_email")

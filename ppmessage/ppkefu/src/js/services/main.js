@@ -39,37 +39,10 @@ function ($q, $timeout, $rootScope, yvDB, yvLog, yvSys, yvAPI, yvNav, yvNoti, yv
         _update_message_status(message, status);
     });
 
-    scope.$on("event:online", function(event, params) {
-        _handle_online_message(params);
+    scope.$on("event:add-service-user", function(event) {
+        _update_contacts_from_server();
     });
-   
-    function _handle_online_message(message) {
-        yvLog.log("receive online message", message);
-        var object = yvBase.get("object", message.user_uuid);
-        if (!object) return;
-        $timeout(function () {
-            object.extra_data = message.extra_data;
-            switch (message.browser) {
-            case yvConstants.ONLINE_STATUS.ONLINE:
-                object.browser_online = true;
-                break;
-            case yvConstants.ONLINE_STATUS.OFFLINE:
-                object.browser_online = false;
-            default:
-                // keep unchanged
-            }
-            switch (message.mobile) {
-            case yvConstants.ONLINE_STATUS.ONLINE:
-                object.mobile_online = true;
-                break;
-            case yvConstants.ONLINE_STATUS.OFFLINE:
-                object.mobile_online = false;
-            default:
-                // keep unchanged
-            }
-        });
-    }
-
+    
     function _init_yvdb(callback) {
         if (yvSys.has_db()) {
             return yvDB.init_yvdb(callback);

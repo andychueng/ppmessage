@@ -546,7 +546,11 @@ ppmessageModule.config([
                 USER_EMAIL: "User Email",
                 ADD_SERVICE_USER: "Add Service User",
 
-                SUBMIT: "Submit"
+                SUBMIT: "Submit",
+
+                REQUIRED_NOT_PROVIDED: "Required not provided",
+                PASSWORD_REPEAT_NOT_MATCH: "Password repeat not match",
+                PASSWORD_TOO_LONG: "Password too long"
 
             }
         }
@@ -1079,7 +1083,12 @@ ppmessageModule.config([
                 USER_EMAIL: "用户邮箱",
                 ADD_SERVICE_USER: "添加座席",
 
-                SUBMIT: "提交"
+                SUBMIT: "提交",
+
+                REQUIRED_NOT_PROVIDED: "缺参数",
+                PASSWORD_REPEAT_NOT_MATCH: "密码不一致",
+                PASSWORD_TOO_LONG: "密码太长"
+
             }
         }
     }

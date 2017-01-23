@@ -42,15 +42,13 @@ class PPGetApiInfoHandler(BaseHandler):
         return
         
     def initialize(self):
-        self.addPermission(api_level=API_LEVEL.PPCONSOLE)
-        self.addPermission(api_level=API_LEVEL.THIRD_PARTY_CONSOLE)
+        self.addPermission(api_level=API_LEVEL.PPKEFU)
         return
 
     def _Task(self):
         super(PPGetApiInfoHandler, self)._Task()
         _user_uuid = json.loads(self.request.body).get("user_uuid")
         if _user_uuid == None:
-            logging.error("no user_uuid provided")
             self.setErrorCode(API_ERR.NO_PARA)
             return
         self.user_uuid = _user_uuid
