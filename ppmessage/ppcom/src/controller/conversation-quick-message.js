@@ -47,7 +47,9 @@ Ctrl.$conversationQuickMessage = (function() {
         $( '#pp-conversation' ).hide();
 
         $( '.pp-conversation-part-pulltorefreshbutton' ).hide();
-        $( '.pp-messenger-panel' ).css( { 'background-color': 'transparent', 'box-shadow': 'none' } );
+        $( '.pp-messenger-panel' )
+            .css( { 'background-color': 'transparent', 'box-shadow': 'none' } )
+            .addClass( 'pp-messenger-panel-quick-message-mode' );
         $( '.pp-conversation-content' ).css( { top: 'initial', 
                                                width: '330px',
                                                'background-color': 'transparent', 
@@ -79,7 +81,9 @@ Ctrl.$conversationQuickMessage = (function() {
         $( '#pp-conversation' ).show();
 
         $( '.pp-conversation-part-pulltorefreshbutton' ).show();
-        $( '.pp-messenger-panel' ).css( { 'background-color': View.Style.Color.base, 'box-shadow': '' } );
+        $( '.pp-messenger-panel' )
+            .css( { 'background-color': View.Style.Color.base, 'box-shadow': '' } )
+            .removeClass( 'pp-messenger-panel-quick-message-mode' );
         $( '.pp-conversation-content' ).css( { top: '', 
                                                width: '',
                                                'background-color': '', 

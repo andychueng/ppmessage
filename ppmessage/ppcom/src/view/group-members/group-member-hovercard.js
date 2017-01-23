@@ -11,6 +11,9 @@ View.$groupMemberHovercard = (function() {
         HOVERCARD_HEIGHT = 156, // default hovercard height
         HOVERCARD_TOP_OFFSET = 25,
         IMG_WIDTH = 70, // width of `img`
+        HALF_IMG_WIDTH = IMG_WIDTH / 2,
+        DEFAULT_PANEL_WIDTH = 368,
+        HOVERCARD_WIDTH = 260,
 
         mouseover = false; // mouse `over` or `leave` on current hovercard ? 
 
@@ -161,22 +164,24 @@ View.$groupMemberHovercard = (function() {
             hovercardOffsetY = HOVERCARD_TOP_OFFSET;
 
         return {
-            top: upEdgeDistance + hovercardOffsetY,
+            e: config.e,
+            top: upEdgeDistance + hovercardOffsetY + ( Service.$device.inMobileWidth() ? 15 : 0 ),
             arrowRight: calcArrowRight( config.e )
         };
         
     }
 
     function calcArrowRight( mouseEvent ) {
-        var HALF_IMG_WIDTH = IMG_WIDTH / 2,
-
-            // @see http://stackoverflow.com/questions/6073505/what-is-the-difference-between-screenx-y-clientx-y-and-pagex-y
+        var // @see http://stackoverflow.com/questions/6073505/what-is-the-difference-between-screenx-y-clientx-y-and-pagex-y
             // `screenX` and `screenY`: Relative to the top left of the physical screen/monitor, this reference point only moves if you increase or decrease the number of monitors or the monitor resolution.
             // `clientX` and `clientY`: Relative to the upper left edge of the content area (the viewport) of the browser window. This point does not move even if the user moves a scrollbar from within the browser.
             marginRight = $( window ).width() - mouseEvent.clientX - IMG_WIDTH,
             fix = HALF_IMG_WIDTH - mouseEvent.offsetX;
 
         // number `5` is a magic number that let `hovercard` a little closer from right
+        if ( Service.$device.inMobileWidth() ) {
+            return HOVERCARD_WIDTH / 2 - 9 / 2; // 9 is triangle border width
+        }
         return marginRight - fix - 20;
     }
 
@@ -194,7 +199,7 @@ View.$groupMemberHovercard = (function() {
             } );
 
         $( elSelector )
-            .on( 'mouseover', function ( e ) {
+            .on( 'mouseover', function ( e ) {                
                 mouseover = true;                
             } )
             .on( 'mouseleave', function ( e ) {
@@ -215,7 +220,7 @@ View.$groupMemberHovercard = (function() {
             textareaTargetHeight = 40,
             textareaTargetMargin = 0,
             bodyHeight = 100,
-            messagePanelWidth = 368,
+            messagePanelWidth = getPanelWidth(),
             duration = 300,
             sheetHeaderHeight = 0,
             windowHeight = $( '#pp-conversation' ).height(),
@@ -272,12 +277,23 @@ View.$groupMemberHovercard = (function() {
         return mouseover;
     }
 
+    function getPanelWidth() {
+        return $( '.pp-messenger-panel' ).width();
+    }
+
     //GroupMemberHovercard
     ////////////////////////
     function GroupMemberHovercard( memberInfo, position ) {
+        var inMobileWidth = Service.$device.inMobileWidth(),
+            left = undefined;
+
+        if ( inMobileWidth ) {
+            left = ( position.e.clientX - position.e.offsetX + HALF_IMG_WIDTH - HOVERCARD_WIDTH / 2 );
+        }
+
         View.Div.call(this, {
             className: hovercardClassName,
-            style: 'top:' + position.top + 'px'
+            style: 'top:' + position.top + 'px;' + ( left !== undefined ? 'left:' + left + 'px' : '' )
         });
     }
     extend( GroupMemberHovercard, View.Div );
