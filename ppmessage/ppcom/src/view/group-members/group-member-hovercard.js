@@ -165,7 +165,7 @@ View.$groupMemberHovercard = (function() {
 
         return {
             e: config.e,
-            top: upEdgeDistance + hovercardOffsetY + ( Service.$device.inMobileWidth() ? 15 : 0 ),
+            top: upEdgeDistance + hovercardOffsetY + ( Service.$device.inMobileWidth() ? 25 : 5 ),
             arrowRight: calcArrowRight( config.e )
         };
         
