@@ -279,10 +279,11 @@ View.$sheetHeader = (function() {
         }
         teamProfileFullShowing = false;
 
-        $full.animate( { 'margin-top': "-=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
-        $( '#pp-conversation-content' ).animate( { 'top': "-=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION );
-        $( '#' + id ).animate({ height: "-=" + TEAM_PROFILE_FULL_HEIGHT }, TEAM_PROFILE_FULL_ANIM_DURATION, _completed );
+        $full.animate( { 'margin-top': "-=" + TEAM_PROFILE_FULL_HEIGHT }, { duration: TEAM_PROFILE_FULL_ANIM_DURATION, queue: false } );
+        $( '#pp-conversation-content' ).animate( { 'top': "-=" + TEAM_PROFILE_FULL_HEIGHT }, { duration: TEAM_PROFILE_FULL_ANIM_DURATION, queue: false } );
+        $( '#' + id ).animate({ height: "-=" + TEAM_PROFILE_FULL_HEIGHT }, { duration: TEAM_PROFILE_FULL_ANIM_DURATION, queue: false } );
 
+        $timeout( _completed, TEAM_PROFILE_FULL_ANIM_DURATION + 50 );
         function _completed() {
             $( '.' + teamProfileFullClassPrefix ).hide();
             showTeamProfile();
