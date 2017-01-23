@@ -33,7 +33,7 @@ function ($scope, $ionicHistory, yvDB, yvAPI, yvUser, yvAlert, yvConstants) {
             yvAlert.tip("app.changepwdctrl.PROMPT_EMPTY");
             return;
         }
-        if ($scope.password.old != origin_password) {
+        if (hex_sha1($scope.password.old) != origin_password) {
             yvAlert.tip("app.changepwdctrl.PROMPT_PWD_ERROR");
             return;
         }
@@ -45,7 +45,7 @@ function ($scope, $ionicHistory, yvDB, yvAPI, yvUser, yvAlert, yvConstants) {
         } else if ($scope.password.new0.length > 16) {
             yvAlert.tip("app.changepwdctrl.PROMPT_LENGTH");
         } else {
-            _password($scope.password.new0);
+            _password(hex_sha1($scope.password.new0));
         }
     };
 

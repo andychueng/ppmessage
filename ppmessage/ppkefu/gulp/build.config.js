@@ -150,6 +150,7 @@ module.exports = {
         "../src/lib/moment-with-zh-cn-locale.js",
 
         "../../resource/share/ppkefu/bower_components/jquery/dist/jquery.min.js",
+        "../../resource/share/ppkefu/bower_components/Jcrop/js/jquery.color.js",
         "../../resource/share/ppkefu/bower_components/Jcrop/js/Jcrop.min.js",
         "../../resource/share/ppkefu/bower_components/ionic/release/js/ionic.bundle.min.js",
         "../../resource/share/ppkefu/bower_components/angular-cookies/angular-cookies.min.js",

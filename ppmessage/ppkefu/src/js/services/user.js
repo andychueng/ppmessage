@@ -14,6 +14,7 @@ function (yvSys, yvConstants) {
         updatetime: null,
         is_online: false,
         access_token: null,
+        password: null,
         status: yvConstants.USER_STATUS.READY,
         
         app: {
@@ -57,13 +58,10 @@ function (yvSys, yvConstants) {
         user.fullname = data.user_fullname;
         user.signature = data.user_signature;
         user.updatetime = data.updatetime;
+        user.password = data.user_password;
         user.is_online = true;
         user.status = yvConstants.USER_STATUS.READY;
         user.device_uuid = data.ppkefu_browser_device_uuid;
-        user.show_badge = !!data.user_show_badge;
-        user.mute_notification = !!data.user_mute_notification;
-        user.silence_notification = !!data.user_silence_notification;
-        user.mute_other_mobile_device = !!data.user_mute_other_mobile_device;
         
         return user;
     }

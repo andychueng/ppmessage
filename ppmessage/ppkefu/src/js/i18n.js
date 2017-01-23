@@ -544,7 +544,9 @@ ppmessageModule.config([
                 USER_PASSWORD: "User Password",
                 USER_PASSWORD_REPEAT: "Repeat User Password",
                 USER_EMAIL: "User Email",
-                ADD_SERVICE_USER: "Add Service User"
+                ADD_SERVICE_USER: "Add Service User",
+
+                SUBMIT: "Submit"
 
             }
         }
@@ -1075,7 +1077,9 @@ ppmessageModule.config([
                 USER_PASSWORD: "用户密码",
                 USER_PASSWORD_REPEAT: "重复用户密码",
                 USER_EMAIL: "用户邮箱",
-                ADD_SERVICE_USER: "添加座席"
+                ADD_SERVICE_USER: "添加座席",
+
+                SUBMIT: "提交"
             }
         }
     }
