@@ -58,7 +58,7 @@ class PPComCreateConversationHandler(BaseHandler):
         _data.pop("updatetime")
         _r.update(_data)
 
-        return
+        return True
 
     def _create(self, _member_uuid, _request):
         _user_uuid = _request.get("user_uuid")
@@ -104,6 +104,7 @@ class PPComCreateConversationHandler(BaseHandler):
         _row.async_add(_redis)
         _row.create_redis_keys(_redis)
 
+        logging.info("return from new")
         return self._return(_conversation_uuid, _request)
     
     def _existed(self, _request):
@@ -131,7 +132,8 @@ class PPComCreateConversationHandler(BaseHandler):
         _conversation_uuid = _redis.hget(_key, "conversation_uuid")
         if not _conversation_uuid:
             return False
-        
+
+        logging.info("return from existed")
         return self._return(_conversation_uuid, _request)
 
 

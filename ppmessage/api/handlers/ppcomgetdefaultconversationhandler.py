@@ -147,7 +147,9 @@ class PPComGetDefaultConversationHandler(BaseHandler):
             return
 
         _service_users = list(_service_users)
-        _assigned_uuid = _service_users[0]
+        _peer_uuid = _service_users[0]
+        if len(_service_users) != 1:
+            _peer_uuid = None
 
         _key = DeviceUser.__tablename__ + ".uuid." + self._user_uuid
         _portal_user_name = self.application.redis.hget(_key, "user_fullname")
@@ -172,7 +174,7 @@ class PPComGetDefaultConversationHandler(BaseHandler):
 
         _row = ConversationUserData(uuid=str(uuid.uuid1()),
                                     user_uuid=self._user_uuid,
-                                    peer_uuid=_assigned_uuid,
+                                    peer_uuid=_peer_uuid,
                                     conversation_uuid=_conversation_uuid,
                                     conversation_name=_conversation_name,
                                     conversation_type=CONVERSATION_TYPE.P2S,
