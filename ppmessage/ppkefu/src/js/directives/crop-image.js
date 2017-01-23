@@ -96,20 +96,25 @@ function (yvLink, yvConstants) {
             if (!jcrop_api) {
                 return;
             }
-            var canvas = jcrop_api.container.context;
+            
             var selection = jcrop_api.getSelection();
             var container_size = jcrop_api.getContainerSize();
+            
             var scale = {
-                x: container_size[0] / canvas.width,
-                y: container_size[1] / canvas.height
+                x: container_size[0] / $("#target-image")[0].naturalWidth,
+                y: container_size[1] / $("#target-image")[0].naturalHeight
             };
+            
             var s = getTrueSelection(selection, scale);
+
+            var s1 = $("#target-image").Jcrop('api').getSelection();
+            var s2 = $("#target-image").width();
             
             var avatar = document.createElement("canvas");
             avatar.width = thumb_width;
             avatar.height = thumb_height;
             var context = avatar.getContext("2d");
-            context.drawImage(canvas, s.x, s.y, s.w, s.h, 0, 0, thumb_width, thumb_height);
+            context.drawImage($("#target-image")[0], s.x, s.y, s.w, s.h, 0, 0, thumb_width, thumb_height);
 
             var data_url = avatar.toDataURL();
             var blob = dataURLtoBlob(data_url);
@@ -119,6 +124,7 @@ function (yvLink, yvConstants) {
             // NOTICE: Safari, IE, Edge doesn't support File constructor.
             // So we wont't construct a File, just return blob.
             callback && callback(blob);
+
         }
 
         
