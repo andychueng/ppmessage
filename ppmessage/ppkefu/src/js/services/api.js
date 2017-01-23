@@ -468,11 +468,6 @@ function ($rootScope, $timeout, $http, yvLog, yvSys, yvUser, yvFile, yvConstants
             return _api_post(_url, _args, null, _success, _error, _api_error);
         },
 
-        create_conversation: function (_args, _success, _error, _api_error) {
-            var _url = "/PP_CREATE_CONVERSATION";
-            _args.user_uuid = yvUser.get("uuid");
-            return _api_post(_url, _args, null, _success, _error, _api_error);
-        },
 
         close_conversation: function (_conv_uuid, _success, _error, _api_error) {
             var _url = "/PP_CLOSE_CONVERSATION";

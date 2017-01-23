@@ -18,7 +18,7 @@ from .ppupdateuserhandler import PPUpdateUserHandler
 from .ppcreatedevicehandler import PPCreateDeviceHandler
 from .ppupdatedevicehandler import PPUpdateDeviceHandler
 
-from .ppcreateconversationhandler import PPCreateConversationHandler
+from .ppkefucreateconversationhandler import PPKefuCreateConversationHandler
 from .ppupdateconversationhandler import PPUpdateConversationHandler
 from .ppgetconversationinfohandler import PPGetConversationInfoHandler
 
@@ -88,7 +88,7 @@ def getWebServiceHandlers():
     handler_list.append((r"/PP_CREATE_DEVICE", PPCreateDeviceHandler))
     handler_list.append((r"/PP_UPDATE_DEVICE", PPUpdateDeviceHandler))
         
-    handler_list.append((r"/PP_CREATE_CONVERSATION", PPCreateConversationHandler))
+    handler_list.append((r"/PPKEFU_CREATE_CONVERSATION", PPKefuCreateConversationHandler))
     handler_list.append((r"/PP_UPDATE_CONVERSATION", PPUpdateConversationHandler))
     handler_list.append((r"/PP_GET_CONVERSATION_INFO", PPGetConversationInfoHandler))
     

@@ -280,7 +280,8 @@ function ($q, $timeout, $rootScope, yvDB, yvLog, yvSys, yvAPI, yvNav, yvNoti, yv
             }
         }
 
-        yvAPI.create_conversation(params, function (data) {
+        params.user_uuid = yvUser.get("uuid");
+        yvAPI.request("/PPKEFU_CREATE_CONVERSATION", params, function (data) {
             _add_conversation(data, function (conversation) {
                 yvBase.active("conversation", conversation);
                 callback && callback(conversation);

@@ -517,6 +517,11 @@ class ConversationUserData(CommonMixin, BaseModel):
 
         _key = self.__tablename__ + ".conversation_uuid." + self.conversation_uuid + ".datas"
         _redis.sadd(_key, self.uuid)
+
+        if self.peer_uuid:
+            _key = self.__tablename__ + ".user_uuid." + self.user_uuid + ".peer_uuid." + self.peer_uuid
+            _redis.set(_key, self.uuid)
+
         return
 
     def update_redis_keys(self, _redis, *args, **kwargs):
@@ -572,6 +577,11 @@ class ConversationUserData(CommonMixin, BaseModel):
 
         _key = self.__tablename__ + ".conversation_uuid." + _obj["conversation_uuid"] + ".datas"
         _redis.srem(_key, self.uuid)
+
+
+        if _obj.get("peer_uuid") and _obj.get("user_uuid"):
+            _key = self.__tablename__ + ".user_uuid." + _obj.get("user_uuid") + ".peer_uuid." + _obj.get("peer_uuid")
+            _redis.delete(_key)
 
         CommonMixin.delete_redis_keys(self, _redis)
         return
