@@ -42,21 +42,16 @@ brew tap homebrew/services
 
 # "pip install -i http://pypi.douban.com/simple xxx" might be faster
 sudo pip install \
-     apns2 \
      pillow \
      phonenumbers \
      StringGenerator \
      beautifulsoup4 \
      filemagic \
      identicon \
-     jieba \
      paramiko \
-     paho-mqtt \
-     ppmessage-mqtt \
      pypinyin \
      pyparsing \
      python-dateutil \
-     python-gcm \
      python-magic \
      qrcode \
      readline \
