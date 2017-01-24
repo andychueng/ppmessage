@@ -1,27 +1,31 @@
 Service.$app = (function() {
 
-    var appInfo = {},
-        
-        set = function(info) {
-            appInfo = info;
-        },
-
-        get = function() {
-            return appInfo;
-        };
+    var appInfo = {};
     
     return {
+
+        setAppName: function(name) {
+            appInfo.app_name = name;
+        },
         
-        set: set,
+        setAppWelcome: function(welcome) {
+            appInfo.app_welcome_message = welcome;
+        },
+        
+        set: function(info) {
+            appInfo = $.extend({}, appInfo, info);
+        },
 
-        app: get, // appInfo
+        app: function() {
+            return appInfo;
+        }, 
 
-        appName: function() {// appName
-            return get().app_name; 
+        appName: function() {
+            return appInfo.app_name; 
         },
 
         appId: function() {
-            return get().app_uuid || get().uuid;
+            return appInfo.app_uuid || appInfo.uuid;
         }
     }
     

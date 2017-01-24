@@ -22,7 +22,7 @@
                     break;
 
                 case Service.Constants.MESSAGE.TYPE_TEXT:
-                    type = $messageToolsModule.isMessageTextOverflow(msg) ? Service.Constants.MESSAGE_SUBTYPE.TXT : Service.Constants.MESSAGE_SUBTYPE.TEXT;
+                    type = Service.Constants.MESSAGE_SUBTYPE.TEXT;
                     break;
                     
                 case Service.Constants.MESSAGE.TYPE_FILE:
@@ -84,7 +84,7 @@
                 var body = {
                     fid: data.message.text.fuuid
                 };
-                apiMessage['message_body'] = $messageToolsModule.isMessageTextOverflow(data) ? $json.stringify(body) : data.message.text.body;
+                apiMessage['message_body'] = data.message.text.body;
                 break;
 
             case Service.PPMessage.TYPE.EMOJI:

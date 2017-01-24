@@ -391,7 +391,9 @@
   height: 75px;
   float: left;
   display: none;
-  position: relative; }
+  position: relative; 
+}
+
 .pp-sheet-header .pp-sheet-header-button-icon {
   background-size: 15px 12px;
   background-repeat: no-repeat;
@@ -399,7 +401,8 @@
   margin: 0 auto;
   width: 18px;
   height: 100%;
-  float: left; }
+  float: left; 
+}
 
 .pp-sheet-header .pp-header-buttons-close {
     background-position: 50%;
@@ -1176,10 +1179,24 @@
  * pp-uploading-bar
  */
 .pp-uploading-bar {
-    border-radius: 4px; position: relative; display: inline-block; width: 50px; height: 6px; border: 1px solid #ccc; vertical-align: middle; background-color: #fff; margin: 0px 5px;
+    border-radius: 4px;
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 6px;
+    border: 1px solid #ccc;
+    vertical-align: middle;
+    background-color: #fff;
+    margin: 0px 5px;
 }
 .pp-uploading-bar-state {
-    transition: width 0.4s; border-radius: 3px; background-color: #0071b2; position: absolute; top: 0; left: 0; bottom: 0;
+    transition: width 0.4s;
+    border-radius: 3px; 
+    background-color: #0071b2; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    bottom: 0;
 }
 .pp-uploading-bar-remove {
     background-size: 14px 14px;
@@ -1508,15 +1525,15 @@
 }
 
 .pp-launcher-hovercard:after, .pp-launcher-hovercard:before {
-                                  top: 100%;
-                                  right: 20px;
-                                  border: solid transparent;
-                                  content: " ";
-                                  height: 0;
-                                  width: 0;
-                                  position: absolute;
-                                  pointer-events: none;
-                              }
+    top: 100%;
+    right: 20px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
 
 .pp-launcher-hovercard:before {
     border-color: rgba(204, 204, 204, 0);
@@ -1660,3 +1677,49 @@
     transition: all .3s ease;
 }
 /* ImageViewer End */
+
+/* placeholder fix begin */
+.placeholder-fix::-webkit-input-placeholder  {
+    color:gray;
+    -webkit-transition: all 1.0s ease;
+    -ms-transition: all 1.0s ease;
+    -moz-transition: all 1.0s ease;
+    -o-transition: all 1.0s ease;
+    transition: all 1.0s ease;
+}
+
+.placeholder-fix::-moz-placeholder   {
+    color:gray;
+    -webkit-transition: all 1.0s ease;
+    -ms-transition: all 1.0s ease;
+    -moz-transition: all 1.0s ease;
+    -o-transition: all 1.0s ease;
+    transition: all 1.0s ease;
+}
+
+.placeholder-fix:-moz-placeholder   {
+    color:gray;
+    -webkit-transition: all 1.0s ease;
+    -ms-transition: all 1.0s ease;
+    -moz-transition: all 1.0s ease;
+    -o-transition: all 1.0s ease;
+    transition: all 1.0s ease;
+}
+
+.placeholder-fix:focus::-webkit-input-placeholder  {
+    text-indent: -100%;
+    opacity: 1;
+}
+
+.placeholder-fix:focus::-moz-placeholder   {
+    text-indent: -100%;
+    opacity: 1;
+}
+
+.placeholder-fix:-moz-placeholder   {
+    text-indent: -100%;
+    opacity: 1;
+    /* color:transparent; */
+}
+
+/* placeholder fix end */

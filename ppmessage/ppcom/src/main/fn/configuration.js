@@ -8,6 +8,5 @@ Configuration = {
     auth: '{auth}',
     web_socket_url: '{web_socket_url}',
     file_upload_url: '{file_upload_url}',
-    file_upload_txt_url: '{file_upload_txt_url}',
     file_download_url: '{file_download_url}'
 };

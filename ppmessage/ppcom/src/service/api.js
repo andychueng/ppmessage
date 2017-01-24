@@ -130,7 +130,7 @@
         };
 
         this.updateUser = function(data, success, fail) {
-            this._post("/PP_UPDATE_USER", $.extend( {}, data ), success, fail );
+            this._post("/PP_UPDATE_USER", $.extend({}, data), success, fail);
         };
 
         this.getConversationList = function(data, success, fail) {
@@ -143,7 +143,7 @@
 
         // data : { user_uuid: xxx, app_uuid: xxx, member_list: [ 'xxxxx', 'xxxxx' ], group_uuid: xxx }
         this.createConversation = function(data, success, fail) {
-            this._post("/PP_CREATE_CONVERSATION", $.extend( {}, data ), success, fail);
+            this._post("/PP_CREATE_CONVERSATION", $.extend({}, data), success, fail);
         };
 
         this.sendMessage = function(data, success, fail) {
@@ -152,11 +152,11 @@
 
         // { list: [ 'xxx', 'xxxx' ] }
         this.ackMessage = function(data, success, fail) {
-            this._post("/ACK_MESSAGE", $.extend( {}, data ), success, fail);
+            this._post("/ACK_MESSAGE", $.extend({}, data), success, fail);
         };
 
         this.createAnonymousUser = function(data, success, fail) {
-            this._post("/PP_CREATE_ANONYMOUS", $.extend( {}, data ), success, fail);
+            this._post("/PPCOM_CREATE_ANONYMOUS", $.extend({}, data), success, fail);
         };
 
         // {
@@ -164,83 +164,70 @@
         //     user_uuid: xxx,
         //     device_ostype: xxx,
         //     ppcom_trace_uuid: xxx,
+        //     is_browser_device: true,
         //     device_id: xxx
         // }
         this.createDevice = function(data, success, fail) {
-            this._post("/PP_CREATE_DEVICE", $.extend( true, {}, data ), success, fail);
+            this._post("/PPCOM_CREATE_DEVICE", $.extend(true, {}, data), success, fail);
         };
 
         // @device_os_type: `Service.$device.getOSType()`;
         this.updateDevice = function(data, success, fail) {
-            this._post("/PP_UPDATE_DEVICE", $.extend( {}, data ), success, fail);
+            this._post("/PP_UPDATE_DEVICE", $.extend({}, data), success, fail);
         };
 
         /*
          * Get user_uuid by the third-web-site's user_email
          */
         this.getUserUuid = function(data, success, fail) {
-            this._post("/PP_GET_USER_UUID", $.extend( {}, data ), success, fail);
+            this._post("/PPCOM_GET_USER_UUID", $.extend({}, data), success, fail);
         };
 
         this.getUserDetailInfo = function(data, success, fail) {
-            this._post("/GET_YVOBJECT_DETAIL", $.extend( {}, data ), success, fail);
+            this._post("/GET_YVOBJECT_DETAIL", $.extend({}, data), success, fail);
         };
 
         /**
          * Get message conversation historys
          */
         this.pageMessageHistory = function(data, success, fail) {
-            this._post("/PP_PAGE_HISTORY_MESSAGE", $.extend( {}, data ), success, fail);
+            this._post("/PP_PAGE_HISTORY_MESSAGE", $.extend({}, data), success, fail);
         };
         
         /**
          * Get ImappInfo
          */
         this.getAppInfo = function(data, success, fail) {  
-            this._post("/PP_GET_APP_INFO", $.extend( {}, data ), success, fail);
+            this._post("/PP_GET_APP_INFO", $.extend({}, data), success, fail);
         };
 
-        /**
-         * Get welcome team
-         */
-        this.getWelcomeTeam = function(data, success, fail) {
-            this._post("/PP_GET_WELCOME_TEAM", $.extend( {}, data ), success, fail);
-        };
-
-        // data: { app_uuid: xxx, user_uuid: xxx }
-        this.getDefaultConversation = function ( data, success, fail ) {
-            this._post( '/PP_GET_DEFAULT_CONVERSATION', $.extend( {}, data ), success, fail );
-        };
+    
 
         // data: { app_uuid: xxx, conversation_uuid: xxx }
-        this.getConversationUserList = function ( data, success, fail ) {
-            this._post( '/PP_GET_CONVERSATION_USER_LIST', $.extend( {}, data ), success, fail );
+        this.getConversationUserList = function (data, success, fail) {
+            this._post('/PP_GET_CONVERSATION_USER_LIST', $.extend({}, data), success, fail);
         };
 
-        // // data: { app_uuid: xxx, user_uuid: xxx, device_uuid: xxx, group_uuid: xxx }
-        // this.cancelWaitingCreateConversation = function ( data, success, fail ) {
-        //     this._post( '/PP_CANCEL_WAITING_CREATE_CONVERSATION', $.extend( {}, data ), success, fail );
-        // };
+        // data: { app_uuid: xxx, user_uuid: xxx, device_uuid: xxx }
+        this.createPPComDefaultConversation = function (data, success, fail) {
+            this._post('/PPCOM_CREATE_DEFAULT_CONVERSATION', $.extend({}, data), success, fail);
+        };
 
         // data: { app_uuid: xxx, user_uuid: xxx, device_uuid: xxx }
-        this.getPPComDefaultConversation = function ( data, success, fail ) {
-            this._post( '/PPCOM_GET_DEFAULT_CONVERSATION', $.extend( {}, data ), success, fail );
+        this.getPPComDefaultConversation = function (data, success, fail) {
+            this._post('/PPCOM_GET_DEFAULT_CONVERSATION', $.extend({}, data), success, fail);
         };
 
         // data: { app_uuid: xxx, user_uuid: xxx, member_list: [ 'user_uuid' ], group_uuid: xxx }
-        this.createPPComConversation = function ( data, success, fail ) {
-            this._post( '/PPCOM_CREATE_CONVERSATION', $.extend( {}, data ), success, fail );
+        this.createPPComConversation = function (data, success, fail) {
+            this._post('/PPCOM_CREATE_CONVERSATION', $.extend({}, data), success, fail);
         };
 
         // data: { app_uuid: xxx, user_uuid: xxx, conversation_uuid: xxx }
-        this.getConversationInfo = function ( data, success, fail ) {
-            this._post( '/PP_GET_CONVERSATION_INFO', $.extend( {}, data ), success, fail );
+        this.getConversationInfo = function (data, success, fail) {
+            this._post('/PP_GET_CONVERSATION_INFO', $.extend({}, data), success, fail);
         };
 
-        // // data: { app_uuid: xxx }
-        // this.getWaitingQueueLength = function( data, success, fail ) {
-        //     this._post( '/PP_GET_AMD_QUEUE_LENGTH', $.extend( {}, data ), success, fail );
-        // };
 
         // data: { app_uuid: xxx }
         this.getIPInfo = function( data, success, fail ) {

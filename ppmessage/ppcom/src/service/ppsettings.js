@@ -10,8 +10,9 @@
             // Default settings
             DEFAULT = {
 
-                ent_user: {},
-
+                user_id: null,
+		user_createtime: null,
+		
                 app_uuid: null,
                 api_key: null,
                 api_secret: null,
@@ -51,7 +52,8 @@
                 // 保持键的名字与`$service.User.DEFAULT`相同，因为我们会使用`userSettings`来Create
                 // `$service.User`
                 userSettings = {
-
+                    user_id: settings.user_id,
+		    user_createtime: settings.user_createime,
                     user_email: settings.user_email,
                     user_fullname: settings.user_name,
                     user_avatar: settings.user_icon,
@@ -59,7 +61,7 @@
                     device_uuid: null,
 
                     is_portal_user: true,
-                    is_anonymous: $.isEmptyObject( settings.ent_user ),
+                    is_anonymous: settings.user_id && settings.user_createtime,
                     ppcom_trace_uuid: (function() {
                         // get ppcom_trace_uuid
                         var id = Service.$cookies.get(ANONYMOUS_USER_COOKIE_KEY) || function() {

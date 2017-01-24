@@ -2,8 +2,8 @@
  *
  * [Example]:
  * var launcherHoverCardCtrl = Ctrl.$hoverCard;
- * launcherHoverCardCtrl.showHoverCard(); // 显示HoverCard
- * launcherHoverCardCtrl.hideHoverCard(); // 隐藏HoverCard
+ * launcherHoverCardCtrl.showHoverCard(); 
+ * launcherHoverCardCtrl.hideHoverCard(); 
  *
  */
 Ctrl.$hoverCard = (function() {
@@ -34,7 +34,7 @@ Ctrl.$hoverCard = (function() {
             $hoverCardView, // We use this to update html content in hovercard
             $hoverCardController, // We use this to delegate hovercard's events
 
-            _clearTimeoutEvent = function() { //清除定时事件
+            _clearTimeoutEvent = function() { 
                 if (_timeoutEvent != null) {
                     $clearTimeout(_timeoutEvent);
                     _timeoutEvent = null;
@@ -42,7 +42,7 @@ Ctrl.$hoverCard = (function() {
                 }
             },
 
-            _hasTimeoutEventPending = function() { //是否有定时事件正在执行
+            _hasTimeoutEventPending = function() { 
                 return _timeoutEvent != null;
             },
 
@@ -125,14 +125,14 @@ Ctrl.$hoverCard = (function() {
         };
 
         /**
-         * 是否初始化成功，从网上拿来信息成功
+         * 
          */
         this.isInited = function() {
             return _inited;
         };
 
         /**
-         * 更新是否初始化成功的状态
+         * 
          */
         this.updateInitState = function(success) {
             _inited = success;
@@ -155,7 +155,7 @@ Ctrl.$hoverCard = (function() {
         };
 
         /**
-         * HoverCard 点击事件：
+         * HoverCard click event
          */
         this.onHoverCardClicked = function() {
             notifyUserActiveClickPPCom();
@@ -164,7 +164,7 @@ Ctrl.$hoverCard = (function() {
         };
 
         /**
-         * 隐藏 HoverCard，并通过动画平滑过渡到 聊天面板 界面
+         * hide HoverCard and transit to conversation panel
          */
         this.smoothTranisationToMessagePanel = function() {
             View.$hoverCard.smoothTranisationToMessagePanel();
@@ -176,7 +176,7 @@ Ctrl.$hoverCard = (function() {
         };
 
         /**
-         * 隐藏 HoverCard
+         * Hide HoverCard
          *
          * Note：HoverCard并不是立刻隐藏的，而是在设定了一个定时事件，默认500ms之后才会触发隐藏事件。
          *
@@ -190,7 +190,7 @@ Ctrl.$hoverCard = (function() {
         };
 
         /**
-         * 立刻隐藏 HoverCard
+         * Hide HoverCard at now
          */
         this.hideHoverCardNow = function() {
             if (_isPageLoadEndShowing) return; // Force user to click `close` button manually to hide me
@@ -205,7 +205,7 @@ Ctrl.$hoverCard = (function() {
         };
 
         /**
-         * 显示 HoverCard
+         * Show HoverCard
          */
         this.showHoverCard = function() {
             
@@ -260,18 +260,16 @@ Ctrl.$hoverCard = (function() {
     }
     extend(HoverCardController, Ctrl.PPBaseCtrl);
 
-    var instance = null, // singletion
-
-        get = function() {
+    var instance = null; // singletion
+    
+    return {
+        get: function() {
             if (!instance) {
                 instance = new HoverCardController();
             }
             return instance;
-        };
-    
-    return {
-        get: get
-    }
+        }
+    };
 
     ////////// Tools ///////////
     function buildWelcomeInfo ( team, welcomeText, serviceUsers ) {

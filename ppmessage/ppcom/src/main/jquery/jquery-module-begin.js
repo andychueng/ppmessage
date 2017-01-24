@@ -1,1 +1,1 @@
-function JQueryModule () {
+function JQueryModule() {

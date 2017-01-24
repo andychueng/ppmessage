@@ -27,7 +27,7 @@ Ctrl.$conversationContent = (function() {
                     groupId = body.conversation.uuid;
 
                 appendMessage( body );
-                View.$conversationContent.scrollToBottom();
+                View.$conversationContent.scrollToBottom();    
                 
             });
 
@@ -299,7 +299,7 @@ Ctrl.$conversationContent = (function() {
         clear: clear,
 
         isLoadable: isLoadable
-    }
+    };
 
     ///////////////////////////////////////////////////////////
     //// Conversation Content State Control ( Life Cycle ) ////
@@ -307,7 +307,7 @@ Ctrl.$conversationContent = (function() {
     
     ////////////// `onStart` -> `onResume` -> `onHide /////////
 
-    function onStart ( conversation ) {
+    function onStart(conversation) {
 
         activeConversation = conversation;
         
@@ -329,7 +329,7 @@ Ctrl.$conversationContent = (function() {
     }
 
     // reload all data associated with this `conversation`
-    function onResume( conversation ) {
+    function onResume(conversation) {
         
         // Update view associated with this conversation
         // CLEAR data except for `pull to refresh` element

@@ -10,7 +10,7 @@
 //       
 // - `cancel` cancel request default conversation
 //
-Service.$conversationAgency = ( function() {
+Service.$conversationAgency = (function() {
 
     var STATE = {
         REQUESTING: 0, // in requesting
@@ -96,7 +96,7 @@ Service.$conversationAgency = ( function() {
         Service.$api.createPPComConversation( {
             user_uuid: Service.$user.getUser().getInfo().user_uuid,
             app_uuid: Service.$ppSettings.getAppUuid(),
-            conversation_type: Service.Constants.MESSAGE.TO_TYPE,
+            device_uuid: Service.$user.quickDeviceUUID(),
             member_list: ( config.user_uuid !== undefined ) ? [ config.user_uuid ] : undefined
         }, function( r ) {
 
@@ -120,16 +120,7 @@ Service.$conversationAgency = ( function() {
         if ( state !== STATE.REQUESTING ) {
             return;
         }
-
-        // Service.$api.cancelWaitingCreateConversation( {
-        //     app_uuid: Service.$app.appId(),
-        //     user_uuid: Service.$user.quickId(),
-        // }, onCompleted, onCompleted );
-
-        function onCompleted( someThing ) {
-            state = STATE.CANCEL;
-        }
-        
+        state = STATE.CANCEL;
     }
 
     function isDefaultConversationAvaliable() {

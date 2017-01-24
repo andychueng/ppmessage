@@ -46,7 +46,7 @@
 //     } };
 //     ```
 //
-Service.$conversationManager = ( function() {
+Service.$conversationManager = (function() {
 
     var EVENT = {
         WAITING: 'CONVERSATION_MANAGER/WAITING',
@@ -78,13 +78,9 @@ Service.$conversationManager = ( function() {
     function init() {
         var $pubsub = Service.$pubsub;
         
-        $pubsub.subscribe( EVENT.CONVERSATION_UUID_AVALIABLE, function( topics, conversationUUID ) {
-
-            Service.$conversationAgency.requestInfo( conversationUUID, function( conv ) {
-                
-                if ( conv ) {
-                    Service.$debug.d( 'Default conversation avaliable !', conv );
-
+        $pubsub.subscribe(EVENT.CONVERSATION_UUID_AVALIABLE, function(topics, conversationUUID) {
+            Service.$conversationAgency.requestInfo(conversationUUID, function(conv) {
+                if (conv) {
                     // We are waiting `default conversation`
                     // Now, this `default conversation` become avaliable now
                     var isDefaultConversation = !Service.$conversationAgency.isDefaultConversationAvaliable();
@@ -98,41 +94,38 @@ Service.$conversationManager = ( function() {
                         $pubsub.publish( EVENT.AVALIABLE, conv );
                     }
                 }
-                
-            } );
-            
-        } );
+            });
+        });
     }
     
     function all() {
-        return sort( conversationList );
+        return sort(conversationList);
     }
 
     function simulateConversationAvaliable() {
-        Service.$conversationAgency.enableDebug( false );
-        Service.$conversationAgency.request( function( defaultConversation ) {
-            onDefaultConversationAvaliable( defaultConversation );
-            Service.$pubsub.publish( EVENT.AVALIABLE, defaultConversation );
-        } );
+        Service.$conversationAgency.enableDebug(false);
+        Service.$conversationAgency.request(function(defaultConversation) {
+            onDefaultConversationAvaliable(defaultConversation);
+            Service.$pubsub.publish(EVENT.AVALIABLE, defaultConversation);
+        });
     }
 
     //////// asyncGetDefaultConversation /////////////
-    function asyncGetDefaultConversation( callback ) {
+    function asyncGetDefaultConversation(callback) {
 
-        if ( findDefault() ) {
-            $onResult( findDefault(), callback );
+        if (findDefault()) {
+            $onResult(findDefault(), callback);
             return;
         }
 
-        Service.$conversationAgency.request( function( defaultConversation ) {
-            if ( defaultConversation ) {
-                onDefaultConversationAvaliable( defaultConversation );
+        Service.$conversationAgency.request(function(defaultConversation) {
+            if (defaultConversation) {
+                onDefaultConversationAvaliable(defaultConversation);
             } else {
-                Service.$debug.d( 'Cannot get deault conversation: waiting ...' );
-                notifyToWaiting();                
+                notifyToWaiting();
             }
-            $onResult( findDefault(), callback );
-        } );
+            $onResult(findDefault(), callback);
+        });
 
     }
 
@@ -145,55 +138,54 @@ Service.$conversationManager = ( function() {
     }
 
     //////// activeConversation ///////////
-    function activeConversation( token ) {
+    function activeConversation(token) {
 
         // act as a getter method
-        if ( token === undefined ) {
-            if ( activeToken !== undefined ) {
-                return findByToken( activeToken );
+        if (token === undefined) {
+            if (activeToken !== undefined) {
+                return findByToken(activeToken);
             }
-
-            return undefined;    
+            return undefined;
         } else { // act as a setter method
-            active( token );
+            active(token);
         }
         
     }
 
     /////// asyncGetList //////////////
-    function asyncGetList( callback ) {
+    function asyncGetList(callback) {
 
-        if ( hasLoadedAllConversationList ) {
-            $onResult( sort( conversationList ), callback );
+        if (hasLoadedAllConversationList) {
+            $onResult(sort(conversationList), callback);
             return;
         }
         
         // 2. asyncGetAllConversations
-        Service.$api.getConversationList( {
+        Service.$api.getConversationList({
             user_uuid: Service.$user.getUser().getInfo().user_uuid,
             app_uuid: Service.$ppSettings.getAppUuid()
-        }, function ( response ) {
+        }, function (response) {
 
-            if ( response && response.error_code === 0 ) {
-                var list = ( response.list || [] ).slice();
-                list && $.each( list, function( index, item ) {
-                    push( conversation( item ) );
-                } );
+            if (response && response.error_code === 0) {
+                var list = (response.list || []).slice();
+                list && $.each(list, function(index, item) {
+                    push(conversation(item));
+                });
             }
 
             // 3. success callback
             hasLoadedAllConversationList = true;
-            $onResult( sort( conversationList ), callback );
+            $onResult(sort(conversationList), callback);
             return;
             
-        }, function ( error ) {
+        }, function (error) {
             
             // 3. error callback
             hasLoadedAllConversationList = true;
-            $onResult( sort( conversationList ), callback );
+            $onResult(sort(conversationList), callback);
             return;
-                
-        } );
+            
+        });
     }
 
     ///////// asyncGetConversation ///////
@@ -202,73 +194,63 @@ Service.$conversationManager = ( function() {
     //     user_uuid: xxx, create a conversation with `member_list`
     // }
     // provided `user_uuid`
-    function asyncGetConversation( config, callback ) {
+    function asyncGetConversation(config, callback) {
 
-        var exist = ( config.user_uuid !== undefined ) ? find( config.user_uuid ) : undefined; 
+        var exist = (config.user_uuid !== undefined) ? find(config.user_uuid) : undefined; 
 
-        if ( !Service.$tools.isNull( exist ) ) {
-            $onResult( exist, callback );
+        if (!Service.$tools.isNull(exist)) {
+            $onResult(exist, callback);
             return;
         }
 
-        Service.$conversationAgency.create( config, function( conv ) {
-            
-            if ( conv ) {
-                push( conversation( conv ) );
-                $onResult( findByToken( conv.uuid ) , callback );
+        Service.$conversationAgency.create(config, function(conv) {
+            if (conv) {
+                push(conversation(conv));
+                $onResult(findByToken(conv.uuid) , callback);
             } else {
-                $onResult( undefined, callback );
+                $onResult(undefined, callback);
                 notifyToWaiting();
             }
-            
-        } );
+        });
 
-        // try to match `assigned_uuid` to `userId`
-        function find( userId ) {
-
+        // try to match `peer_uuid` to `userId`
+        function find(userId) {
             var r;
-            $.each( conversationList, function( index, item ) {
-                if ( item.assigned_uuid === userId ) {
+            $.each(conversationList, function(index, item) {
+                if (item.peer_uuid === userId) {
                     r = item;
                 }
-            } );
+            });
             return r;
-            
         }
 
-        function shouldWaiting( r ) {
-            return r.error_code !== 0 || Service.$tools.isApiResponseEmpty( r );
+        function shouldWaiting(r) {
+            return r.error_code !== 0 || Service.$tools.isApiResponseEmpty(r);
         }
         
     }
 
     ////////// set `token` to active /////////
-    function active( token ) {
-        
-        var conversation = findByToken( token );
-        if ( conversation !== undefined ) {
-            
-            $.each( conversationList, function ( index, item ) {
+    function active(token) {        
+        var conversation = findByToken(token);
+        if (conversation !== undefined) {
+            $.each(conversationList, function (index, item) {
                 item.active = false;
-            } );
-
+            });
             conversation.ts = Date.now();
             conversation.active = true;
             activeToken = token;
-            
         }
-
-        vip( token );
-        
+        vip(token);
     }
 
-    function vip( token ) {
+    function vip(token) {
 
         var conversation = findDefault(),
             appWelcome,
             appName;
         
-        if ( conversation !== undefined ) {
+        if (conversation !== undefined) {
             
             appWelcome = conversation.app_welcome;
             appName = conversation.app_name;
@@ -276,61 +258,59 @@ Service.$conversationManager = ( function() {
             conversation.vip = false;
             delete conversation.app_welcome;
             delete conversation.app_name;
-            
         }
 
-        var newer = findByToken( token );
-        if ( newer ) {
+        var newer = findByToken(token);
+        if (newer) {
 
             // move welcome info and `vip` flag to the newer conversation
             newer.vip = true;
-            appWelcome && ( newer.app_welcome = appWelcome );
-            appName && ( newer.app_name = appName );
+            appWelcome && (newer.app_welcome = appWelcome);
+            appName && (newer.app_name = appName);
             
         }
         
     }
 
-    function conversation( item, vip ) {        
+    function conversation(item, vip) {        
         item [ 'token' ] = item.uuid;
-        item [ 'ts' ] = Service.$tools.getTimestamp( item.updatetime );
-        item [ 'vip' ] = ( typeof vip === 'boolean' ) ? vip : false;
+        item [ 'ts' ] = Service.$tools.getTimestamp(item.updatetime);
+        item [ 'vip' ] = (typeof vip === 'boolean') ? vip : false;
         return item;
     }
 
-    function findByToken( token ) {
-
+    function findByToken(token) {
         var find,
             i,
             len = conversationList.length;
 
-        for ( i = 0; i < len; ++i ) {
-            if ( token === conversationList [ i ].token ) return conversationList [ i ];
+        for (i = 0; i < len; ++i) {
+            if (token === conversationList[i].token) {
+                return conversationList[i];
+            }
         }
-        
         return undefined;        
     }
 
     function findDefault() {
-
         var find,
             i,
             len = conversationList.length;
         
-        for ( i = 0 ; i < len ; ++i ) {
-            if ( conversationList [ i ].vip ) return conversationList [ i ];
+        for (i = 0 ; i < len ; i++) {
+            if (conversationList[i].vip) {
+                return conversationList[i];
+            }
         }
-
         return undefined;
-        
     }
 
-    function sort( conversations ) {
+    function sort(conversations) {
 
-        if ( !conversations || conversations.length <= 1 ) return conversations;
-        return conversations.sort( compare );
+        if (!conversations || conversations.length <= 1) return conversations;
+        return conversations.sort(compare);
 
-        function compare( a, b ) {
+        function compare(a, b) {
             
             var timestampA = a.ts,
                 timestampB = b.ts;
@@ -340,27 +320,27 @@ Service.$conversationManager = ( function() {
         
     }
 
-    function push( conversation ) {
+    function push(conversation) {
 
         var existItem;
-        $.each( conversationList, function ( index, item ) {
-            if ( existItem === undefined && item.token === conversation.token ) {
+        $.each(conversationList, function (index, item) {
+            if (existItem === undefined && item.token === conversation.token) {
                 existItem = item;
             }
-        } );
+        });
 
-        if ( existItem === undefined ) {
-            conversationList.push( conversation );
+        if (existItem === undefined) {
+            conversationList.push(conversation);
         } else {
             conversation.vip = existItem.vip; // prevent `vip` override
-            $.extend( existItem, conversation );
+            $.extend(existItem, conversation);
         }
         
     }
 
     // === helpers ===
     function notifyToWaiting() {
-        Service.$pubsub.publish( EVENT.WAITING );
+        Service.$pubsub.publish(EVENT.WAITING);
     }
     
-} )();
+})();

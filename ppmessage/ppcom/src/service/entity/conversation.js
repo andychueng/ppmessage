@@ -10,7 +10,7 @@ Service.$conversation = ( function() {
         setUser: setUser,
         getUser: getUser,
         asyncGetUser: asyncGetUser
-    }
+    };
 
     function setUser( token, users ) {
         if ( users && users.length > 0 ) {
@@ -38,7 +38,7 @@ Service.$conversation = ( function() {
             }
         }
 
-        conversationUsers [ token ] = undefined; // remove all cached user datas
+        conversationUsers [token] = undefined; // remove all cached user datas
         
         Service.$api.getConversationUserList( {
             app_uuid: Service.$ppSettings.getAppUuid(),
@@ -46,12 +46,11 @@ Service.$conversation = ( function() {
         }, function( r ) {
 
             if ( r && r.error_code === 0 ) {
-                conversationUsers [ token ] = ( function() {
-                    
+                conversationUsers [token] = (function() {                    
                     var users = [];
                     r.list && $.each( r.list, function( index, item ) {
-                        var userInfoAdapter = Service.$users.adapter( item );
-                        users.push( Service.$users.getOrCreateUser( userInfoAdapter ).getInfo() );
+                        var userInfoAdapter = Service.$users.adapter(item);
+                        users.push(Service.$users.getOrCreateUser(userInfoAdapter).getInfo() );
                     } );
                     return users;
                     

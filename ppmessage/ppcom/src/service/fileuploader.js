@@ -79,8 +79,8 @@
                             fuuid = $json.parse(response).fuuid;
                             break;
 
-                        case 'txt':
-                            fuuid = $json.parse(response).fid;
+                        default:
+                            console.error("error type: %s", type);
                             break;
                         }
 
@@ -96,8 +96,8 @@
                     url = Configuration.file_upload_url;
                     break;
 
-                case 'txt':
-                    url = Configuration.file_upload_txt_url;
+                default:
+                    console.error("can not handler: %s", type);
                     break;
                 }
 
@@ -138,7 +138,6 @@
                     status.state = 'FINISH';
                     status.progress = 100;
                     
-                    if (type == 'txt') $("#pp-composer-container-content-txt").val('');
                     if (doneCallback) doneCallback(fixResponse(xhr.responseText));
                 };
 
@@ -156,12 +155,7 @@
                     xhr.send(formData);
                     break;
 
-                case 'txt':
-                    $("#pp-composer-container-content-txt").val(settings.content); 
-                    var form = document.forms.namedItem("pp-composer-container-form");
-                    var data = new FormData(form);
-                    xhr.send(data);
-                    
+                default:
                     break;
                     
                 }

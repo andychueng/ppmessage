@@ -9,6 +9,15 @@ status:
 - 2 for release candiate
 - 3 for (final) release
 
+## `1.0.0.2`
+
+support position and envent
+
+
+## `0.3.0.0`:
+
+support `flow`
+
 ## `0.1.0.20`:
 
 support `audio`

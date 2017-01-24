@@ -21,7 +21,7 @@ Ctrl.$launcher = (function() {
                 this.setUnreadBadgeNum(0);
                 this.setLauncherIcon("");
                 // clearn message on showing
-                messageOnShowing = undefined;
+                _messageOnShowing = undefined;
             }
             PP.toggle();
         },
@@ -42,7 +42,7 @@ Ctrl.$launcher = (function() {
                     Ctrl.$conversationQuickMessage.disable();
                 }
                 
-                var messageOnShowingOld = messageOnShowing;
+                var messageOnShowingOld = _messageOnShowing;
                 View.$launcher.showMessageBox();
 
                 if ( mode === Ctrl.$conversationPanel.MODE.QUICK_MESSAGE ) {
@@ -88,7 +88,7 @@ Ctrl.$launcher = (function() {
             var $hoverCardController = Ctrl.$hoverCard.get();
             $hoverCardController.asyncPrepareHoverCardInfo( function( prepareSucc ) {
                 prepareSucc && _showHoverCard();
-            } );
+            });
         },
 
         this.onMouseLeaveEvent = function() {
@@ -168,39 +168,48 @@ Ctrl.$launcher = (function() {
             this.setLauncherIcon("");
 
             // clearn message on showing
-            messageOnShowing = undefined;
+            _messageOnShowing = undefined;
         };
 
         // on message arrived ...
         Service.$pubsub.subscribe('msgArrived/launcher', function(topics, ppMessage) {
-            
-            self.setUnreadBadgeNum( self.getUnreadBadgeNum() + 1 );
-            self.setLauncherIcon( ppMessage.getBody().user.avatar );
-            self.recordOpenConversationItem( ppMessage.getBody() );
-
+            self.setUnreadBadgeNum(self.getUnreadBadgeNum() + 1);
+            self.setLauncherIcon(ppMessage.getBody().user.avatar);
+            self.recordOpenConversationItem(ppMessage.getBody()); 
+	    
             // record the new one
             // so when we click launcher, directyle open chating panel, rather than group list panel
-            messageOnShowing = ppMessage.getBody();
-            
+            _messageOnShowing = ppMessage.getBody();           
+        });
+
+        // on effect arrived ...
+        Service.$pubsub.subscribe('ws/effect', function(topics, msg) {
+            if (msg.effect) {
+                Service.$animate.animate("#pp-launcher-button", msg.effect);
+            }
+            if (msg.welcome) {
+                Service.$app.setAppWelcome(msg.welcome);
+            }
+            if (msg.title) {
+                Service.$app.setAppName(msg.title);
+                Ctrl.$sheetheader.setHeaderTitle(msg.title);
+            }
         });
         
     };
 
     var _unreadBadgeNum = 0,
         _isMouseOver = false,
-        messageOnShowing,
-
-        instance,
-
-        get = function() {
-            if (!instance) {
-                instance = new PPLauncherCtrl();
-            }
-            return instance;
-        };
+	_messageOnShowing,
+        _instance = null;
     
     return {
-        get: get,
-    }
+        get: function() {
+            if (!_instance) {
+                _instance = new PPLauncherCtrl();
+            }
+            return _instance;
+        }
+    };
     
 })();

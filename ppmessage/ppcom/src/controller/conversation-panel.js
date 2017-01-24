@@ -16,15 +16,14 @@ Ctrl.$conversationPanel = ( function() {
     //////// API //////////
     return {
         MODE: MODE,
-        mode: mode,
-        setMode: setMode,
-
-        stopPollingWaitingQueueLength: stopPollingWaitingQueueLength,
-        isOpen: isOpen
-    }
+	mode: mode,
+	setMode: setMode,
+	isOpen: isOpen,
+        stopPolling: stopPolling
+    };
 
     ////// Implementation //
-
+    
     function setMode( m ) {
         if ( m === MODE.QUICK_MESSAGE ) {
             Ctrl.$conversationQuickMessage.setLastMode( cMode );
@@ -32,18 +31,23 @@ Ctrl.$conversationPanel = ( function() {
         cMode = m;
     }
 
-    function mode( m ) { //Query current mode
-        
-        if ( m === undefined ) {
+    function stopPolling() {
+        Service.$polling.cancel({eventID: POLLING_QUEUE_LENGTH_EVENT_ID});
+        Service.$conversationAgency.cancel();
+        View.$loading.hide();
+    }
+
+    function mode(m) { //Query current mode
+        if (!m) {
             return cMode;    
         }
 
-        setMode( m );
+        setMode(m);
 
-        switch ( cMode ) {
+        switch(cMode) {
         case MODE.LIST:
             modeList();
-            stopPollingWaitingQueueLength();
+            stopPolling();
             break;
 
         case MODE.CONTENT:
@@ -52,7 +56,7 @@ Ctrl.$conversationPanel = ( function() {
             View.$sheetHeader.showDropDownButton();
             View.$sheetHeader.showGroupButton(); // show group button
             View.$sheetHeader.showTeamProfile();
-            stopPollingWaitingQueueLength();
+            stopPolling();
             break;
 
         case MODE.WAITING:
@@ -61,7 +65,7 @@ Ctrl.$conversationPanel = ( function() {
             Ctrl.$conversationContent.hide();
             View.$loading.show();
             Ctrl.$sheetheader.setHeaderTitle( Service.Constants.i18n( 'WAITING_AVALIABLE_CONVERSATION' ) );
-            startPollingWaitingQueueLength();
+            startPolling();
             break;
 
         case MODE.QUICK_MESSAGE:
@@ -92,7 +96,7 @@ Ctrl.$conversationPanel = ( function() {
             AVALIABLE_TOPIC = $conversationManager.EVENT.AVALIABLE,
             TIMEOUT_DELAY = 200;
         
-        $pubsub.subscribe( WAITING_TOPIC, function( topics, data ) {
+        $pubsub.subscribe(WAITING_TOPIC, function(topics, data) {
             //
             // Only when the launcher is not showing ( that is: messagePanel is showing ),
             // we enter to `MODE.WAITING` mode.
@@ -101,15 +105,15 @@ Ctrl.$conversationPanel = ( function() {
             // the ( hide launcher && show messagePanel ) css animation finished ( about 300ms ) here, otherwise,
             // we may get a wrong value here ( because the css animation is executing )
             //
-            $timeout( function() {
-
-                Ctrl.$conversationPanel.isOpen() && mode( MODE.WAITING );
-                
-            }, TIMEOUT_DELAY );            
+            $timeout(function() {
+                !Ctrl.$launcher.get().isLauncherShow() && mode(MODE.WAITING);
+            }, TIMEOUT_DELAY);            
         } );
 
-        $pubsub.subscribe( AVALIABLE_TOPIC, function( topics, data ) {
-            if ( mode() !== MODE.WAITING ) return;
+        $pubsub.subscribe(AVALIABLE_TOPIC, function(topics, data) {
+            if (mode() !== MODE.WAITING) {
+                return;
+            }
             
             Ctrl.$sheetheader.setHeaderTitle();
             View.$sheetHeader.reBuildTeamProfile( Service.$conversationManager.activeConversation().token );
@@ -126,30 +130,26 @@ Ctrl.$conversationPanel = ( function() {
         } );
     }
 
-    function startPollingWaitingQueueLength() {
-        Service.$polling.run( { eventID: POLLING_QUEUE_LENGTH_EVENT_ID,
-                                apiFunc: Service.$api.getPPComDefaultConversation,
-                                apiRequestParams: {
-                                    app_uuid: Service.$app.appId(),
-                                    user_uuid: Service.$user.quickId()
-                                },
-                                onGet: onGet } );
-    }
-
-    function stopPollingWaitingQueueLength() {
-        Service.$polling.cancel( { eventID: POLLING_QUEUE_LENGTH_EVENT_ID } );
-        Service.$conversationAgency.cancel();
-        View.$loading.hide();
-    }
-
-    function onGet( response, success ) {
-        if ( success ) {
-            var text = Service.$tools.format( Service.Constants.i18n( 'WAITING_LENGTH_HINT' ), response.length );
-            View.$loading.text( text );
-            if (response.conversation_uuid) {
-                Service.$pubsub.publish(Service.$conversationManager.EVENT.CONVERSATION_UUID_AVALIABLE, response.conversation_uuid);
+    function startPolling() {
+        Service.$polling.run({
+            eventID: POLLING_QUEUE_LENGTH_EVENT_ID,
+            apiFunc: Service.$api.getPPComDefaultConversation,
+            apiRequestParams: {
+                app_uuid: Service.$app.appId(),
+                user_uuid: Service.$user.quickId(),
+                device_uuid: Service.$user.quickDeviceUUID()
+            },
+            onGet: function(response, success) {
+                if (success) {
+                    var text = Service.Constants.i18n('WAITING_HINT');
+                    View.$loading.text(text);
+                    if (response.conversation_uuid) {
+                        Service.$pubsub.publish(Service.$conversationManager.EVENT.CONVERSATION_UUID_AVALIABLE,
+                                                response.conversation_uuid);
+                    }
+                }
             }
-        }
+        });
     }
     
 } )();

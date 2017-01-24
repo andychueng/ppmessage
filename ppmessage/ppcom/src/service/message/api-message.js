@@ -28,7 +28,9 @@
             // THE FOLLOWING THREE FILEDS ONLY WORKING FOR `SEND MESSAGE`
             uuid: '',
             from_type: 'DU',
-            app_uuid: Service.$ppSettings.getAppUuid()
+            app_uuid: Service.$ppSettings.getAppUuid(),
+            is_browser_message: true,
+            is_service_user: false
         };
 
         // `uuid`

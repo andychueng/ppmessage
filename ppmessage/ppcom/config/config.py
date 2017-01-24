@@ -18,7 +18,6 @@ def _cur_dir():
 
 def _replace(_d):
 
-    logging.info(_d)
     _api_key = _d.get("key")
     _api_secret = _d.get("secret")
     _ssl = _d.get("ssl")
@@ -37,22 +36,23 @@ def _replace(_d):
     
     ws = "ws://"
     http = "http://"
-    host = _host + ":" + _port
-
-    auth = http + host + "/ppauth"
-    api = http + host + "/api"
-    ppcom_assets_path = http + host + "/ppcom/assets/"
-    web_socket_url = ws + host + "/pcsocket/WS"
-    file_upload_url = http + host + "/upload/upload/"
-    file_upload_txt_url = http + host + "/ppkefu/upload/"
-    file_download_url= http + host + "/download/download/"
-
     if _ssl == "on":
         http = "https://"
         ws = "wss://"
 
+    host = _host + ":" + _port
+    base = http + host
+        
+    auth = base + "/ppauth"
+    api = base + "/ppapi"
+    ppcom_assets_path = base + "/ppcom/assets/"
+    file_upload_url = base + "/ppupload/ppupload/"
+    file_download_url = base + "/ppdownload/ppdownload/"
+    web_socket_url = ws + host + "/pcsocket/WS"
+
     import sys
     reload(sys)
+    
     sys.setdefaultencoding('utf-8')
 
     with open(_template_min_js, "r") as _t:
@@ -64,7 +64,6 @@ def _replace(_d):
                .replace('{web_socket_url}', web_socket_url)\
                .replace('{file_upload_url}', file_upload_url)\
                .replace('{file_download_url}', file_download_url)\
-               .replace('{file_upload_txt_url}', file_upload_txt_url)\
                .replace('{ppcom_assets_path}', ppcom_assets_path)\
                .replace('{ppcom_api_key}', _api_key)\
                .replace('{ppcom_api_secret}', _api_secret)
@@ -85,6 +84,10 @@ def _main():
     #     "server_name":  "ppmessage.com",
     #     "server_port": "80"
     # }
+    
+    _root_dir = os.path.join(_cur_dir(), "../../../../ppmessage")
+    sys.path.append(os.path.abspath(_root_dir))
+
     from ppmessage.core.constant import API_LEVEL
     from ppmessage.core.constant import CONFIG_STATUS
     from ppmessage.core.utils.config import _get_config
@@ -97,7 +100,7 @@ def _main():
     _d = {
         "key": _api.get(API_LEVEL.PPCOM.lower()).get("key"),
         "secret": _api.get(API_LEVEL.PPCOM.lower()).get("secret"),
-        "ssl": "off",
+        "ssl": _get_config().get("server").get("ssl"),
         "server_name": _get_config().get("server").get("name"),
         "server_port": _get_config().get("server").get("port")
     }
@@ -108,8 +111,4 @@ def _main():
 if __name__ == "__main__":
     reload(sys)
     sys.setdefaultencoding('utf-8')
-
-    _root_dir = os.path.join(_cur_dir(), "../../../../ppmessage")
-    sys.path.append(os.path.abspath(_root_dir))
-
     _main()

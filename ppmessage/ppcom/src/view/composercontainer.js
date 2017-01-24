@@ -200,7 +200,11 @@ View.$composerContainer = (function() {
             type: 'file',
             event: {
                 change: function(file) {
-                    ctrl.onFileSelect(file);
+                    if (file && file.files) {
+                        $.each(file.files, function(i, f) {
+                            ctrl.onFileSelect(f);
+                        });
+                    }
                 }
             }
         }, ctrl));

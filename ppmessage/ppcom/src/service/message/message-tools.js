@@ -6,14 +6,6 @@
             return unescape(encodeURIComponent(s));
         }
 
-        function isTextLengthLargerThan128(text) {
-            return encodeTextWithUtf8(text).length > Service.Constants.MESSAGE.TEXT_MAX_LEN;
-        }
-
-        function isMessageTextOverflow(msg) {
-            return isTextLengthLargerThan128(msg.message.text.body);
-        }
-
         // Currently, we have the following message types:
         //
         // -TEXT
@@ -49,8 +41,7 @@
         }
 
         return {
-            isTextLengthLargerThan128: isTextLengthLargerThan128,
-            isMessageTextOverflow: isMessageTextOverflow,
+         
 
             isMessage: isMessage,
             isQuickMessage: isQuickMessage,

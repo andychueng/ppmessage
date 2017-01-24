@@ -13,11 +13,12 @@ module.exports = {
         "../src/jQuery/pull2refresh.jquery.js",
         "../src/jQuery/animation.jquery.js",
 
-        "../src/service/pp-service2.js",
+        "../src/service/pp-service.js",
         "../src/service/pp-service-baseservice.js",
         "../src/service/constants.js",
+        "../src/service/animate.js",
         "../src/service/api.js",
-        "../src/service/rootCache.js",
+        "../src/service/rootcache.js",
         "../src/service/cookies.js",
         "../src/service/errorhint.js",
         "../src/service/users.js",
@@ -74,6 +75,7 @@ module.exports = {
         "../src/service/message/message-state-broadcast-receiver-file.js",
         "../src/service/message/message-state-broadcast-receiver-image.js",
         "../src/service/websocket/auth.js",
+        "../src/service/websocket/effect.js",
         "../src/service/websocket/msg.js",
         "../src/service/websocket/notification.js",
         "../src/service/websocket/notify-factory.js",
@@ -82,7 +84,7 @@ module.exports = {
         "../src/service/websocket/typing.js",
         "../src/service/websocket/unknown.js",
 
-        "../src/view/pp-view2.js",
+        "../src/view/pp-view.js",
         "../src/view/element.js",
         "../src/view/pp-view-element-css.replaced.js",
         "../src/view/pp-view-element-div.js",
@@ -161,7 +163,7 @@ module.exports = {
 
         // MODULE JQuery
         "../src/main/jquery/jquery-module-begin.js",
-        "../../resource/share/ppcom/bower_components/jquery/dist/jquery.js",
+        "../bower/bower_components/jquery/dist/jquery.js",
         "../src/main/jquery/jquery-module-end.js",
 
         // RUN
@@ -170,6 +172,8 @@ module.exports = {
     ],
 
     cssFiles: [
+        "../bower/bower_components/animate.css/animate.css",
+
         "../src/css/global.css",
         "../src/css/pp-main.css",
         "../src/css/animation.css",

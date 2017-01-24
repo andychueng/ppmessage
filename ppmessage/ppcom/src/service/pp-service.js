@@ -12,13 +12,11 @@
             Service.$cookies = new Service.PPCookies();
             Service.$tools = new Service.PPTools();
             Service.$errorHint = new Service.ErrorHint();
-            Service.$publicApi = new Service.PublicAPI();
-            
+            Service.$publicApi = new Service.PublicAPI();            
             Service.$startUp = new Service.PPStartUp(Service.$api, Service.$device);
-
             Service.$conversationManager.init();
-
             Service._booted = true;
+            
         }
     };
     

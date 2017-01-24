@@ -1,33 +1,29 @@
-Service.$msgStateReceiverFactory = ( function() {
+Service.$msgStateReceiverFactory = (function() {
 
     return {
-        get: get
-    }
+        get: function(ppMessageType) {
 
-    function get( ppMessageType ) {
+            switch ( ppMessageType ) {
 
-        switch ( ppMessageType ) {
-
-        case Service.PPMessage.TYPE.TEXT:
-            return Service.$msgStateTextReceiver;
-
-        case Service.PPMessage.TYPE.EMOJI:
-            return Service.$msgStateEmojiReceiver;
-
-        case Service.PPMessage.TYPE.FILE:
-            return Service.$msgStateFileReceiver;
-
-        case Service.PPMessage.TYPE.IMAGE:
-            return Service.$msgStateImageReceiver;
-
-        default:
-            
-            return {
-                listen: function () {}
+            case Service.PPMessage.TYPE.TEXT:
+                return Service.$msgStateTextReceiver;
+                
+            case Service.PPMessage.TYPE.EMOJI:
+                return Service.$msgStateEmojiReceiver;
+                
+            case Service.PPMessage.TYPE.FILE:
+                return Service.$msgStateFileReceiver;
+                
+            case Service.PPMessage.TYPE.IMAGE:
+                return Service.$msgStateImageReceiver;
+                
+            default:            
+                return {
+                    listen: function() {}
+                }
+                
             }
-            
         }
-        
-    }
+    };
     
-} )();
+})();

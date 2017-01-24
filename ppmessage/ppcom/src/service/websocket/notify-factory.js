@@ -6,7 +6,8 @@ Service.$notifyFactory = ( function() {
         MSG:     'MSG', // message arrived
         ONLINE : 'ONLINE',
         SYS:     'SYS',
-        TYPING : 'TYPING'
+        TYPING: 'TYPING',
+        EFFECT: "EFFECT"
     };
 
     var WHAT = {
@@ -24,10 +25,10 @@ Service.$notifyFactory = ( function() {
 
     function get ( $notifyService, msg ) {
 
-        var type = findType( msg ),
+        var type = findType(msg),
             handler;
 
-        switch ( type ) {
+        switch (type) {
             
         case TYPE.MSG:
             handler = Service.$notifyMsg;
@@ -49,29 +50,32 @@ Service.$notifyFactory = ( function() {
             handler = Service.$notifySys;
             break;
 
+        case TYPE.EFFECT:
+            handler = Service.$notifyEffect;
+            break;
+            
         default:
             handler = Service.$notifyUnknown;
             break;
         }
 
-        return handler.get( $notifyService, msg.msg ? msg.msg : msg );
+        return handler.get($notifyService, msg.msg ? msg.msg : msg);
         
     }
 
-    function findType ( msg ) {
+    function findType(msg) {
 
         var t = msg.type;
 
-        if ( t === TYPE.MSG )  { // fix 'LOGOUT' message
+        if (t === TYPE.MSG)  { // fix 'LOGOUT' message
 
             if ( msg.msg.mt === TYPE.SYS ) {
-                
                 t = TYPE.SYS;
             } 
             
-        } else if ( t === TYPE.ACK ) {
+        } else if (t === TYPE.ACK) {
 
-            switch ( msg.what ) {
+            switch (msg.what) {
 
             case WHAT.AUTH:
                 t = TYPE.AUTH;
@@ -83,9 +87,8 @@ Service.$notifyFactory = ( function() {
             }
             
         }
-
-        return t;
         
+        return t;
     }
     
 } )();

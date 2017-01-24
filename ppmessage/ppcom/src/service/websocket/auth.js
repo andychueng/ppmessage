@@ -7,7 +7,7 @@ Service.$notifyAuth = (function() {
         get: authMessageDispatcher
     }
 
-    function authMessageDispatcher ( $notifyService, authMsg ) {
+    function authMessageDispatcher ($notifyService, authMsg) {
         
         return {
             auth: auth,
@@ -18,6 +18,8 @@ Service.$notifyAuth = (function() {
             
             var $api = Service.$api,
                 $json = Service.$json,
+                $device = Service.$device,
+                $ppSettings = Service.$ppSettings,
                 wsSettings = $notifyService.getWsSettings(),
 
                 // auth params
@@ -27,16 +29,15 @@ Service.$notifyAuth = (function() {
                 app_uuid = wsSettings.app_uuid,
                 is_service_user = false,
                 extra_data = {
-                    title: document.title,
-                    location: ( ( function() { // fetch `window.location`
-                        var loc = {};
-                        for (var i in location) {
-                            if (location.hasOwnProperty(i) && (typeof location[i] == "string")) {
-                                loc[i] = location[i];
-                            }
-                        }
-                        return loc;
-                    } )() )
+                    page_title: document.title,
+                    page_url: location.href,
+                    browser_os : $device.getOSName(),
+                    browser_os_version : $device.getOSVersion(),
+                    browser_name : $device.getBrowserName(),
+                    browser_version : $device.getBrowserVersion(),
+                    browser_language : $device.getBrowserLanguage(),
+                    language_override : $ppSettings.getLanguage(),
+                    document_referrer : document.referrer
                 };
 
             // register webSocket
@@ -47,17 +48,27 @@ Service.$notifyAuth = (function() {
                 user_uuid: user_uuid,
                 device_uuid: device_uuid,
                 extra_data: extra_data,
-                is_service_user: is_service_user
+                is_sider_device: false,
+                is_mobile_device: false,
+                is_service_user: false
             }));
 
         }
 
-        function onAuth () {
-            
-            if ( !authMsg ) return;
+        function onAuth() {            
+            if (!authMsg) {
+                return;
+            }
+
+            var wsSettings = $notifyService.getWsSettings();
+            Service.$api.createPPComDefaultConversation({
+                app_uuid: wsSettings.app_uuid,
+                user_uuid: wsSettings.user_uuid,
+                device_uuid: wsSettings.device_uuid
+            });
 
             // auth success
-            if ( authMsg.error_code === 0 || authMsg.code === 0 ) {
+            if (authMsg.error_code === 0 || authMsg.code === 0) {
                 Modal.$conversationContentGroup.tryLoadLostMessages();                
             }
         }

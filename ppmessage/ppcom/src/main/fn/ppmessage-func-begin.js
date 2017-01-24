@@ -1,4 +1,4 @@
-function PPMessage (jQuery) {
+function PPMessage(jQuery) {
 
     // Global module variables for convenience use
     var fn = {
@@ -11,7 +11,7 @@ function PPMessage (jQuery) {
         Configuration: {},
         Toolkit: {}
     },
-        
+        ppJQuery = fn.$,
         $ = fn.$,
         Service = fn.Service,
         View = fn.View,
@@ -26,6 +26,8 @@ function PPMessage (jQuery) {
         $clearTimeout = clearTimeout,
 
         // on async get data callback
-        $onResult = function ( data, callback ) {
-            if ( callback ) callback ( data );
+        $onResult = function(data, callback) {
+            if (callback) {
+                callback(data);
+            }
         };

@@ -152,11 +152,7 @@ Ctrl.$composerContainer = (function() {
         };
 
         this.onFileSelect = function(file) {
-            
-            var filePath = $(file).val();
-            var isImage = $tools.isImage(filePath);
-            var f = file.files[0];
-
+            var isImage = $tools.isImage(file.name);
             //read file info and send it
             var fileReader = new FileReader();
             fileReader.onloadend = function(e) {
@@ -167,14 +163,15 @@ Ctrl.$composerContainer = (function() {
                         // Send image message
                         new Service.PPMessage.Builder( Service.PPMessage.TYPE.IMAGE )
                             .imageBody({
-                                file: f, url: filePath, data: e.target.result
+                                file: file, url: file.name, data: e.target.result
                             })
                             .build().send();
                         
                     }
                 } else {
                     // Not a Image
-                    var fileName = filePath;
+                    var filePath = file.name;
+                    var fileName = file.name;
                     var slash = -1;
                     if ((slash = filePath.lastIndexOf('\\')) > 0) {
                         fileName = filePath.substring(slash + 1);
@@ -184,7 +181,7 @@ Ctrl.$composerContainer = (function() {
                     new Service.PPMessage.Builder( Service.PPMessage.TYPE.FILE )
                         .fileBody({
                             fileUrl: filePath,
-                            file: f,
+                            file: file,
                             fileName: fileName,
                             fileSize: e.total
                         })
@@ -199,8 +196,8 @@ Ctrl.$composerContainer = (function() {
                 Service.$debug.d('FileReader upload file error. filePath: %s, error: %s.', filePath, e);
             };
 
-            if (file && file.files[0]) {
-                var size = file.files[0].size;
+            if (file) {
+                var size = file.size;
                 if (size > Constants.MAX_UPLOAD_SIZE) {
                     //TODO
                     var hint = Constants.i18n('MAXIMUM_UPLOAD_SIZE_HINT') + Constants.MAX_UPLOAD_SIZE_STR;
@@ -216,10 +213,8 @@ Ctrl.$composerContainer = (function() {
                         });
                     }, 2000);
                 } else {
-                    fileReader.readAsDataURL(file.files[0]);
+                    fileReader.readAsDataURL(file);
                 }
-                //clear it
-                $(file).val('');
             }
         };
 
@@ -253,17 +248,14 @@ Ctrl.$composerContainer = (function() {
     };
     extend(PPComposerContainerCtrl, Ctrl.PPBaseCtrl);
 
-    var instance = null,
-
-        get = function() {
+    var instance = null;
+    return {
+        get: function() {
             if (instance == null) {
                 instance = new PPComposerContainerCtrl();
             }
             return instance;
-        };
-
-    return {
-        get: get
-    }
+        }
+    };
     
 })();

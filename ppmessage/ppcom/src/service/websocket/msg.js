@@ -21,11 +21,11 @@ Service.$notifyMsg = (function() {
 
         // @description:
         //     if `WebSocket` is not ok, then this method will throw a Exception
-        function send () {
+        function send() {
 
             var apiMessage = msg;
 
-            if ( apiMessage ) {
+            if (apiMessage) {
                 
                 var wsMsg = Service.$json.stringify( {
                     type: TYPE_SEND,
@@ -40,7 +40,7 @@ Service.$notifyMsg = (function() {
             
         }
 
-        function dispatch () {
+        function dispatch() {
             
             var isAckMessage = ( msg.what !== undefined && msg.what === WHAT_SEND );
 

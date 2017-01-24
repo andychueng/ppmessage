@@ -1,4 +1,4 @@
-Service.$task = ( function() {
+Service.$task = (function() {
 
     var todoList = [],
         repeatList = [],
@@ -10,7 +10,7 @@ Service.$task = ( function() {
 
         repeat: repeat,
         cancelRepeat: cancelRepeat
-    }
+    };
 
     function plan( id, event, time ) {
         todoList [ id ] = $timeout( event, time || DEFAULT_TIME );

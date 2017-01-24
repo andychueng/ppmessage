@@ -140,19 +140,15 @@ Service.$messageSender = ( function() {
         var apiMessageJsonBody = new Service.PPMessageAdapter( ppMessage ).getApiMessageBody();
 
         try {
-            
             //send by `WebSocket`    
             Service.$notifyMsg.get( Service.$notification, apiMessageJsonBody ).send();
-            
         } catch ( e ) {
-            
             // Try send message from `api` channel
-            Service.$api.sendMessage( apiMessageJsonBody, function(response) {
-                onSendSuccess( ppMessage, settings, response );
-            }, function(error) {
-                onSendFail( ppMessage, settings );
-            });
-            
+            //Service.$api.sendMessage( apiMessageJsonBody, function(response) {
+            //    onSendSuccess( ppMessage, settings, response );
+            //}, function(error) {
+            onSendFail( ppMessage, settings );
+            //});
         }
 
     }

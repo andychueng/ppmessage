@@ -1,14 +1,5 @@
 /**
- * 加载PPCom的入口:
- *
- * 创建匿名用户、获取用户信息、更新device等
- *
- * new PP.PPStartUp().startUp(ppSettings, function() {
- *     console.log('StartUp successful!');
- * }, function(errorCode) {
- *     console.log('StartUp failed, errorCode: ' + errorCode);
- * });
- *
+ * PPCom entry, create anonymous, device, conversation
  */
 ((function(Service) {
 
@@ -55,37 +46,29 @@
 
             _createDevice = function(userSettings, succCB, failCB) {
                 $api.createDevice({
+                    is_browser_device: true,
                     app_uuid: Service.$ppSettings.getAppUuid(),
                     user_uuid: userSettings.user_uuid,
-                    device_ostype: Service.$device.getOSType(),
+                    device_ostype: $device.getOSType(),
                     ppcom_trace_uuid: userSettings.ppcom_trace_uuid,
-                    device_id: Service.$device.getDeviceId()
+                    device_id: $device.getDeviceId()
                 }, function(result) {
                     
-                    $api.updateDevice({
-                        device_uuid: result.device_uuid,
-                        device_ostype: Service.$device.getOSType()
-                    });
                     Service.$ppSettings.updateUserSettings({
                         device_uuid: result.device_uuid
                     });
 
-                    succCB(result);
-                }, function(response) {
-
-                    var DEVICE_EXISTED_ERROR_CODE = 25;
                     
-                    //Create device failed.
-                    if (response && response['error_code']) {
-                        if (response['error_code'] == DEVICE_EXISTED_ERROR_CODE) {
-                            Service.$ppSettings.updateUserSettings({
-                                device_uuid : response.device_uuid
-                            });
-                            succCB(response);
-                            return;
-                        }
+                    if (succCB) {
+                        succCB(result);
                     }
-                    if (failCB) failCB(response);
+                    
+                }, function(response) {
+                    
+                    if (failCB) {
+                        failCB(response);
+                    }
+                    
                 });
             },
 
@@ -151,19 +134,13 @@
                 var settings = Service.$ppSettings.getSettings();
                 $api.getUserUuid({
                     app_uuid: Service.$ppSettings.getAppUuid(),
+                    ent_user_id: userSettings.user_id,
+                    ent_user_createtime: userSettings.user_createtime,
+
+		    user_email: userSettings.user_email,
                     user_icon: userSettings.user_avatar,
-                    user_email: userSettings.user_email,
                     user_fullname: userSettings.user_fullname,
-                    
-                    ent_company_id: settings.ent_user[ 'ent_company_id' ], 
-                    ent_company_name: settings.ent_user[ 'ent_company_name' ], 
-                    ent_company_fullname: settings.ent_user[ 'ent_company_fullname' ], 
-                    
-                    ent_user_icon: settings.ent_user[ 'ent_user_icon' ] || userSettings.user_avatar,
-                    ent_user_name: settings.ent_user[ 'ent_user_name' ] || userSettings.user_fullname,
-                    ent_user_id: settings.ent_user[ 'ent_user_id' ],
-                    ent_user_createtime: settings.ent_user[ 'ent_user_createtime' ]
-                    
+                    ppcom_trace_uuid: userSettings.ppcom_trace_uuid
                 }, function(response) {
                     $api.getUserDetailInfo({
                         uuid: response.user_uuid,
@@ -188,7 +165,7 @@
         this.startUp = function(ppSettings, succCallback, errorCallback) {
 
             // check browser version
-            if (Service.$device.isIE9OrLowerVersionBrowser()) {
+            if ($device.isIE9OrLowerVersionBrowser()) {
                 if (errorCallback) errorCallback(ErrorHint.ERROR_IE9_OR_LOWER_BROWSER);
                 return;
             }

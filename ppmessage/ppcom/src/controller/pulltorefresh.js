@@ -126,17 +126,14 @@ Ctrl.$pulltoRefreshController = (function() {
     }
     extend(PulltoRefreshController, Ctrl.PPBaseCtrl);
 
-    var instance = null,
-
-        get = function( $conversationContentCtrl ) {
+    var instance = null;
+    return {
+        get: function($conversationContentCtrl) {
             if (instance == null) {
                 instance = new PulltoRefreshController();
             }
-            return instance.init( $conversationContentCtrl );
-        };
-    
-    return {
-        get: get
-    }
+            return instance.init($conversationContentCtrl);
+        }
+    };
     
 })();

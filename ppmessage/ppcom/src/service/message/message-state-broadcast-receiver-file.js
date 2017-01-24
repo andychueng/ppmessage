@@ -19,12 +19,12 @@ Service.$msgStateFileReceiver = (function() {
                 Ctrl.$conversationContent.appendMessage( body );
                 
                 View.$composerContainer.focus();
-                View.$userFileMessage.onBeginUpload( body );
+                View.$userFileMessage.onBeginUpload(body);
                 break;
 
             case STATE.UPLOADING:
                 var progress = data.stateInfo.uploadProgress;
-                View.$userFileMessage.onUploading( body, progress );
+                View.$userFileMessage.onUploading(body, progress);
                 break;
 
             case STATE.UPLOAD_DONE:

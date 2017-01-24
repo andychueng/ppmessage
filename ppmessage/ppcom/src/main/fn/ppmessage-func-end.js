@@ -1,5 +1,4 @@
 // Boot all services when create fn
-Service.PPStartUp.bootServices();
-
-return fn;
+    Service.PPStartUp.bootServices();
+    return fn;
 }

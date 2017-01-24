@@ -22,7 +22,8 @@ var watchingPaths = {
     config: ['./build.config.js']
 };
 
-gulp.task('default', [mode]);
+gulp.task('default', ["exec-config-py"]);
+
 gulp.task('css', function(done) {
     gulp.src(buildConfig.cssFiles)
         .pipe(concat('pp-lib.css'))
@@ -45,6 +46,8 @@ gulp.task('merge', ['css'], function(done) {
         .on('end', done);
 });
 
+
+
 gulp.task('dev', ['merge'], function(done) {
     gulp.src(buildConfig.scriptFiles)
         .pipe(concat('pp-library-template.js'))
@@ -58,7 +61,7 @@ gulp.task('scripts', ['merge'], function(done) {
         .pipe(concat('pp-library-template.js'))
         .pipe(gulp.dest(buildConfig.distPath))
         .pipe(ngAnnotate())
-        //.pipe(uglify())
+        .pipe(uglify())
         .on('error', function(e) {
             console.log(e);
             done();        
@@ -93,9 +96,9 @@ gulp.task('refresh-config', function(done) {
 gulp.task('watch', ['default'], function() {
     gulp.watch(watchingPaths.css, ['default']);
     gulp.watch(watchingPaths.config, ['refresh-config', 'default']);
-    gulp.watch(watchingPaths.scripts, ["exec-config-py"]);
+    gulp.watch(watchingPaths.scripts, ["default"]);
 });
 
-gulp.task("exec-config-py", ['default'], function () {
+gulp.task("exec-config-py", [mode], function() {
     childProcess.exec("python ../config/config.py");
 });

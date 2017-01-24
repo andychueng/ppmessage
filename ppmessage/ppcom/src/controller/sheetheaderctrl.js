@@ -14,7 +14,7 @@ Ctrl.$sheetheader = (function() {
         
         incrUnread: incrUnread,
         decrUnread: decrUnread,
-    }
+    };
 
     ///////// Implenmentation ///////
     function minimize() {
@@ -66,16 +66,13 @@ Ctrl.$sheetheader = (function() {
         });
 
         // decide should show group button, when app init
-        Service.$conversationManager.asyncGetList( function( conversationList ) {
-
-            var len = ( conversationList || [] ).length;
+        Service.$conversationManager.asyncGetList(function(conversationList) {
+            var len = (conversationList || []).length;
             // more than one conversations, so show `conversations` button in the sheetHeader
             if ( len > 1 ) {
                 View.$sheetHeader.showGroupButton();
             }
-            
-        } );
-        
+        });
     }
 
     function incrUnread() {
@@ -90,17 +87,17 @@ Ctrl.$sheetheader = (function() {
 
     function cancelAnyWaitingToCreateConversations() {
         var $conversationAgency = Service.$conversationAgency,
-            inRequestingGroupConversation = false,
             DELAY_TIME = 300; // Waiting the css animation completed
 
-        Ctrl.$conversationPanel.stopPollingWaitingQueueLength();
-        $timeout( function() {
+        Ctrl.$conversationPanel.stopPolling();
+        $timeout(function() {
+            //setHeaderTitle();
             // resume to `MODE.LIST` mode if we are waiting group conversations
-            inRequestingGroupConversation && Ctrl.$conversationList.show();
+            Ctrl.$conversationList.show();
             // resume to `MODE.CONTENT` mode if we are waiting default conversations
             !$conversationAgency.isDefaultConversationAvaliable() &&
-                Ctrl.$conversationPanel.mode( Ctrl.$conversationPanel.MODE.CONTENT );
-        }, DELAY_TIME );
+                Ctrl.$conversationPanel.mode(Ctrl.$conversationPanel.MODE.CONTENT);
+        }, DELAY_TIME);
     }
     
 })();

@@ -58,7 +58,9 @@
 
                 var jQuerySelector = id ? '#' + id : _attr['selector'],
                     avaliableEvents = [
-                        'click', 'mouseover', 'mouseleave', 'mousedown', 'keydown', 'keyup', 'change', 'input propertychange', 'focus', 'blur', 'init'
+                        'click', 'mouseover', 'mouseleave', 'mousedown',
+                        'keydown', 'keyup', 'change', 'input propertychange',
+                        'focus', 'blur', 'init', 'dragenter', 'dragleave', 'dragover', 'drag', 'drop'
                     ];
 
                 if (!jQuerySelector) throw new Error('No jQuerySelector');
@@ -85,7 +87,7 @@
 
                             default:
                                 setTimeout(function() {
-                                    $(jQuerySelector).bind(key, function(e) {
+                                    $(jQuerySelector).on(key, function(e) {
                                         value.apply(this, arguments);
                                     });                              
                                 });
