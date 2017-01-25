@@ -29,6 +29,7 @@ from ppmessage.db.models import PCSocketInfo
 from ppmessage.db.models import PCSocketDeviceData
 
 from ppmessage.db.models import ApiInfo
+from ppmessage.db.models import CompanyInfo
 
 from sqlalchemy import DateTime
 
@@ -65,7 +66,8 @@ def load(_redis):
         PCSocketInfo,
         PCSocketDeviceData,
 
-        ApiInfo
+        ApiInfo,
+        CompanyInfo
               
     ]
     

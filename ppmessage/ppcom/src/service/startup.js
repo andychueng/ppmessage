@@ -45,7 +45,7 @@
             },
 
             _createDevice = function(userSettings, succCB, failCB) {
-                $api.createDevice({
+                $api.request("/PPCOM_CREATE_DEVICE", {
                     is_browser_device: true,
                     app_uuid: Service.$ppSettings.getAppUuid(),
                     user_uuid: userSettings.user_uuid,
@@ -136,8 +136,7 @@
                     app_uuid: Service.$ppSettings.getAppUuid(),
                     ent_user_id: userSettings.user_id,
                     ent_user_createtime: userSettings.user_createtime,
-
-		    user_email: userSettings.user_email,
+		            user_email: userSettings.user_email,
                     user_icon: userSettings.user_avatar,
                     user_fullname: userSettings.user_fullname,
                     ppcom_trace_uuid: userSettings.ppcom_trace_uuid
@@ -197,8 +196,8 @@
                         Service.$app.set(response);
                         
                         var userSettings = Service.$ppSettings.getUserSettings();
-                        //anonymous user
-                        if (userSettings.is_anonymous) {
+
+                        if (!userSettings.is_anonymous) {
                             _startUpAnonymousUser(userSettings, succCallback, errorCallback);
                         } else {
                             _startUpNoneAnonymousUser(userSettings, succCallback, errorCallback);

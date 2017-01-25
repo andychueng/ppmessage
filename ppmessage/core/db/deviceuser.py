@@ -33,8 +33,12 @@ def create_device_user(redis, request):
         
     _user_icon = request.get("user_icon")
     if not _user_icon:
-        _user_icon = random_identicon(_user_email)
+        if _user_email:
+            _user_icon = random_identicon(_user_email)
+        else:
+            _user_icon = random_identicon(_uuid)
 
+    _company_uuid = request.get("company_uuid")
     _user_name = request.get("user_name")
     _user_mobile = request.get("user_mobile")
     _user_fullname = request.get("user_fullname")
@@ -52,10 +56,12 @@ def create_device_user(redis, request):
 
     _values = {
         "uuid": _uuid,
+        "company_uuid": _company_uuid,
         "is_service_user": _is_service_user,
         "is_owner_user": _is_owner_user,
         "is_ppmessage_user": _is_ppmessage_user,
         "is_anonymous_user": _is_anonymous_user,
+        "is_removed_user": False,
         "user_name": _user_name,
         "user_mobile": _user_mobile,
         "user_email": _user_email,

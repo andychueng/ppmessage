@@ -61,12 +61,6 @@ class DeviceUser(CommonMixin, BaseModel):
     # zh_cn/en_us/zh_tw
     user_language = Column("user_language", String(32))
         
-    # service_user_status for service user
-    # READY -> ready to allocate message to me
-    # BUSY -> busy not allocate message to me
-    # REST -> rest not allocate message to me
-    
-    service_user_status = Column("service_user_status", String(16))
     
     # ppcom portal user
     is_anonymous_user = Column("is_anonymous_user", Boolean)
@@ -86,6 +80,8 @@ class DeviceUser(CommonMixin, BaseModel):
     # which is uuid of other/third party system
     ent_user_uuid = Column("ent_user_uuid", String(64))
     ent_user_createtime = Column("ent_user_createtime", DateTime)
+
+    company_uuid = Column("company_uuid", String(64))
     
     __table_args__ = (
     )
@@ -100,6 +96,10 @@ class DeviceUser(CommonMixin, BaseModel):
         _key = self.__tablename__ + ".is_service_user." + str(self.is_service_user)
         _redis.sadd(_key, self.uuid)
 
+        if self.is_service_user == False and self.ent_user_uuid:
+            _key = self.__tablename__ + ".ent_user_uuid." + self.ent_user_uuid
+            _redis.set(_key, self.uuid)
+        
         if self.is_service_user == True and not self.is_removed_user:
             _key = self.__tablename__ + ".user_email." + self.user_email
             _redis.set(_key, self.uuid)
@@ -796,13 +796,23 @@ class ApiTokenData(CommonMixin, BaseModel):
         CommonMixin.delete_redis_keys(self, _redis)
         return
 
+
+class CompanyInfo(CommonMixin, BaseModel):
+    __tablename__ = "company_infos"
+
+    ent_company_uuid = Column("ent_company_uuid", String(64))
+    ent_company_createtime = Column("ent_company_createtime", DateTime)
     
-class UserOnlineStatusLog(CommonMixin, BaseModel):
-    __tablename__ = "user_online_status_logs"
-    user_uuid = Column("user_uuid", String(64))
-    device_uuid = Column("device_uuid", String(64))
-    online_status = Column("online_status", String(32))
-    status_data = Column("status_data", String(16))
+    company_name = Column("company_name", String(64))
+    company_fullname = Column("company_fullname", String(256))
+
+    company_icon = Column("company_icon", String(512))
+    company_address = Column("company_address", String(256))
+    company_phone = Column("company_phone", String(32))
+    company_email = Column("company_email", String(64))
+
+
+    extra_field_datas = Column("extra_field_datas", String(4096))
     
     __table_args__ = (
     )
@@ -810,4 +820,20 @@ class UserOnlineStatusLog(CommonMixin, BaseModel):
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)
         return
+        
+    def create_redis_keys(self, _redis, *args, **kwargs):
+        CommonMixin.create_redis_keys(self, _redis, *args, **kwargs)
+        _key = self.__tablename__
+        _redis.sadd(_key, self.uuid)
 
+        _key = self.__tablename__ + ".ent_company_uuid." + self.ent_company_uuid
+        _redis.set(_key, self.uuid)
+        return
+
+    def delete_redis_keys(self, _redis):
+        CommonMixin.delete_redis_keys(self, _redis)
+        return    
+
+    def update_redis_keys(self, _redis):            
+        CommonMixin.update_redis_keys(self, _redis)
+        return

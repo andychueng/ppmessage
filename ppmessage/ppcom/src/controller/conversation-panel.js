@@ -16,19 +16,23 @@ Ctrl.$conversationPanel = ( function() {
     //////// API //////////
     return {
         MODE: MODE,
-	mode: mode,
-	setMode: setMode,
-	isOpen: isOpen,
+	    mode: mode,
+	    setMode: setMode,
+	    isOpen: isOpen,
         stopPolling: stopPolling
     };
 
     ////// Implementation //
     
     function setMode( m ) {
+
+        //console.log("setMode to : %s from: %s", m, cMode);
+        
         if ( m === MODE.QUICK_MESSAGE ) {
             Ctrl.$conversationQuickMessage.setLastMode( cMode );
         }
         cMode = m;
+        
     }
 
     function stopPolling() {
@@ -38,12 +42,15 @@ Ctrl.$conversationPanel = ( function() {
     }
 
     function mode(m) { //Query current mode
+
+        //console.log("mode: %s, cMode: %s", m, cMode);
+        
         if (!m) {
             return cMode;    
         }
 
         setMode(m);
-
+        
         switch(cMode) {
         case MODE.LIST:
             modeList();

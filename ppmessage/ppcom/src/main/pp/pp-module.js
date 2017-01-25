@@ -47,26 +47,26 @@ function PPModule(jQuery) {
         // Show PPCom MesssageBox
         open : function() {
             getFn(jQuery).Service.$publicApi.show();
-	},
+	    },
 	    
-	// Hide PPCom MessageBox
-	close : function() {
+	    // Hide PPCom MessageBox
+	    close : function() {
             getFn(jQuery).Service.$publicApi.hide();
-	},
+	    },
 	    
-	// Check is PPCom MessageBox opened
-	isOpen : function() {
-	    return getFn(jQuery).Service.$publicApi.isOpen();
-	},
+	    // Check is PPCom MessageBox opened
+	    isOpen : function() {
+	        return getFn(jQuery).Service.$publicApi.isOpen();
+	    },
 
-	// Toggle PPCom MessageBox
-	toggle : function() {
-	    if (windoow.PP.isOpen()) {
-	        window.PP.close();
-	    } else {
-	        window.PP.open();
-	    }
-	},
+	    // Toggle PPCom MessageBox
+	    toggle : function() {
+            if (getFn(jQuery).Service.$publicApi.isOpen()) {
+                getFn(jQuery).Service.$publicApi.show();
+            } else {
+                getFn(jQuery).Service.$publicApi.hide();
+            }
+	    },
 
         /**
          * PPCom MessageBox onShow event callback

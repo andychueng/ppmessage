@@ -129,6 +129,11 @@
             });
         };
 
+
+        this.request = function(url, data, success, fail) {
+            this._post(url, $.extend({}, data), success, fail);
+        };
+        
         this.updateUser = function(data, success, fail) {
             this._post("/PP_UPDATE_USER", $.extend({}, data), success, fail);
         };
@@ -159,22 +164,6 @@
             this._post("/PPCOM_CREATE_ANONYMOUS", $.extend({}, data), success, fail);
         };
 
-        // {
-        //     app_uuid: xxx,
-        //     user_uuid: xxx,
-        //     device_ostype: xxx,
-        //     ppcom_trace_uuid: xxx,
-        //     is_browser_device: true,
-        //     device_id: xxx
-        // }
-        this.createDevice = function(data, success, fail) {
-            this._post("/PPCOM_CREATE_DEVICE", $.extend(true, {}, data), success, fail);
-        };
-
-        // @device_os_type: `Service.$device.getOSType()`;
-        this.updateDevice = function(data, success, fail) {
-            this._post("/PP_UPDATE_DEVICE", $.extend({}, data), success, fail);
-        };
 
         /*
          * Get user_uuid by the third-web-site's user_email
@@ -208,10 +197,6 @@
             this._post('/PP_GET_CONVERSATION_USER_LIST', $.extend({}, data), success, fail);
         };
 
-        // data: { app_uuid: xxx, user_uuid: xxx, device_uuid: xxx }
-        this.createPPComDefaultConversation = function (data, success, fail) {
-            this._post('/PPCOM_CREATE_DEFAULT_CONVERSATION', $.extend({}, data), success, fail);
-        };
 
         // data: { app_uuid: xxx, user_uuid: xxx, device_uuid: xxx }
         this.getPPComDefaultConversation = function (data, success, fail) {

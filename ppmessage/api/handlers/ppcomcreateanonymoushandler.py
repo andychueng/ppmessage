@@ -27,7 +27,7 @@ from tornado.ioloop import IOLoop
 from tornado.httpclient import HTTPRequest
 from tornado.httpclient import AsyncHTTPClient
 
-class PPCreateAnonymousHandler(BaseHandler):
+class PPComCreateAnonymousHandler(BaseHandler):
 
     def _unknown_user_name(self):
         return "unknown.area.user"

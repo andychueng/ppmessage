@@ -86,18 +86,7 @@ Ctrl.$sheetheader = (function() {
     }
 
     function cancelAnyWaitingToCreateConversations() {
-        var $conversationAgency = Service.$conversationAgency,
-            DELAY_TIME = 300; // Waiting the css animation completed
-
         Ctrl.$conversationPanel.stopPolling();
-        $timeout(function() {
-            //setHeaderTitle();
-            // resume to `MODE.LIST` mode if we are waiting group conversations
-            Ctrl.$conversationList.show();
-            // resume to `MODE.CONTENT` mode if we are waiting default conversations
-            !$conversationAgency.isDefaultConversationAvaliable() &&
-                Ctrl.$conversationPanel.mode(Ctrl.$conversationPanel.MODE.CONTENT);
-        }, DELAY_TIME);
     }
     
 })();

@@ -8,6 +8,7 @@
             deviceWidth = (w.innerWidth > 0) ? w.innerWidth : screen.width,
             deviceHeight = (w.innerHeight > 0) ? w.innerHeight : screen.height,
 
+            MOBILE_MAX_WIDTH = 736,
             DEVICE_ID_COOKIE_KEY = 'pp-device-id',
             DEVICE_ID_COOKIE_EXPIRE = 10 * 365 * 24 * 3600, // 10 years, never delete it
             deviceId, // device identifier

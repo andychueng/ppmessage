@@ -44,7 +44,7 @@ def _replace(_d):
     base = http + host
         
     auth = base + "/ppauth"
-    api = base + "/ppapi"
+    api = base + "/api"
     ppcom_assets_path = base + "/ppcom/assets/"
     file_upload_url = base + "/ppupload/ppupload/"
     file_download_url = base + "/ppdownload/ppdownload/"

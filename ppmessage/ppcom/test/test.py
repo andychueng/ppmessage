@@ -20,18 +20,12 @@ def _web_path(pre):
 class TestHandler(tornado.web.RequestHandler):
     
     def post(self):
-        page = 'test.html' #test-qqbrowser.html
+        page = 'test.html'
         with open(page) as f:
             self.write(f.read())
 
     def get(self):
         self.post()
-
-class PPMessageHandler(tornado.web.RequestHandler):
-    def get(self):
-        page = 'test-ppmessage.html'
-        with open(page) as f:
-            self.write(f.read())
 
 
 class PPDebugTestHandler(tornado.web.RequestHandler):
@@ -51,7 +45,6 @@ if __name__ == "__main__":
         handlers = [
             (r"/", TestHandler),
             (r"/debug", PPDebugTestHandler),
-            (r"/ppmessage", PPMessageHandler),
             (r"/libs/(.*)", StaticFileHandler, {
                 "path": os.path.join(os.path.dirname(__file__), "../assets"),
             }),

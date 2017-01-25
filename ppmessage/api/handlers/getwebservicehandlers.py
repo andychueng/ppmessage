@@ -10,12 +10,11 @@ from .getyvobjectdetailhandler import GetYVObjectDetailHandler
 from .ackmessagehandler import AckMessageHandler
 from .setdeviceinfohandler import SetDeviceInfoHandler
 
-from .ppcreateanonymoushandler import PPCreateAnonymousHandler
 from .ppcreateuserhandler import PPCreateUserHandler
 from .ppremoveuserhandler import PPRemoveUserHandler
 from .ppupdateuserhandler import PPUpdateUserHandler
 
-from .ppcreatedevicehandler import PPCreateDeviceHandler
+from .ppcomcreatedevicehandler import PPComCreateDeviceHandler
 from .ppupdatedevicehandler import PPUpdateDeviceHandler
 
 from .ppkefucreateconversationhandler import PPKefuCreateConversationHandler
@@ -32,7 +31,7 @@ from .ppgetappinfohandler import PPGetAppInfoHandler
 from .ppgetserviceuserlisthandler import PPGetServiceUserListHandler
 
 from .ppsendmessagehandler import PPSendMessageHandler
-from .ppgetuseruuidhandler import PPGetUserUUIDHandler
+from .ppcomgetuseruuidhandler import PPComGetUserUUIDHandler
 from .ppgetuserinfohandler import PPGetUserInfoHandler
 
 from .ppupdateconversationmemberhandler import PPUpdateConversationMemberHandler
@@ -55,6 +54,7 @@ from .ppgetapiinfohandler import PPGetApiInfoHandler
 
 from .ppvalidateonlinedevicehandler import PPValidateOnlineDeviceHandler
 
+from .ppcomcreateanonymoushandler import PPComCreateAnonymousHandler
 from .ppcomgetdefaultconversationhandler import PPComGetDefaultConversationHandler
 from .ppcomcreateconversationhandler import PPComCreateConversationHandler
 
@@ -70,6 +70,8 @@ def getWebServiceHandlers():
     # get yvobject detail yvobject is the caller and callee
     handler_list.append((r"/GET_YVOBJECT_DETAIL", GetYVObjectDetailHandler))
 
+    handler_list.append((r"/PPCOM_CREATE_DEVICE", PPComCreateDeviceHandler))
+    handler_list.append((r"/PPCOM_CREATE_ANONYMOUS", PPComCreateAnonymousHandler))
     handler_list.append((r"/PPCOM_GET_DEFAULT_CONVERSATION", PPComGetDefaultConversationHandler))
     handler_list.append((r"/PPCOM_CREATE_CONVERSATION", PPComCreateConversationHandler))
 
@@ -80,12 +82,10 @@ def getWebServiceHandlers():
     handler_list.append((r"/SET_DEVICE_INFO", SetDeviceInfoHandler))
 
     # PPMESSAGE
-    handler_list.append((r"/PP_CREATE_ANONYMOUS", PPCreateAnonymousHandler))
     handler_list.append((r"/PP_CREATE_USER", PPCreateUserHandler))
     handler_list.append((r"/PP_REMOVE_USER", PPRemoveUserHandler))
     handler_list.append((r"/PP_UPDATE_USER", PPUpdateUserHandler))
     
-    handler_list.append((r"/PP_CREATE_DEVICE", PPCreateDeviceHandler))
     handler_list.append((r"/PP_UPDATE_DEVICE", PPUpdateDeviceHandler))
         
     handler_list.append((r"/PPKEFU_CREATE_CONVERSATION", PPKefuCreateConversationHandler))
@@ -102,7 +102,6 @@ def getWebServiceHandlers():
     handler_list.append((r"/PP_GET_SERVICE_USER_LIST", PPGetServiceUserListHandler))
 
     handler_list.append((r"/PP_SEND_MESSAGE", PPSendMessageHandler))
-    handler_list.append((r"/PP_GET_USER_UUID", PPGetUserUUIDHandler))
     handler_list.append((r"/PP_GET_USER_INFO", PPGetUserInfoHandler))
 
     handler_list.append((r"/PP_UPDATE_CONVERSATION_MEMBER", PPUpdateConversationMemberHandler))
@@ -123,7 +122,9 @@ def getWebServiceHandlers():
     handler_list.append((r"/PP_VALIDATE_ONLINE_DEVICE", PPValidateOnlineDeviceHandler))
 
     handler_list.append((r"/PP_GET_IP_INFO", PPGetIPInfoHandler))
+    
     handler_list.append((r"/PPCOM_TRACK_EVENT", PPComTrackEventHandler))
+    handler_list.append((r"/PPCOM_GET_USER_UUID", PPComGetUserUUIDHandler))
     
     return handler_list
 

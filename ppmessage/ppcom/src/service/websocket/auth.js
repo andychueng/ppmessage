@@ -61,7 +61,7 @@ Service.$notifyAuth = (function() {
             }
 
             var wsSettings = $notifyService.getWsSettings();
-            Service.$api.createPPComDefaultConversation({
+            Service.$api.request("/PPCOM_GET_DEFAULT_CONVERSATION", {
                 app_uuid: wsSettings.app_uuid,
                 user_uuid: wsSettings.user_uuid,
                 device_uuid: wsSettings.device_uuid

@@ -6,29 +6,23 @@ Ctrl.$launcher = (function() {
 
     function PPLauncherCtrl() {
 
-        var self = this,
-
-            _showHoverCard = function() {
-                Ctrl.$hoverCard.get().showHoverCard();
-            },
-
-            _hideHoverCard = function() {
-                Ctrl.$hoverCard.get().hideHoverCard();
-            };
-
+        var self = this;
+            
         this.onClickEvent = function() { // Launcher onClick event
-            if (!PP.isOpen()) {
+            if (!Service.$publicApi.isOpen()) {
                 this.setUnreadBadgeNum(0);
                 this.setLauncherIcon("");
                 // clearn message on showing
                 _messageOnShowing = undefined;
+                Service.$publicApi.show();
+            } else {
+                Service.$publicApi.hide();
             }
-            PP.toggle();
-        },
+        };
 
         this.shouldShowLauncherWhenInit = function() { // 是否默认显示小泡
             return !View.$launcher.shouldHideLauncher();
-        },
+        };
 
         // Open messageBox and hide Launcher
         this.showMessageBox = function() {
@@ -76,29 +70,19 @@ Ctrl.$launcher = (function() {
                 }
                 
             } );
-        },
+        };
 
         this.onMouseOverEvent = function() {
             _isMouseOver = true;
-
-            if (!this.shouldShowHoverCardOnMouseOver()) {
-                return;
-            }
-
-            var $hoverCardController = Ctrl.$hoverCard.get();
-            $hoverCardController.asyncPrepareHoverCardInfo( function( prepareSucc ) {
-                prepareSucc && _showHoverCard();
-            });
-        },
+        };
 
         this.onMouseLeaveEvent = function() {
             _isMouseOver = false;
-            _hideHoverCard();
-        },
+        };
 
         this.isMouseOver = function() {
             return _isMouseOver;
-        },
+        };
 
         this.recordOpenConversationItem = function(message) {
             _clickToOpenConversation = message;
@@ -106,27 +90,27 @@ Ctrl.$launcher = (function() {
 
         this.getLauncherIcon = function() {
             return _launcherIcon || Service.Constants.ICON_DEFAULT_LAUNCHER;
-        },
+        };
 
         this.getLauncherBottomMargin = function() {
             return View.$settings.getLauncherBottomMargin();
-        },
+        };
 
         this.getLauncherRightMargin = function() {
             return View.$settings.getLauncherRightMargin();
-        },
+        };
 
         this.shouldShowHoverCardOnMouseOver = function() {
             return !Service.$device.isMobileBrowser() && Ctrl.$conversationPanel.mode() === Ctrl.$conversationPanel.MODE.CONTENT;
-        },
+        };
 
         this.launcherInit = function() {
-        },
+        };
 
         this.setLauncherIcon = function(icon) {
             _launcherIcon = icon;
             $('#pp-launcher-icon').attr('src', this.getLauncherIcon());
-        },
+        };
 
         /**
          * 当前小泡是否处于显示状态
@@ -135,10 +119,10 @@ Ctrl.$launcher = (function() {
         this.isLauncherShow = function() {
             //Note: 不能使用 `$('#pp-launcher-button').hasClass('pp-launcher-button-maximize')` 来判断，因为在一开始`pp-launcher-button`，这两个`class`均没有
             return this.shouldShowLauncherWhenInit() && !$('#pp-launcher-button').hasClass('pp-launcher-button-minimized');
-        },
+        };
 
         this.onLauncherInit = function() {
-        },
+        };
 
         // unreadNumber <= 0: hidden; unreadNumber>0: show
         this.setUnreadBadgeNum = function(unreadNumber) {
@@ -146,17 +130,17 @@ Ctrl.$launcher = (function() {
             _unreadBadgeNum = show ? (unreadNumber > 99 ? 99 : unreadNumber) : 0;
             show ? $( '#pp-launcher-badge' ).show() : $( '#pp-launcher-badge' ).hide();
             $('#pp-launcher-badge').text(_unreadBadgeNum);
-        },
+        };
 
         this.getUnreadBadgeNum = function() {
             return _unreadBadgeNum;
-        },
+        };
 
         this.clear = function() {
             _unreadBadgeNum = 0;
             _launcherIcon = "";
             _clickToOpenConversation = "";
-        },
+        };
 
         /**
          * Hide launcher
@@ -200,7 +184,7 @@ Ctrl.$launcher = (function() {
 
     var _unreadBadgeNum = 0,
         _isMouseOver = false,
-	_messageOnShowing,
+	    _messageOnShowing,
         _instance = null;
     
     return {
