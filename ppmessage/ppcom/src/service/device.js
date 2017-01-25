@@ -5,9 +5,6 @@
 
         var w = window,
 
-            deviceWidth = (w.innerWidth > 0) ? w.innerWidth : screen.width,
-            deviceHeight = (w.innerHeight > 0) ? w.innerHeight : screen.height,
-
             MOBILE_MAX_WIDTH = 736,
             DEVICE_ID_COOKIE_KEY = 'pp-device-id',
             DEVICE_ID_COOKIE_EXPIRE = 10 * 365 * 24 * 3600, // 10 years, never delete it
@@ -142,16 +139,15 @@
         if ((ix = browserVersion.indexOf(' ')) != -1) browserVersion = browserVersion.substring(0, ix);
 
         this.getDeviceWidth = function() {
-            return deviceWidth;
+            return $(window).width();
         };
 
         this.getDeviceHeight = function() {
-            return deviceHeight;
+            return $(window).height();
         };
 
         this.inMobile = function() {
-            var w = this.getDeviceWidth();
-            return w <= MOBILE_MAX_WIDTH;
+            return $(window).width() <= MOBILE_MAX_WIDTH;
         };
 
         this.inMobileWidth = this.inMobile;

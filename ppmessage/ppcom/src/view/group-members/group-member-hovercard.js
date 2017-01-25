@@ -9,7 +9,7 @@ View.$groupMemberHovercard = (function() {
         textareaContainerElSelector = elSelector + ' .textarea-container',
 
         HOVERCARD_HEIGHT = 156, // default hovercard height
-        HOVERCARD_TOP_OFFSET = 25,
+        HOVERCARD_TOP_OFFSET = 100,
         IMG_WIDTH = 70, // width of `img`
         HALF_IMG_WIDTH = IMG_WIDTH / 2,
         DEFAULT_PANEL_WIDTH = 368,
@@ -160,12 +160,15 @@ View.$groupMemberHovercard = (function() {
     // }
     function calcHovercardPosition( config ) {
 
-        var upEdgeDistance = config.el.offset().top - $( window ).scrollTop(),
+        var upEdgeDistance = config.el.position().top - $( window ).scrollTop(),
             hovercardOffsetY = HOVERCARD_TOP_OFFSET;
 
+        var _top = upEdgeDistance + hovercardOffsetY;
+        console.log("config: %o, hovercard: %d, config: %d, window: %d, edge: %d", config, _top, config.el.position().top, $(window).scrollTop(), upEdgeDistance);
+        
         return {
             e: config.e,
-            top: upEdgeDistance + hovercardOffsetY + ( Service.$device.inMobileWidth() ? 25 : 5 ),
+            top: _top,
             arrowRight: calcArrowRight( config.e )
         };
         
@@ -175,13 +178,17 @@ View.$groupMemberHovercard = (function() {
         var // @see http://stackoverflow.com/questions/6073505/what-is-the-difference-between-screenx-y-clientx-y-and-pagex-y
             // `screenX` and `screenY`: Relative to the top left of the physical screen/monitor, this reference point only moves if you increase or decrease the number of monitors or the monitor resolution.
             // `clientX` and `clientY`: Relative to the upper left edge of the content area (the viewport) of the browser window. This point does not move even if the user moves a scrollbar from within the browser.
-            marginRight = $( window ).width() - mouseEvent.clientX - IMG_WIDTH,
+            marginRight = $(window).width() - mouseEvent.clientX - IMG_WIDTH,
             fix = HALF_IMG_WIDTH - mouseEvent.offsetX;
 
+        console.log("window width: %d, mouse: %o, m:%d, f:%d", $(window).width(), mouseEvent, marginRight, marginRight - fix - 20);
+        
         // number `5` is a magic number that let `hovercard` a little closer from right
         if ( Service.$device.inMobileWidth() ) {
+            //return marginRight - fix - 40;
             return HOVERCARD_WIDTH / 2 - 9 / 2; // 9 is triangle border width
         }
+
         return marginRight - fix - 20;
     }
 
