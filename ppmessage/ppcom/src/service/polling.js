@@ -19,11 +19,13 @@
 Service.$polling = (function() {
 
     var DEFAULT_DELAY = 3000, // ms
-        OPTIONS = { eventID: undefined,
-                    apiFunc: undefined,
-                    apiRequestParams: undefined,
-                    delay: DEFAULT_DELAY,
-                    onGet: undefined },
+        OPTIONS = {
+            eventID: undefined,
+            apiFunc: undefined,
+            apiRequestParams: undefined,
+            delay: DEFAULT_DELAY,
+            onGet: undefined
+        },
         tasks = {};
 
     return {

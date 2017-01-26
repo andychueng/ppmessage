@@ -184,7 +184,7 @@ Ctrl.$launcher = (function() {
 
     var _unreadBadgeNum = 0,
         _isMouseOver = false,
-	    _messageOnShowing,
+        _messageOnShowing,
         _instance = null;
     
     return {

@@ -25,9 +25,6 @@ Ctrl.$conversationPanel = ( function() {
     ////// Implementation //
     
     function setMode( m ) {
-
-        //console.log("setMode to : %s from: %s", m, cMode);
-        
         if ( m === MODE.QUICK_MESSAGE ) {
             Ctrl.$conversationQuickMessage.setLastMode( cMode );
         }
@@ -42,9 +39,6 @@ Ctrl.$conversationPanel = ( function() {
     }
 
     function mode(m) { //Query current mode
-
-        //console.log("mode: %s, cMode: %s", m, cMode);
-        
         if (!m) {
             return cMode;    
         }

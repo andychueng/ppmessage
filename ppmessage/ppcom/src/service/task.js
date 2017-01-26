@@ -34,4 +34,4 @@ Service.$task = (function() {
         }
     }
     
-} )();
+})();

@@ -11,7 +11,7 @@
             DEFAULT = {
 
                 user_id: null,
-		        user_createtime: null,
+                user_createtime: null,
 		
                 app_uuid: null,
                 api_key: null,
@@ -53,14 +53,13 @@
                 // `$service.User`
                 userSettings = {
                     user_id: settings.user_id,
-		            user_createtime: settings.user_createime,
+		    user_createtime: settings.user_createime,
                     user_email: settings.user_email,
                     user_fullname: settings.user_name,
                     user_avatar: settings.user_icon,
-
                     user_uuid: null,
                     device_uuid: null,
-                    
+
                     is_portal_user: true,
                     is_anonymous: settings.user_id && settings.user_createtime,
                     ppcom_trace_uuid: (function() {

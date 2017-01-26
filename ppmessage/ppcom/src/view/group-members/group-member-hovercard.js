@@ -164,7 +164,7 @@ View.$groupMemberHovercard = (function() {
             hovercardOffsetY = HOVERCARD_TOP_OFFSET;
 
         var _top = upEdgeDistance + hovercardOffsetY;
-        console.log("config: %o, hovercard: %d, config: %d, window: %d, edge: %d", config, _top, config.el.position().top, $(window).scrollTop(), upEdgeDistance);
+       
         
         return {
             e: config.e,
@@ -181,11 +181,8 @@ View.$groupMemberHovercard = (function() {
             marginRight = $(window).width() - mouseEvent.clientX - IMG_WIDTH,
             fix = HALF_IMG_WIDTH - mouseEvent.offsetX;
 
-        console.log("window width: %d, mouse: %o, m:%d, f:%d", $(window).width(), mouseEvent, marginRight, marginRight - fix - 20);
-        
         // number `5` is a magic number that let `hovercard` a little closer from right
         if ( Service.$device.inMobileWidth() ) {
-            //return marginRight - fix - 40;
             return HOVERCARD_WIDTH / 2 - 9 / 2; // 9 is triangle border width
         }
 
