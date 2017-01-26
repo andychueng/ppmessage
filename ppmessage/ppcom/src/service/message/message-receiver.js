@@ -51,7 +51,9 @@ Service.$messageReceiverModule = (function() {
             }
 
 	        if ( PLAY_SOUND ) { // Play notification sound when new message arrived
-		        Audio !== undefined && new Audio( Service.Constants.MSG_NOTIFICATION_SOUND_URL ).play();
+                setTimeout(function() {
+		            Audio !== undefined && new Audio( Service.Constants.MSG_NOTIFICATION_SOUND_URL ).play();
+                }, 100);
 	        }
 
             // Quick message
