@@ -42,7 +42,8 @@
 }
 
 #pp-container .msg-sms-email-input-container {
-    position: relative; */
+    position: relative;
+    width: 100%;
     font-weight: 400;
     font-style: normal;
     display: -webkit-inline-box;
